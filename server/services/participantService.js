@@ -1,4 +1,4 @@
-import Participant from "../models/participantModel";
+import Participant from "../models/participantModel.js";
 
 const handleParticipation = async ({ address, amount }) => {
   try {
