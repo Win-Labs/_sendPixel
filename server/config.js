@@ -9,6 +9,7 @@ import {
   lineaSepolia,
   scrollSepolia,
   morphHolesky,
+  localhost,
 } from "viem/chains";
 
 dotenv.config({ path: "./.env" });
@@ -16,6 +17,12 @@ dotenv.config({ path: "./.env" });
 const alchemyApiKey = process.env.ALCHEMY_API_KEY;
 
 const chainsConfig = [
+  {
+    chain: { ...localhost, id: 31337 },
+    rpcUrl: `http://localhost:8545`,
+    webSocketUrl: `http://localhost:8545`,
+    address: process.env.DEPLOYER_ADDRESS_LOCALHOST,
+  },
   {
     chain: holesky,
     rpcUrl: `https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`,
