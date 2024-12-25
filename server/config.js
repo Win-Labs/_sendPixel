@@ -59,12 +59,12 @@ const chainsConfig = [
     webSocketUrl: `https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
     address: process.env.DEPLOYER_ADDRESS_SCROLL_SEPOLIA,
   },
-  {
-    chain: morphHolesky,
-    rpcUrl: `https://rpc-quicknode-holesky.morphl2.io`,
-    webSocketUrl: `wss://rpc-quicknode-holesky.morphl2.io`,
-    address: process.env.DEPLOYER_ADDRESS_MORPH_HOLESKY,
-  },
+  // {
+  //   chain: morphHolesky,
+  //   rpcUrl: `https://rpc-quicknode-holesky.morphl2.io`,
+  //   webSocketUrl: `wss://rpc-quicknode-holesky.morphl2.io`,
+  //   address: process.env.DEPLOYER_ADDRESS_MORPH_HOLESKY,
+  // },
 ];
 
 const canvasDeployerAbi = [
