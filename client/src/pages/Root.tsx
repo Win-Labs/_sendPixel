@@ -147,6 +147,7 @@ const Root = () => {
         >
           Blog
         </a>
+        <div>Branch: Grind</div>
       </s.FooterLinksContainer>
 
       {isModalOpen && (
