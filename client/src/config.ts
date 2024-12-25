@@ -148,12 +148,12 @@ const morphHolesky = {
 
 export const supportedChains = [
   localhost,
-  holesky,
-  sepolia,
-  celoAlfajores,
-  baseSepolia,
-  lineaSepolia,
-  scrollSepolia,
+  // holesky,
+  // sepolia,
+  // celoAlfajores,
+  // baseSepolia,
+  // lineaSepolia,
+  // scrollSepolia,
   // morphHolesky,
 ];
 const transports = supportedChains.reduce((acc, chain) => {
@@ -173,14 +173,14 @@ export const config = createConfig({
 
 export const DEPLOYER_CONTRACT_ADDRESSES = {
   [localhost.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LOCALHOST,
-  [holesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_HOLESKY,
-  [sepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_SEPOLIA,
-  [celoAlfajores.id]: import.meta.env
-    .VITE_PUBLIC_DEPLOYER_ADDRESS_CELO_ALFAJORES,
-  [baseSepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_BASE_SEPOLIA,
-  [lineaSepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LINEA_SEPOLIA,
-  [scrollSepolia.id]: import.meta.env
-    .VITE_PUBLIC_DEPLOYER_ADDRESS_SCROLL_SEPOLIA,
+  // [holesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_HOLESKY,
+  // [sepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_SEPOLIA,
+  // [celoAlfajores.id]: import.meta.env
+  //   .VITE_PUBLIC_DEPLOYER_ADDRESS_CELO_ALFAJORES,
+  // [baseSepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_BASE_SEPOLIA,
+  // [lineaSepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LINEA_SEPOLIA,
+  // [scrollSepolia.id]: import.meta.env
+  //   .VITE_PUBLIC_DEPLOYER_ADDRESS_SCROLL_SEPOLIA,
   // [morphHolesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_MORPH_HOLESKY,
 };
 

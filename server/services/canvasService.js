@@ -65,13 +65,13 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
     // Decode the packed amount into RGB and coordinates
     const packedValue = BigInt(amount); // Convert amount to BigInt for bit manipulation
 
-    const maxPackedValue = (1n << 40n) - 1n; // Maximum value for 40 bits
-    if (packedValue > maxPackedValue) {
-      console.log(
-        "Invalid packed value: exceeds 40-bit limit. You are eligible for the reward, but your transfer will not be reflected on the canvas."
-      );
-      return;
-    }
+    // const maxPackedValue = (1n << 40n) - 1n; // Maximum value for 40 bits
+    // if (packedValue > maxPackedValue) {
+    //   console.log(
+    //     "Invalid packed value: exceeds 40-bit limit. You are eligible for the reward, but your transfer will not be reflected on the canvas."
+    //   );
+    //   return;
+    // }
 
     // Extract RGB values
     const r = Number((packedValue >> 32n) & 0xffn); // Top 8 bits for R
