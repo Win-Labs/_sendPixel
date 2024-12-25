@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useGET } from "../hooks/useServer";
+
 import { useSendTransaction } from "wagmi";
 import { backendUrl, supportedChains } from "../config";
 import { ICanvas } from "../models";
@@ -10,6 +10,8 @@ import {
   notification,
   usePushNotifications,
 } from "../utils/usePushNotifications";
+import { useQuery } from "@tanstack/react-query";
+import { GET } from "../utils/api";
 
 interface PixelsContainerProps {
   width: number;
@@ -54,13 +56,12 @@ const Canvas = () => {
     error: errorCanvas,
     data: dataCanvas,
     refetch: refetchCanvas,
-  } = useGET(
-    ["pixels", paramCanvasId],
-    `${backendUrl}/canvases/${paramCanvasId}`,
-    !!paramCanvasId,
-    // @ts-ignore
-    3000
-  );
+  } = useQuery({
+    queryKey: ["pixels", paramCanvasId],
+    queryFn: () => GET(`${backendUrl}/canvases/${paramCanvasId}`),
+    enabled: !!paramCanvasId,
+    refetchInterval: 3000,
+  });
 
   const [canvas, setCanvas] = useState<ICanvas | null>(null);
   const [activePixelId, setActivePixelId] = useState<number | null>(null);
@@ -127,41 +128,40 @@ const Canvas = () => {
     b: number
   ) {
     if (!canvas) return;
-    // Step 1: Pad RGB values to 3 digits each
-    let r_padded = String(r).padStart(3, "0");
-    let g_padded = String(g).padStart(3, "0");
-    let b_padded = String(b).padStart(3, "0");
 
-    // Step 2: Pad x and y based on width and height
-    const xDigits = Math.ceil(Math.log10(canvas.width)); // Number of digits needed for x
-    const yDigits = Math.ceil(Math.log10(canvas.height));
-
-    let x_padded = String(x).padStart(xDigits, "0");
-    let y_padded = String(y).padStart(yDigits, "0");
-
-    // Step 3: Concatenate RGB first, then x and y
-    let result = `${r_padded}${g_padded}${b_padded}${x_padded}${y_padded}`;
-
-    // Step 4: Ensure total length of 18 digits
-    if (result.length < 18) {
-      result = result.padStart(18, "0");
+    // Step 1: Validate inputs
+    if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
+      throw new Error("RGB values must be between 0 and 255.");
     }
-    // const etherValue = parseFloat(result) / 1e18; // Divide by 1e18 to scale properly
-    // console.log("parsedEther:", etherValue);
-    console.log("this is result: ", BigInt(result));
+    if (x < 0 || x >= canvas.width || y < 0 || y >= canvas.height) {
+      throw new Error("Coordinates are out of canvas bounds.");
+    }
+
+    // Step 2: Encode RGB and coordinates into a single 40-bit integer
+    const packedValue =
+      (BigInt(r) << 32n) |
+      (BigInt(g) << 24n) |
+      (BigInt(b) << 16n) |
+      (BigInt(x) << 8n) |
+      BigInt(y);
+
+    console.log("Packed value:", packedValue.toString());
+
+    // Step 3: Send the transaction with the packed value
     sendTransaction({
       to: canvas.canvasId as `0x${string}`,
-      value: BigInt(result),
+      value: packedValue,
     });
 
-    // if user is subscribed to chat, send notification
+    // Notify the user if subscribed
     if (isSubscribed) {
       notification(
         user,
         `Wallet ${user.account} colored canvas "${canvas.name}" to R${r} G${g} B${b} color at coordinates ${x}:${y}`
       );
     }
-    return result;
+
+    return packedValue;
   }
 
   const onConstructEth = (
@@ -182,7 +182,7 @@ const Canvas = () => {
   const chain = supportedChains.find(
     (chain) => chain.id === dataCanvas?.chainId
   );
-  const explorerUrl = chain?.blockExplorers?.default?.blockscoutUrl || "";
+  const explorerUrl = chain?.blockExplorers?.custom?.url || "";
   const fullUrl = `${explorerUrl}address/${canvas?.canvasId}`;
 
   return (

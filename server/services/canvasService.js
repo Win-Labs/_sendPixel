@@ -62,31 +62,25 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
     const width = canvas.width;
     const height = canvas.height;
 
-    // Calculate required number of digits for x and y based on width and height
-    const xDigits = Math.ceil(Math.log10(width)); // Number of digits needed for x
-    const yDigits = Math.ceil(Math.log10(height)); // Number of digits needed for y
+    // Decode the packed amount into RGB and coordinates
+    const packedValue = BigInt(amount); // Convert amount to BigInt for bit manipulation
 
-    console.log(`xDigits: ${xDigits}, yDigits: ${yDigits}`);
-
-    // Validate that amount string has enough length for x, y, and RGB
-    const requiredLength = xDigits + yDigits + 9; // 9 digits for RGB and xDigits + yDigits for coordinates
-    if (amount.length < requiredLength) {
-      throw new Error(
-        `Amount format is incorrect, expected at least ${requiredLength} digits, but got ${amount.length}.`
+    const maxPackedValue = (1n << 40n) - 1n; // Maximum value for 40 bits
+    if (packedValue > maxPackedValue) {
+      console.log(
+        "Invalid packed value: exceeds 40-bit limit. You are eligible for the reward, but your transfer will not be reflected on the canvas."
       );
+      return;
     }
 
-    // Extract x and y from the back of the string
-    const coordinatesStart = amount.length - (xDigits + yDigits); // Start position for x and y extraction
-    const x = parseInt(
-      amount.slice(coordinatesStart, coordinatesStart + xDigits)
-    ); // Extract x
-    const y = parseInt(
-      amount.slice(
-        coordinatesStart + xDigits,
-        coordinatesStart + xDigits + yDigits
-      )
-    ); // Extract y
+    // Extract RGB values
+    const r = Number((packedValue >> 32n) & 0xffn); // Top 8 bits for R
+    const g = Number((packedValue >> 24n) & 0xffn); // Next 8 bits for G
+    const b = Number((packedValue >> 16n) & 0xffn); // Next 8 bits for B
+
+    // Extract x and y coordinates
+    const x = Number((packedValue >> 8n) & 0xffn); // Next 8 bits for x
+    const y = Number(packedValue & 0xffn); // Bottom 8 bits for y
 
     // Ensure x and y are within the canvas dimensions
     if (x >= width || y >= height) {
@@ -94,12 +88,6 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
         `Coordinates out of bounds: x=${x}, y=${y}, width=${width}, height=${height}`
       );
     }
-
-    // Now extract the RGB values from the remaining part of the string
-    const rgbStart = coordinatesStart - 9; // The last 9 digits before coordinates are for RGB
-    const r = parseInt(amount.slice(rgbStart, rgbStart + 3)); // First 3 digits for r
-    const g = parseInt(amount.slice(rgbStart + 3, rgbStart + 6)); // Next 3 digits for g
-    const b = parseInt(amount.slice(rgbStart + 6, rgbStart + 9)); // Last 3 digits for b
 
     // Ensure RGB values are between 0-255
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {

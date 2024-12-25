@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import useWrite from "../hooks/useContract";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
-import { config, supportedChains } from "../config";
-import { useAccount } from "wagmi";
+import {
+  config,
+  supportedChains,
+  canvasDeployerAbi,
+  DEPLOYER_CONTRACT_ADDRESSES,
+} from "../config";
+import { useAccount, useWriteContract } from "wagmi";
 import {
   notification,
   usePushNotifications,
@@ -69,12 +73,13 @@ const Input = styled.input`
 
 const Modal = ({ toggle }) => {
   const { chainId: accountChainId, address } = useAccount();
+
   const { user, isSubscribed } = usePushNotifications();
   const {
-    writeAsync,
-    hash: hashInitializeCanvas,
-    isHashPending: initializeCanvasIsHashPending,
-  } = useWrite();
+    writeContractAsync,
+    data: hashInitializeCanvas,
+    isPending: initializeCanvasIsHashPending,
+  } = useWriteContract();
 
   const [name, setName] = useState("");
   const [height, setHeight] = useState("");
@@ -93,11 +98,13 @@ const Modal = ({ toggle }) => {
     name && height && width && isNetworkSupported && destinationAddress;
 
   const handleInitializeCanvas = async () => {
-    const hash = await writeAsync(
-      "deployCanvas",
-      [name, Number(height), Number(width), "", destinationAddress],
-      accountChainId as number
-    );
+    const hash = await writeContractAsync({
+      functionName: "deployCanvas",
+      args: [name, Number(height), Number(width), "", destinationAddress],
+      abi: canvasDeployerAbi,
+      address: DEPLOYER_CONTRACT_ADDRESSES[accountChainId as number],
+      account: address,
+    });
     toggle();
 
     if (isSubscribed) {
@@ -110,7 +117,7 @@ const Modal = ({ toggle }) => {
     const chain = supportedChains.find(
       (chain) => chain.id === accountChainId!
     )!;
-    const explorerUrl = chain.blockExplorers.default.blockscoutUrl;
+    const explorerUrl = chain?.blockExplorers?.custom.url;
     const fullUrl = `${explorerUrl}tx/${hash}`;
 
     enqueueSnackbar(

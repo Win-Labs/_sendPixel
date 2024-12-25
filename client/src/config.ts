@@ -13,131 +13,141 @@ import {
   lineaSepolia as lineaSepoliaDefault,
   scrollSepolia as scrollSepoliaDefault,
   morphHolesky as morphHoleskyDefault,
+  localhost as localhostDefault,
 } from "@wagmi/core/chains";
 
 export const backendUrl: string = import.meta.env.VITE_PUBLIC_BACKEND_URL;
 const alchemyApiKey: string = import.meta.env.VITE_PUBLIC_ALCHEMY_API_KEY;
 
-export const holesky = /*#__PURE__*/ defineChain({
+export const localhost = {
+  ...localhostDefault,
+  id: 31337,
+};
+
+export const holesky = {
   ...holeskyDefault,
   rpcUrls: {
-    default: {
+    ...holeskyDefault.rpcUrls, // Spread the default rpcUrls
+    custom: {
       http: [`https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
   blockExplorers: {
-    default: {
-      name: "Etherscan",
-      url: "https://holesky.etherscan.io",
-      apiUrl: "https://api-holesky.etherscan.io/api",
-      blockscoutUrl: "https://eth-holesky.blockscout.com/",
+    ...holeskyDefault.blockExplorers, // Spread the default blockExplorers
+    custom: {
+      name: "Blockscout",
+      url: "https://eth-holesky.blockscout.com/",
     },
   },
-});
+};
 
-export const sepolia = /*#__PURE__*/ defineChain({
+console.log("holesky", holesky);
+console.log("holeskyDefault", holeskyDefault);
+
+export const sepolia = {
   ...sepoliaDefault,
   rpcUrls: {
-    default: {
+    ...sepoliaDefault.rpcUrls,
+    custom: {
       http: [`https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
   blockExplorers: {
-    default: {
-      name: "Etherscan",
-      url: "https://sepolia.etherscan.io",
-      apiUrl: "https://api-sepolia.etherscan.io/api",
-      blockscoutUrl: "https://eth-sepolia.blockscout.com/",
+    ...sepoliaDefault.blockExplorers,
+    custom: {
+      name: "Blockscout",
+      url: "https://eth-sepolia.blockscout.com/",
     },
   },
-});
+};
 
-export const celoAlfajores = /*#__PURE__*/ defineChain({
+export const celoAlfajores = {
   ...celoAlfajoresDefault,
-  name: "Celo",
   rpcUrls: {
-    default: {
-      http: [`https://alfajores-forno.celo-testnet.org`],
+    ...celoAlfajoresDefault.rpcUrls,
+    custom: {
+      http: ["https://alfajores-forno.celo-testnet.org"],
     },
   },
   blockExplorers: {
-    default: {
-      name: "Etherscan",
-      url: "https://sepolia.etherscan.io",
-      apiUrl: "https://api-sepolia.etherscan.io/api",
-      blockscoutUrl: "https://celo-alfajores.blockscout.com/",
+    ...celoAlfajoresDefault.blockExplorers,
+    custom: {
+      name: "Celo Alfajores Explorer",
+      url: "https://celo-alfajores.blockscout.com/",
     },
   },
-});
+};
 
-export const baseSepolia = /*#__PURE__*/ defineChain({
+export const baseSepolia = {
   ...baseSepoliaDefault,
-  name: "Base",
   rpcUrls: {
-    default: {
+    ...baseSepoliaDefault.rpcUrls,
+    custom: {
       http: [`https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
   blockExplorers: {
-    default: {
-      name: "Etherscan",
+    ...baseSepoliaDefault.blockExplorers,
+    custom: {
+      name: "Blockscout",
       url: "https://base-sepolia.blockscout.com/",
-      apiUrl: "https://api-sepolia.etherscan.io/api",
-      blockscoutUrl: "https://base-sepolia.blockscout.com/",
     },
   },
-});
+};
 
-export const lineaSepolia = /*#__PURE__*/ defineChain({
+export const lineaSepolia = {
   ...lineaSepoliaDefault,
-  name: "Linea",
   rpcUrls: {
-    default: {
+    ...lineaSepoliaDefault.rpcUrls,
+    custom: {
       http: [`https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
   blockExplorers: {
-    default: {
-      name: "Etherscan",
-      url: "https://sepolia.etherscan.io",
-      apiUrl: "https://api-sepolia.etherscan.io/api",
-      blockscoutUrl: "https://explorer.sepolia.linea.build/",
+    ...lineaSepoliaDefault.blockExplorers,
+    custom: {
+      name: "Linea Explorer",
+      url: "https://explorer.sepolia.linea.build/",
     },
   },
-});
+};
 
-export const scrollSepolia = /*#__PURE__*/ defineChain({
+export const scrollSepolia = {
   ...scrollSepoliaDefault,
-  name: "Scroll",
   rpcUrls: {
-    default: {
+    ...scrollSepoliaDefault.rpcUrls,
+    custom: {
       http: [`https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
   blockExplorers: {
-    default: {
-      name: "Etherscan",
+    ...scrollSepoliaDefault.blockExplorers,
+    custom: {
+      name: "Scroll Explorer",
       url: "https://sepolia.scrollscan.com/",
-      apiUrl: "https://api-sepolia.etherscan.io/api",
-      blockscoutUrl: "https://sepolia.scrollscan.com/",
     },
   },
-});
+};
 
-export const morphHolesky = /*#__PURE__*/ defineChain({
+export const morphHolesky = {
   ...morphHoleskyDefault,
-  name: "Morph",
-  blockExplorers: {
-    default: {
-      name: "Morph Holesky Explorer",
-      url: "https://explorer-holesky.morphl2.io",
-      apiUrl: "https://explorer-api-holesky.morphl2.io/api?",
-      blockscoutUrl: "https://explorer-holesky.morphl2.io/",
+  rpcUrls: {
+    ...morphHoleskyDefault.rpcUrls,
+    custom: {
+      http: morphHoleskyDefault.rpcUrls.default.http,
     },
   },
-});
+  blockExplorers: {
+    ...morphHoleskyDefault.blockExplorers,
+    custom: {
+      name: "Morph Explorer",
+      url: "https://explorer-holesky.morphl2.io",
+    },
+  },
+};
 
 export const supportedChains = [
+  localhost,
   holesky,
   sepolia,
   celoAlfajores,
@@ -147,7 +157,11 @@ export const supportedChains = [
   morphHolesky,
 ];
 const transports = supportedChains.reduce((acc, chain) => {
-  acc[chain.id] = http();
+  acc[chain.id] = http(
+    chain.rpcUrls.custom
+      ? chain.rpcUrls.custom.http[0]
+      : chain.rpcUrls.default.http[0]
+  );
   return acc;
 }, {});
 
@@ -156,6 +170,222 @@ export const config = createConfig({
   transports,
   connectors: [Web3AuthConnectorInstance(supportedChains)],
 });
+
+export const DEPLOYER_CONTRACT_ADDRESSES = {
+  [localhost.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LOCALHOST,
+  [holesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_HOLESKY,
+  [sepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_SEPOLIA,
+  [celoAlfajores.id]: import.meta.env
+    .VITE_PUBLIC_DEPLOYER_ADDRESS_CELO_ALFAJORES,
+  [baseSepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_BASE_SEPOLIA,
+  [lineaSepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LINEA_SEPOLIA,
+  [scrollSepolia.id]: import.meta.env
+    .VITE_PUBLIC_DEPLOYER_ADDRESS_SCROLL_SEPOLIA,
+  [morphHolesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_MORPH_HOLESKY,
+};
+
+export const canvasDeployerAbi = [
+  {
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "deployer",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "deployedCanvasContract",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "name",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "height",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "width",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "mode",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "chainId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "destination",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "creationTime",
+        type: "uint256",
+      },
+    ],
+    name: "CanvasDeployed",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_height",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_width",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_mode",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_destination",
+        type: "address",
+      },
+    ],
+    name: "deployCanvas",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+];
+
+export const canvasAbi = [
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_destination",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "FundsTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "sender",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+    ],
+    name: "PixelRegistered",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "creationTime",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "destination",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "transferFunds",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
+  },
+];
 
 export const groupChatId = import.meta.env.VITE_PUBLIC_PUSH_GROUP_ADDRESS;
 
