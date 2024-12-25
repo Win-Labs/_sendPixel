@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useGET } from "../hooks/useServer";
+
 import { useSendTransaction } from "wagmi";
 import { backendUrl, supportedChains } from "../config";
 import { ICanvas } from "../models";
@@ -10,6 +10,8 @@ import {
   notification,
   usePushNotifications,
 } from "../utils/usePushNotifications";
+import { useQuery } from "@tanstack/react-query";
+import { GET } from "../utils/api";
 
 interface PixelsContainerProps {
   width: number;
@@ -54,13 +56,12 @@ const Canvas = () => {
     error: errorCanvas,
     data: dataCanvas,
     refetch: refetchCanvas,
-  } = useGET(
-    ["pixels", paramCanvasId],
-    `${backendUrl}/canvases/${paramCanvasId}`,
-    !!paramCanvasId,
-    // @ts-ignore
-    3000
-  );
+  } = useQuery({
+    queryKey: ["pixels", paramCanvasId],
+    queryFn: () => GET(`${backendUrl}/canvases/${paramCanvasId}`),
+    enabled: !!paramCanvasId,
+    refetchInterval: 3000,
+  });
 
   const [canvas, setCanvas] = useState<ICanvas | null>(null);
   const [activePixelId, setActivePixelId] = useState<number | null>(null);
