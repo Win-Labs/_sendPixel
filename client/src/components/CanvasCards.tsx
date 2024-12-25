@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import * as s from "./CanvasCardsStyles";
 import { backendUrl } from "../config";
-import { CircularLoader } from "./Loader";
+import Loader from "./Loader";
 import { FilterMode } from "../pages/Canvases";
 import { useAccount } from "wagmi";
 import { ICanvas } from "../models";
@@ -50,7 +50,7 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
   return (
     <div className="cards-container">
       {isLoadingCanvases ? (
-        <CircularLoader />
+        <Loader />
       ) : !canvases?.length ? (
         <div style={{ color: "white" }}>No canvases created yet</div>
       ) : (
