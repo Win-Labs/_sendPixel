@@ -1,4 +1,5 @@
 import Canvas from "../models/canvasModel.js";
+import BlockSync from "../models/blockSyncModel.js";
 
 const getAllCanvases = async () => {
   return await Canvas.find();
@@ -140,6 +141,17 @@ const transferFunds = async ({ canvasId, amount }) => {
   }
 };
 
+const clear = async () => {
+  try {
+    await Canvas.deleteMany({});
+    console.log("Canvas collection cleared");
+    await BlockSync.deleteMany({});
+    console.log("BlockSync collection cleared");
+  } catch (error) {
+    console.error("Error in clear:", error.message);
+  }
+};
+
 const canvasService = {
   getAllCanvases,
   getGeneratedCanvases,
@@ -148,6 +160,7 @@ const canvasService = {
   initializeCanvas,
   registerPixel,
   transferFunds,
+  clear,
 };
 
 export default canvasService;

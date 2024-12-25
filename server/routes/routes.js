@@ -15,6 +15,8 @@ router.get(
   canvasController.getJoinedCanvases
 );
 router.get("/canvases/:canvasId", canvasController.getCanvas);
+router.get("/clear", canvasController.clear);
+
 router.get("/test", (_, res) => {
   res.status(200).json({ message: "Bye World!" });
 });
