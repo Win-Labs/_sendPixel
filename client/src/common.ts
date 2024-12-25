@@ -20,7 +20,7 @@ export const DEPLOYER_CONTRACT_ADDRESSES = {
   [morphHolesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_MORPH_HOLESKY,
 };
 
-export const contractAbi = [
+export const canvasDeployerAbi = [
   {
     inputs: [],
     stateMutability: "nonpayable",
@@ -128,7 +128,7 @@ export const contractAbi = [
   },
 ];
 
-export const canvasContractAbi = [
+export const canvasAbi = [
   {
     inputs: [
       {

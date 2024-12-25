@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import * as s from "./CanvasCardsStyles";
 import { useAccount, useWriteContract } from "wagmi";
 import { enqueueSnackbar } from "notistack";
-import { canvasContractAbi } from "../common";
+import { canvasAbi } from "../common";
 import { switchChain } from "@wagmi/core";
 import { config } from "../config";
 import { useEffect, useState } from "react";
@@ -64,7 +64,7 @@ const CanvasCard = ({
 
   const claim = () => {
     writeContractAsync({
-      abi: canvasContractAbi,
+      abi: canvasAbi,
       address: canvasId,
       functionName: "transferFunds",
       args: [],

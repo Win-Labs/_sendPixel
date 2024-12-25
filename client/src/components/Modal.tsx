@@ -4,7 +4,7 @@ import useWrite from "../hooks/useContract";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
 import { config, supportedChains } from "../config";
-import { useAccount } from "wagmi";
+import { useAccount, useConnect } from "wagmi";
 import {
   notification,
   usePushNotifications,
@@ -69,6 +69,7 @@ const Input = styled.input`
 
 const Modal = ({ toggle }) => {
   const { chainId: accountChainId, address } = useAccount();
+
   const { user, isSubscribed } = usePushNotifications();
   const {
     writeAsync,
@@ -110,7 +111,7 @@ const Modal = ({ toggle }) => {
     const chain = supportedChains.find(
       (chain) => chain.id === accountChainId!
     )!;
-    const explorerUrl = chain.blockExplorers.default.blockscoutUrl;
+    const explorerUrl = chain.blockExplorers.custom.url;
     const fullUrl = `${explorerUrl}tx/${hash}`;
 
     enqueueSnackbar(

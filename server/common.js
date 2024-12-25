@@ -1,4 +1,4 @@
-const contractAbi = [
+const canvasDeployerAbi = [
   {
     inputs: [],
     stateMutability: "nonpayable",
@@ -106,7 +106,7 @@ const contractAbi = [
   },
 ];
 
-const canvasContractAbi = [
+const canvasAbi = [
   {
     inputs: [
       {
@@ -201,4 +201,4 @@ const canvasContractAbi = [
   },
 ];
 
-export { contractAbi, canvasContractAbi };
+export { canvasDeployerAbi, canvasAbi };

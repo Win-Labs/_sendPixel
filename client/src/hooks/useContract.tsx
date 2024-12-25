@@ -1,5 +1,5 @@
 import { useAccount } from "wagmi";
-import { contractAbi, DEPLOYER_CONTRACT_ADDRESSES } from "../common";
+import { canvasDeployerAbi, DEPLOYER_CONTRACT_ADDRESSES } from "../common";
 import { useWriteContract } from "wagmi";
 
 const useWrite = () => {
@@ -14,7 +14,7 @@ const useWrite = () => {
 
   const write = (functionName, args, network: number) => {
     writeContract({
-      abi: contractAbi,
+      abi: canvasDeployerAbi,
       address: DEPLOYER_CONTRACT_ADDRESSES[network],
       functionName,
       args,
@@ -24,7 +24,7 @@ const useWrite = () => {
 
   const writeAsync = (functionName, args, network: number) => {
     return writeContractAsync({
-      abi: contractAbi,
+      abi: canvasDeployerAbi,
       address: DEPLOYER_CONTRACT_ADDRESSES[network],
       functionName,
       args,

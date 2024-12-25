@@ -182,7 +182,7 @@ const Canvas = () => {
   const chain = supportedChains.find(
     (chain) => chain.id === dataCanvas?.chainId
   );
-  const explorerUrl = chain?.blockExplorers?.default?.blockscoutUrl || "";
+  const explorerUrl = chain?.blockExplorers?.custom?.url || "";
   const fullUrl = `${explorerUrl}address/${canvas?.canvasId}`;
 
   return (

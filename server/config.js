@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { webSocket } from "viem";
 
 import {
   holesky,
@@ -17,37 +18,44 @@ const alchemyApiKey = process.env.ALCHEMY_API_KEY;
 export const chainsConfig = [
   {
     chain: holesky,
-    rpc: `https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`,
-    contractAddress: process.env.DEPLOYER_ADDRESS_HOLESKY,
+    rpcUrl: `https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`,
+    webSocketUrl: `https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`,
+    address: process.env.DEPLOYER_ADDRESS_HOLESKY,
   },
   {
     chain: sepolia,
-    rpc: `https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
-    contractAddress: process.env.DEPLOYER_ADDRESS_SEPOLIA,
+    rpcUrl: `https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    webSocketUrl: `https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    address: process.env.DEPLOYER_ADDRESS_SEPOLIA,
   },
   {
     chain: celoAlfajores,
-    rpc: `https://alfajores-forno.celo-testnet.org`,
-    contractAddress: process.env.DEPLOYER_ADDRESS_CELO_ALFAJORES,
+    rpcUrl: `https://alfajores-forno.celo-testnet.org`,
+    webSocketUrl: `https://alfajores-forno.celo-testnet.org/`,
+    address: process.env.DEPLOYER_ADDRESS_CELO_ALFAJORES,
   },
   {
     chain: baseSepolia,
-    rpc: `https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
-    contractAddress: process.env.DEPLOYER_ADDRESS_BASE_SEPOLIA,
+    rpcUrl: `https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    webSocketUrl: `https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    address: process.env.DEPLOYER_ADDRESS_BASE_SEPOLIA,
   },
   {
     chain: lineaSepolia,
-    rpc: `https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
-    contractAddress: process.env.DEPLOYER_ADDRESS_LINEA_SEPOLIA,
+    rpcUrl: `https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    webSocketUrl: `https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    address: process.env.DEPLOYER_ADDRESS_LINEA_SEPOLIA,
   },
   {
     chain: scrollSepolia,
-    rpc: `https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
-    contractAddress: process.env.DEPLOYER_ADDRESS_SCROLL_SEPOLIA,
+    rpcUrl: `https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    webSocketUrl: `https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`,
+    address: process.env.DEPLOYER_ADDRESS_SCROLL_SEPOLIA,
   },
   {
     chain: morphHolesky,
-    rpc: `https://rpc-quicknode-holesky.morphl2.io`,
-    contractAddress: process.env.DEPLOYER_ADDRESS_MORPH_HOLESKY,
+    rpcUrl: `https://rpc-quicknode-holesky.morphl2.io`,
+    webSocketUrl: `wss://rpc-quicknode-holesky.morphl2.io`,
+    address: process.env.DEPLOYER_ADDRESS_MORPH_HOLESKY,
   },
 ];

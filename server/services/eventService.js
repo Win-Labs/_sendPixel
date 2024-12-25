@@ -1,8 +1,9 @@
-import { canvasContractAbi } from "../common.js";
+import { webSocket } from "viem";
+import { canvasAbi } from "../common.js";
 import canvasService from "../services/canvasService.js";
 import watcherService from "./watcherService.js";
 
-const handleInitializeCanvas = async (log, chain, rpc) => {
+const handleInitializeCanvas = async (log, _, chain, rpcUrl, webSocketUrl) => {
   console.log("Handling InitializeCanvas event");
   try {
     const canvasData = {
@@ -27,17 +28,19 @@ const handleInitializeCanvas = async (log, chain, rpc) => {
 
     await watcherService.checkPastThenWatch(
       chain,
-      rpc,
+      rpcUrl,
+      webSocketUrl,
       canvasData.canvasId,
-      canvasContractAbi,
+      canvasAbi,
       [{ eventName: "PixelRegistered", handleEvent: handleRegisterPixel }]
     );
 
     await watcherService.checkPastThenWatch(
       chain,
-      rpc,
+      rpcUrl,
+      webSocketUrl,
       canvasData.canvasId,
-      canvasContractAbi,
+      canvasAbi,
       [{ eventName: "FundsTransferred", handleEvent: handleFundsTransferred }]
     );
   } catch (error) {
