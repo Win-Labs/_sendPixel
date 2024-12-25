@@ -53,7 +53,7 @@ const handleRegisterPixel = async (log) => {
   try {
     const participationData = {
       address: log.args.sender,
-      amount: Number(log.args.amount()),
+      amount: Number(log.args.amount),
     };
 
     await participantService.handleParticipation(participationData);
