@@ -27,7 +27,7 @@ mongoose
     // Clear the Canvas collection on startup
     // await Canvas.deleteMany({});
     // await BlockSync.deleteMany({});
-    console.log("Canvas collection cleared");
+    // console.log("Canvas collection cleared");
 
     // Start event listeners
     await watcherService.startWatchers();

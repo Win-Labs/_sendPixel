@@ -1,7 +1,6 @@
 import blockSyncService from "./blockSyncService.js";
 import eventService from "./eventService.js";
-import { canvasDeployerAbi } from "../common.js";
-import { chainsConfig } from "../config.js";
+import { canvasDeployerAbi, chainsConfig } from "../config.js";
 import { createPublicClient, http, webSocket } from "viem";
 
 // Helper function to create an HTTP client for a given chain
@@ -131,7 +130,12 @@ const checkPastThenWatch = async (
         events,
         fromBlock,
         currentBlockNumber
-      );
+      ).catch((error) => {
+        console.error(
+          `Error fetching missed events for chain ${chain.name}:`,
+          error
+        );
+      });
       currentBlockNumber = BigInt(lastProcessedEvent.lastBlockNumber);
     }
 
@@ -182,17 +186,24 @@ const startWatchers = async () => {
 
   try {
     for (const { chain, rpcUrl, webSocketUrl, address } of chainsConfig) {
-      await checkPastThenWatch(
-        chain,
-        rpcUrl,
-        webSocketUrl,
-        address,
-        canvasDeployerAbi,
-        events
-      );
+      try {
+        await checkPastThenWatch(
+          chain,
+          rpcUrl,
+          webSocketUrl,
+          address,
+          canvasDeployerAbi,
+          events
+        );
+      } catch (error) {
+        console.error(
+          `Failed to start event watcher for chain ${chain.name}:`,
+          error
+        );
+      }
     }
   } catch (error) {
-    console.error("Failed to start event watcher:", error);
+    console.error("Critical failure in startWatchers:", error);
   }
 };
 

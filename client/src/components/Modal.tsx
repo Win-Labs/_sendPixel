@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
-import { config, supportedChains } from "../config";
+import {
+  config,
+  supportedChains,
+  canvasDeployerAbi,
+  DEPLOYER_CONTRACT_ADDRESSES,
+} from "../config";
 import { useAccount, useWriteContract } from "wagmi";
 import {
   notification,
@@ -10,7 +15,6 @@ import {
 } from "../utils/usePushNotifications";
 import { getGasPrice } from "@wagmi/core";
 import { formatEther } from "viem";
-import { canvasDeployerAbi, DEPLOYER_CONTRACT_ADDRESSES } from "../common";
 
 const Overlay = styled.div`
   position: fixed;

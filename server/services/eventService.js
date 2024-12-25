@@ -1,5 +1,5 @@
 import { webSocket } from "viem";
-import { canvasAbi } from "../common.js";
+import { canvasAbi } from "../config.js";
 import canvasService from "../services/canvasService.js";
 import watcherService from "./watcherService.js";
 
