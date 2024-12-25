@@ -13,12 +13,18 @@ import {
   lineaSepolia as lineaSepoliaDefault,
   scrollSepolia as scrollSepoliaDefault,
   morphHolesky as morphHoleskyDefault,
+  localhost as localhostDefault,
 } from "@wagmi/core/chains";
 
 export const backendUrl: string = import.meta.env.VITE_PUBLIC_BACKEND_URL;
 const alchemyApiKey: string = import.meta.env.VITE_PUBLIC_ALCHEMY_API_KEY;
 
-export const holesky = defineChain({
+export const localhost = {
+  ...localhostDefault,
+  id: 31337,
+};
+
+export const holesky = {
   ...holeskyDefault,
   rpcUrls: {
     ...holeskyDefault.rpcUrls, // Spread the default rpcUrls
@@ -33,9 +39,12 @@ export const holesky = defineChain({
       url: "https://eth-holesky.blockscout.com/",
     },
   },
-});
+};
 
-export const sepolia = defineChain({
+console.log("holesky", holesky);
+console.log("holeskyDefault", holeskyDefault);
+
+export const sepolia = {
   ...sepoliaDefault,
   rpcUrls: {
     ...sepoliaDefault.rpcUrls,
@@ -50,9 +59,9 @@ export const sepolia = defineChain({
       url: "https://eth-sepolia.blockscout.com/",
     },
   },
-});
+};
 
-export const celoAlfajores = defineChain({
+export const celoAlfajores = {
   ...celoAlfajoresDefault,
   rpcUrls: {
     ...celoAlfajoresDefault.rpcUrls,
@@ -67,9 +76,9 @@ export const celoAlfajores = defineChain({
       url: "https://celo-alfajores.blockscout.com/",
     },
   },
-});
+};
 
-export const baseSepolia = defineChain({
+export const baseSepolia = {
   ...baseSepoliaDefault,
   rpcUrls: {
     ...baseSepoliaDefault.rpcUrls,
@@ -84,9 +93,9 @@ export const baseSepolia = defineChain({
       url: "https://base-sepolia.blockscout.com/",
     },
   },
-});
+};
 
-export const lineaSepolia = defineChain({
+export const lineaSepolia = {
   ...lineaSepoliaDefault,
   rpcUrls: {
     ...lineaSepoliaDefault.rpcUrls,
@@ -101,9 +110,9 @@ export const lineaSepolia = defineChain({
       url: "https://explorer.sepolia.linea.build/",
     },
   },
-});
+};
 
-export const scrollSepolia = defineChain({
+export const scrollSepolia = {
   ...scrollSepoliaDefault,
   rpcUrls: {
     ...scrollSepoliaDefault.rpcUrls,
@@ -118,9 +127,9 @@ export const scrollSepolia = defineChain({
       url: "https://sepolia.scrollscan.com/",
     },
   },
-});
+};
 
-export const morphHolesky = defineChain({
+export const morphHolesky = {
   ...morphHoleskyDefault,
   rpcUrls: {
     ...morphHoleskyDefault.rpcUrls,
@@ -135,9 +144,10 @@ export const morphHolesky = defineChain({
       url: "https://explorer-holesky.morphl2.io",
     },
   },
-});
+};
 
 export const supportedChains = [
+  localhost,
   holesky,
   sepolia,
   celoAlfajores,
@@ -162,6 +172,7 @@ export const config = createConfig({
 });
 
 export const DEPLOYER_CONTRACT_ADDRESSES = {
+  [localhost.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LOCALHOST,
   [holesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_HOLESKY,
   [sepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_SEPOLIA,
   [celoAlfajores.id]: import.meta.env

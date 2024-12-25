@@ -117,7 +117,7 @@ const Modal = ({ toggle }) => {
     const chain = supportedChains.find(
       (chain) => chain.id === accountChainId!
     )!;
-    const explorerUrl = chain.blockExplorers.custom.url;
+    const explorerUrl = chain?.blockExplorers?.custom.url;
     const fullUrl = `${explorerUrl}tx/${hash}`;
 
     enqueueSnackbar(
