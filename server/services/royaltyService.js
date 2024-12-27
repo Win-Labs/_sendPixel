@@ -16,18 +16,13 @@ const handleRoyalty = async ({ address, amount, canvasAddress }) => {
         console.log(
           `Royalty for user ${address} on canvas ${canvasAddress} exists. Updating amount.`
         );
-        userRoyalty.amount += amount; // Update the amount
+        userRoyalty.amount += amount;
       } else {
         console.log(
           `Royalty for user ${address} on canvas ${canvasAddress} not found. Adding new entry.`
         );
-        royalty.royalties.push({ address, amount, bps: 0 }); // Add new entry with initial bps
+        royalty.royalties.push({ address, amount });
       }
-
-      // Update bps for all royalties
-      royalty.royalties.forEach((r) => {
-        r.bps = (r.amount / royalty.balance) * 10000; // Basis points (1 bps = 0.01%)
-      });
 
       await royalty.save(); // Save the updated document
       console.log(
@@ -43,7 +38,7 @@ const handleRoyalty = async ({ address, amount, canvasAddress }) => {
     const newRoyalty = new Royalty({
       canvasAddress,
       balance: amount,
-      royalties: [{ address, amount, bps: 10000 }], // Initial contribution gets 100% of bps
+      royalties: [{ address, amount }],
     });
 
     await newRoyalty.save();
