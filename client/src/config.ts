@@ -1,4 +1,4 @@
-import { http } from "@wagmi/core";
+import { http, injected } from "@wagmi/core";
 import { createConfig } from "@wagmi/core";
 import Web3AuthConnectorInstance from "./Web3AuthConnectorInstance";
 import { defineChain } from "viem";
@@ -23,6 +23,25 @@ const localhost = {
   ...localhostDefault,
   id: 31337,
 };
+
+const neoXT4 = defineChain({
+  id: 12227332,
+  nativeCurrency: { name: "GAS", symbol: "GAS", decimals: 18 },
+  name: "NeoX T4",
+  rpcUrls: {
+    default: {
+      http: ["https://neoxt4seed1.ngd.network/"],
+      webSocket: ["wss://neoxt4wss1.ngd.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "NEOX Chain explorer",
+      url: "https://xt4scan.ngd.network/",
+    },
+  },
+  testnet: true,
+});
 
 const holesky = {
   ...holeskyDefault,
@@ -147,6 +166,7 @@ const morphHolesky = {
 };
 
 export const supportedChains = [
+  neoXT4,
   localhost,
   // holesky,
   // sepolia,
@@ -168,7 +188,7 @@ const transports = supportedChains.reduce((acc, chain) => {
 export const config = createConfig({
   chains: supportedChains as any,
   transports,
-  connectors: [Web3AuthConnectorInstance(supportedChains)],
+  connectors: [injected()],
 });
 
 export const DEPLOYER_CONTRACT_ADDRESSES = {

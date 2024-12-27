@@ -13,7 +13,7 @@ contract CanvasDeployer {
         uint256 width,
         uint256 mode,
         uint256 chainId,
-        address destination,
+        uint256 activeDuration,
         uint256 creationTime
     );
 
@@ -26,9 +26,9 @@ contract CanvasDeployer {
         uint256 _height,
         uint256 _width,
         uint256 _mode,
-        address _destination
+        uint256 _activeDuration
     ) public returns (address) {
-        Canvas newCanvas = new Canvas(_destination);
+        Canvas newCanvas = new Canvas(_activeDuration);
 
         // Emit event for the deployed Canvas contract
         emit CanvasDeployed(
@@ -39,7 +39,7 @@ contract CanvasDeployer {
             _width,
             _mode,
             block.chainid,
-            _destination,
+            _activeDuration,
             newCanvas.creationTime()
         );
 
