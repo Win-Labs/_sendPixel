@@ -50,8 +50,37 @@ const handleRoyalty = async ({ address, amount, canvasAddress }) => {
   }
 };
 
+const computeRoyaltiesBps = async (canvasAddress) => {
+  try {
+    // Find the royalty document for the specific canvas
+    const royalty = await Royalty.findOne({ canvasAddress });
+
+    if (!royalty) {
+      throw new Error(`No royalty document found for canvas ${canvasAddress}`);
+    }
+
+    const { balance, royalties } = royalty;
+
+    if (balance === 0) {
+      throw new Error("Canvas balance is zero. Cannot compute bps.");
+    }
+
+    // Calculate bps for each individual royalty
+    const bpsArray = royalties.map(({ address, amount }) => ({
+      address,
+      value: (amount / balance) * 10000, // Basis points = (amount / balance) * 10000
+    }));
+
+    return bpsArray;
+  } catch (error) {
+    console.error("Error in computeRoyaltiesBps:", error.message);
+    throw error; // Re-throw the error for the caller to handle
+  }
+};
+
 const royaltyService = {
   handleRoyalty,
+  computeRoyaltiesBps,
 };
 
 export default royaltyService;

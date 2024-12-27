@@ -139,6 +139,14 @@ const processCanvas = async ({ canvasId }) => {
     await canvas.save();
 
     console.log(`Canvas ${canvasId} locked.`);
+
+    // Here we will do the following:
+
+    // call function build image
+    // call function to upload image to IPFS
+    // call function to compute royalties in bps
+    // call function to mint ERC721 and pass array of royalties to it
+    // call function to list NFT for sale
   } catch (error) {
     console.error("Error in processCanvas:", error.message);
   }
