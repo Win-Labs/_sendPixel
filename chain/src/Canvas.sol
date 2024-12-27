@@ -26,21 +26,18 @@ contract Canvas {
         isActive = true;
     }
 
-    // Function to accept Ether and emit the PixelRegistered event
-    receive() external payable {
-        require(isActive, "Canvas is locked");
-        emit PixelRegistered(msg.value, msg.sender, address(this));
+    // Modifier to check if canvas is still active
+    modifier checkAndLock() {
+        if (isActive && block.timestamp >= creationTime + activeDuration) {
+            isActive = false;
+            emit CanvasLocked(address(this));
+        }
+        _;
     }
 
-    // Function to check and lock the canvas if the duration has passed
-    function lockCanvas() external {
-        require(isActive, "Canvas is already locked");
-        require(
-            block.timestamp >= creationTime + activeDuration,
-            "Active duration has not yet elapsed"
-        );
-
-        isActive = false;
-        emit CanvasLocked(address(this));
+    // Function to accept Ether and emit the PixelRegistered event
+    receive() external payable checkAndLock {
+        require(isActive, "Canvas is locked");
+        emit PixelRegistered(msg.value, msg.sender, address(this));
     }
 }
