@@ -44,11 +44,21 @@ const getCanvas = async (req, res) => {
   }
 };
 
+const clear = async (_, res) => {
+  try {
+    await canvasService.clear({});
+    res.status(200).json({ message: "All cleared" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const canvasController = {
   getAllCanvases,
   getGeneratedCanvases,
   getJoinedCanvases,
   getCanvas,
+  clear,
 };
 
 export default canvasController;

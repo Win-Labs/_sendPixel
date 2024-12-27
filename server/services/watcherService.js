@@ -14,7 +14,7 @@ const createHttpClient = (chain, rpcUrl) =>
 const createWebSocketClient = (chain, webSocketUrl) => {
   return createPublicClient({
     chain,
-    transport: http(webSocketUrl),
+    transport: webSocket(webSocketUrl),
   });
 };
 

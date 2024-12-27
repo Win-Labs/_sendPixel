@@ -1,4 +1,5 @@
 import Canvas from "../models/canvasModel.js";
+import BlockSync from "../models/blockSyncModel.js";
 
 const getAllCanvases = async () => {
   return await Canvas.find();
@@ -65,13 +66,13 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
     // Decode the packed amount into RGB and coordinates
     const packedValue = BigInt(amount); // Convert amount to BigInt for bit manipulation
 
-    const maxPackedValue = (1n << 40n) - 1n; // Maximum value for 40 bits
-    if (packedValue > maxPackedValue) {
-      console.log(
-        "Invalid packed value: exceeds 40-bit limit. You are eligible for the reward, but your transfer will not be reflected on the canvas."
-      );
-      return;
-    }
+    // const maxPackedValue = (1n << 40n) - 1n; // Maximum value for 40 bits
+    // if (packedValue > maxPackedValue) {
+    //   console.log(
+    //     "Invalid packed value: exceeds 40-bit limit. You are eligible for the reward, but your transfer will not be reflected on the canvas."
+    //   );
+    //   return;
+    // }
 
     // Extract RGB values
     const r = Number((packedValue >> 32n) & 0xffn); // Top 8 bits for R
@@ -140,6 +141,17 @@ const transferFunds = async ({ canvasId, amount }) => {
   }
 };
 
+const clear = async () => {
+  try {
+    await Canvas.deleteMany({});
+    console.log("Canvas collection cleared");
+    await BlockSync.deleteMany({});
+    console.log("BlockSync collection cleared");
+  } catch (error) {
+    console.error("Error in clear:", error.message);
+  }
+};
+
 const canvasService = {
   getAllCanvases,
   getGeneratedCanvases,
@@ -148,6 +160,7 @@ const canvasService = {
   initializeCanvas,
   registerPixel,
   transferFunds,
+  clear,
 };
 
 export default canvasService;
