@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import { webSocket } from "viem";
+import { defineChain, webSocket } from "viem";
 
 import {
   holesky,
@@ -15,6 +15,25 @@ import {
 dotenv.config({ path: "./.env" });
 
 const alchemyApiKey = process.env.ALCHEMY_API_KEY;
+
+const neoXT4 = defineChain({
+  id: 12227332,
+  nativeCurrency: { name: "GAS", symbol: "GAS", decimals: 18 },
+  name: "NeoX T4",
+  rpcUrls: {
+    default: {
+      http: ["https://neoxt4seed1.ngd.network/"],
+      webSocket: ["wss://neoxt4wss1.ngd.network"],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: "NEOX Chain explorer",
+      url: "https://xt4scan.ngd.network/",
+    },
+  },
+  testnet: true,
+});
 
 const chainsConfig = [
   {

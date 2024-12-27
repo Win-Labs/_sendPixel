@@ -17,10 +17,6 @@ contract CanvasDeployer {
         uint256 creationTime
     );
 
-    // Constructor to initialize the deployer
-    constructor() {}
-
-    // Function to deploy additional Canvas contracts
     function deployCanvas(
         string memory _name,
         uint256 _height,
@@ -30,7 +26,6 @@ contract CanvasDeployer {
     ) public returns (address) {
         Canvas newCanvas = new Canvas(_activeDuration);
 
-        // Emit event for the deployed Canvas contract
         emit CanvasDeployed(
             msg.sender,
             address(newCanvas),
