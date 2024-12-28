@@ -1,9 +1,48 @@
-import { Canvas } from "../models/canvas.js";
+import Canvas from "../models/canvasModel.js"; // change the import path
+import { createCanvas } from "canvas";
+import fs from "fs";
 
 const constructImage = async ({ canvasId }) => {
   try {
     // TODO
+    // check if canvasData not empty
+    const canvasData = await Canvas.findOne({ canvasId });
+    if (!canvasData) {
+      throw new Error("Canvas not found");
+    }
     // build the image based on the pixel data
+    const { width, height, pixels } = canvasData;
+    console.log(`Canvas dimensions: ${width}x${height}`);
+    console.log(`Number of pixels: ${pixels.length}`);
+
+    // create canvas
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+
+    // Fill the entire canvas with white color
+    ctx.fillStyle = "rgb(255, 255, 255)";
+    ctx.fillRect(0, 0, width, height);
+
+    pixels.forEach((pixel) => {
+      const { x, y, color } = pixel;
+      console.log(`Drawing pixel at (${x}, ${y}) with color ${color}`);
+      ctx.fillStyle = `rgb(${color.r},${color.g},${color.b})`;
+      ctx.fillRect(x, y, 1, 1);
+    });
+
+    // Convert the canvas to a base64-encoded JPEG
+    // const buffer = canvas.toBuffer("image/png");
+    // fs.writeFileSync(`./${canvasId}.png`, buffer);
+    const base64Image = canvas.toDataURL("image/png").split(",")[1];
+    console.log(`Image for canvas ${canvasId} constructed successfully`);
+
+    // Save the base64-encoded image to a file
+    const buffer = Buffer.from(base64Image, "base64");
+    fs.writeFileSync(`./${canvasId}.png`, buffer);
+    console.log(`Base64 image for canvas ${canvasId} saved successfully`);
+    console.log(base64Image);
+
+    return base64Image;
   } catch (error) {
     console.error("Error in constructImage:", error.message);
     throw error;

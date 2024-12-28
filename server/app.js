@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import Canvas from "./models/canvasModel.js";
 import BlockSync from "./models/blockSyncModel.js";
 import watcherService from "./services/watcherService.js";
+import { ERC721Service } from "./services/ERC721Service.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -31,6 +32,10 @@ mongoose
 
     // Start event listeners
     await watcherService.startWatchers();
+
+    ERC721Service.constructImage({
+      canvasId: "0xa16E02E87b7454126E5E10d957A927A7F5B5d2be",
+    });
   })
   .catch((error) => {
     console.error("DB connection failed:", error.message);
