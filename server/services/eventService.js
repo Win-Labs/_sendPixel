@@ -1,8 +1,10 @@
-import { canvasContractAbi } from "../common.js";
+import { webSocket } from "viem";
+import { canvasAbi } from "../config.js";
 import canvasService from "../services/canvasService.js";
 import watcherService from "./watcherService.js";
+import royaltyService from "./royaltyService.js";
 
-const handleInitializeCanvas = async (log, chain, rpc) => {
+const handleInitializeCanvas = async (log, _, chain, rpcUrl, webSocketUrl) => {
   console.log("Handling InitializeCanvas event");
   try {
     const canvasData = {
@@ -27,18 +29,14 @@ const handleInitializeCanvas = async (log, chain, rpc) => {
 
     await watcherService.checkPastThenWatch(
       chain,
-      rpc,
+      rpcUrl,
+      webSocketUrl,
       canvasData.canvasId,
-      canvasContractAbi,
-      [{ eventName: "PixelRegistered", handleEvent: handleRegisterPixel }]
-    );
-
-    await watcherService.checkPastThenWatch(
-      chain,
-      rpc,
-      canvasData.canvasId,
-      canvasContractAbi,
-      [{ eventName: "FundsTransferred", handleEvent: handleFundsTransferred }]
+      canvasAbi,
+      [
+        { eventName: "PixelRegistered", handleEvent: handleRegisterPixel },
+        { eventName: "CanvasLocked", handleEvent: handleCanvasLocked },
+      ]
     );
   } catch (error) {
     console.error("Error in handleInitializeCanvas:", error.message);
@@ -47,6 +45,14 @@ const handleInitializeCanvas = async (log, chain, rpc) => {
 
 const handleRegisterPixel = async (log) => {
   try {
+    const royaltyData = {
+      address: log.args.sender,
+      amount: Number(log.args.amount),
+      canvasAddress: log.args.contractAddress,
+    };
+
+    await royaltyService.handleRoyalty(royaltyData);
+
     const pixelData = {
       canvasId: log.args.contractAddress,
       amount: log.args.amount.toString().padStart(18, "0"), // Ensure 18 digits,
@@ -58,21 +64,21 @@ const handleRegisterPixel = async (log) => {
   }
 };
 
-const handleFundsTransferred = async (log) => {
+const handleCanvasLocked = async (log) => {
   try {
     const data = {
       canvasId: log.args.contractAddress,
-      amount: log.args.amount.toString().padStart(18, "0"), // Ensure 18 digits,
     };
-    await canvasService.transferFunds(data);
+    await canvasService.processCanvas(data);
   } catch (error) {
-    console.error("Error in handleFundsTransferred:", error.message);
+    console.error("Error in handleCanvasLocked:", error.message);
   }
 };
 
 const eventService = {
   handleInitializeCanvas,
   handleRegisterPixel,
+  handleCanvasLocked,
 };
 
 export default eventService;

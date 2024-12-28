@@ -13,12 +13,17 @@ contract CanvasDeployer {
         uint256 width,
         uint256 mode,
         uint256 chainId,
-        address destination,
+        uint256 activeDuration,
         uint256 creationTime
     );
 
-    // Constructor to initialize the deployer
-    constructor() {}
+    // Address of the owner of the CanvasDeployer contract
+    address public walletAddress;
+
+    // Constructor to set the owner of the deployer of the CanvasDeployer
+    constructor() {
+        walletAddress = msg.sender;
+    }
 
     // Function to deploy additional Canvas contracts
     function deployCanvas(
@@ -26,11 +31,10 @@ contract CanvasDeployer {
         uint256 _height,
         uint256 _width,
         uint256 _mode,
-        address _destination
+        uint256 _activeDuration
     ) public returns (address) {
-        Canvas newCanvas = new Canvas(_destination);
+        Canvas newCanvas = new Canvas(_activeDuration, walletAddress);
 
-        // Emit event for the deployed Canvas contract
         emit CanvasDeployed(
             msg.sender,
             address(newCanvas),
@@ -39,7 +43,7 @@ contract CanvasDeployer {
             _width,
             _mode,
             block.chainid,
-            _destination,
+            _activeDuration,
             newCanvas.creationTime()
         );
 

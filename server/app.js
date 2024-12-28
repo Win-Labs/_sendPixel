@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/v1", routes);
 
-const DB = process.env.DATABASE.replace(
+const DB = process.env.DATABASE_LOCAL.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );
@@ -27,10 +27,10 @@ mongoose
     // Clear the Canvas collection on startup
     // await Canvas.deleteMany({});
     // await BlockSync.deleteMany({});
-    console.log("Canvas collection cleared");
+    // console.log("Canvas collection cleared");
 
     // Start event listeners
-    await watcherService.startDeployerWatcher();
+    await watcherService.startWatchers();
   })
   .catch((error) => {
     console.error("DB connection failed:", error.message);
