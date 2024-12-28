@@ -1,0 +1,13 @@
+export declare const ETH: string;
+export declare const ERC20: string;
+export declare const ERC721: string;
+export declare const ERC1155: string;
+export declare const COLLECTION: string;
+export declare const ORDER_DATA_V1: string;
+export declare const ORDER_DATA_V2: string;
+export declare const TO_MAKER: string;
+export declare const TO_TAKER: string;
+export declare const PROTOCOL: string;
+export declare const ROYALTY: string;
+export declare const ORIGIN: string;
+export declare const PAYOUT: string;

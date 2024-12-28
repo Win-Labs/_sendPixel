@@ -3,7 +3,7 @@ import {
   GhostMarketSDK,
   TESTNET_API_URL,
   ChainNetwork,
-} from "../ghostmarket-sdk-js/dist/index.js";
+} from "../ghost/ghostmarket-sdk-js/dist/index.js";
 import HDWalletProvider from "@truffle/hdwallet-provider";
 import { defineChain, webSocket, createPublicClient, http } from "viem";
 
