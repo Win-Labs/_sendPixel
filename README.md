@@ -24,8 +24,7 @@ To maximize inclusivity and engagement, _sendPixel is deployed across multiple b
 
 ## 📐 Architecture
 
-![image](https://github.com/user-attachments/assets/4d880371-2e94-441e-a0d5-84c1c6ae10c6)
-
+![image](https://github.com/user-attachments/assets/7e33d417-2e28-4c8e-bfa9-bdf528a8c3fc)
 
 ## 💰 Sponsors
 
