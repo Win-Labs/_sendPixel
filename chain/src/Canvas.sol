@@ -12,16 +12,12 @@ contract Canvas {
     // Event emitted when the canvas is locked after the duration
     event CanvasLocked(address contractAddress);
 
-    // Timestamp of contract creation
     uint256 public creationTime;
-    // Active duration in seconds
     uint256 public activeDuration;
-    // Canvas active state
     bool public isActive;
     // Address of the deployer who will receive funds
     address public walletAddress;
 
-    // Constructor to set the active duration and initialize creation time
     constructor(uint256 _activeDuration, address _walletAddress) {
         activeDuration = _activeDuration;
         creationTime = block.timestamp;
@@ -29,12 +25,11 @@ contract Canvas {
         walletAddress = _walletAddress;
     }
 
-    // Modifier to check if canvas is still active
     modifier checkAndLock() {
         if (isActive && block.timestamp >= creationTime + activeDuration) {
             isActive = false;
 
-            // Transfer all funds to the owner
+            // Transfer all funds to the wallet address
             uint256 balance = address(this).balance;
             if (balance > 0) {
                 payable(walletAddress).transfer(balance);
