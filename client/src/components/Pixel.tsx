@@ -21,6 +21,9 @@ const PixelContainer = styled.div<ColorProps>`
   width: 100%;
   height: 100%;
   cursor: pointer;
+  &: hover {
+    border: 1px solid black;
+  }
 `;
 
 const PaletteContainer = styled.div`
@@ -37,13 +40,7 @@ const PaletteContainer = styled.div`
 
 interface IProps {
   pixelData: PixelItem;
-  onConstructEth: (
-    x: number,
-    y: number,
-    r: number,
-    g: number,
-    b: number
-  ) => void;
+  onConstruct: (x: number, y: number, r: number, g: number, b: number) => void;
   activePixelId: number | null;
   setActivePixelId: Dispatch<SetStateAction<number | null>>;
   isPixelTransactionPending: boolean;
@@ -52,7 +49,7 @@ interface IProps {
 const Pixel: React.FC<IProps> = React.memo(
   ({
     pixelData,
-    onConstructEth,
+    onConstruct,
     activePixelId,
     setActivePixelId,
     isPixelTransactionPending,
@@ -66,8 +63,8 @@ const Pixel: React.FC<IProps> = React.memo(
     const handlePropagation = useCallback((e) => e.stopPropagation(), []);
 
     const handleConfirm = useCallback(() => {
-      onConstructEth(pixelData.x, pixelData.y, color.r, color.g, color.b);
-    }, [color, onConstructEth, pixelData]);
+      onConstruct(pixelData.x, pixelData.y, color.r, color.g, color.b);
+    }, [color, onConstruct, pixelData]);
 
     const isActive = activePixelId === pixelData._id;
 
