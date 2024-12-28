@@ -27,6 +27,7 @@ export interface ICanvas {
   destination: string;
   creationTime: number;
   totalAmount: string;
-  isFunded: boolean;
+  isListed: boolean;
+  isSold: boolean;
   nounImageId: number;
 }

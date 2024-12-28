@@ -12,7 +12,6 @@ import { backendUrl, groupChatId } from "../config";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import { enqueueSnackbar } from "notistack";
 import logo from "../assets/logo.svg";
-import Button from "../components/Button";
 
 const Root = () => {
   const { address } = useAccount();
