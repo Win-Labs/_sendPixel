@@ -156,17 +156,6 @@ const Canvas = () => {
     return packedValue;
   }
 
-  const onConstruct = (
-    x: number,
-    y: number,
-    r: number,
-    g: number,
-    b: number
-  ) => {
-    console.log("Constructing Ethereum transaction...");
-    encodeToNativeCoin(x, y, r, g, b);
-  };
-
   useEffect(() => {
     refetchCanvas();
   }, [hash]);
@@ -235,7 +224,7 @@ const Canvas = () => {
                 <Pixel
                   key={pixel._id}
                   pixelData={pixel}
-                  onConstruct={onConstruct}
+                  onConstruct={encodeToNativeCoin}
                   activePixelId={activePixelId}
                   setActivePixelId={setActivePixelId}
                   isPixelTransactionPending={isPixelTransactionPending}
