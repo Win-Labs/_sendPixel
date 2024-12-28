@@ -22,6 +22,11 @@ To maximize inclusivity and engagement, _sendPixel is deployed across multiple b
 - **Database**: **MongoDB** for scalable data storage.
 - **Smart Contracts**: Developed in **Solidity** and deployed across **multiple networks** for flexible and reliable access.
 
+## 📐 Architecture
+
+![image](https://github.com/user-attachments/assets/4d880371-2e94-441e-a0d5-84c1c6ae10c6)
+
+
 ## 💰 Sponsors
 
 - **Scroll**: 💡 Innovate on Scroll ⸺ $10,000
