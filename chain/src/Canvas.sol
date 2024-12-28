@@ -33,13 +33,13 @@ contract Canvas {
     modifier checkAndLock() {
         if (isActive && block.timestamp >= creationTime + activeDuration) {
             isActive = false;
-            emit CanvasLocked(address(this));
 
             // Transfer all funds to the owner
             uint256 balance = address(this).balance;
             if (balance > 0) {
                 payable(walletAddress).transfer(balance);
             }
+            emit CanvasLocked(address(this));
         }
         _;
     }
