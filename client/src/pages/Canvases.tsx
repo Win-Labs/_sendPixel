@@ -51,13 +51,13 @@ const Canvases = () => {
             onClick={() => setFilterMode(FilterMode.LISTED)}
             $active={filterMode === FilterMode.LISTED}
           >
-            Funded
+            LISTED
           </s.Tab>
           <s.Tab
             onClick={() => setFilterMode(FilterMode.SOLD)}
             $active={filterMode === FilterMode.SOLD}
           >
-            Funded
+            SOLD
           </s.Tab>
         </div>
         <s.SubTabsWrapper>

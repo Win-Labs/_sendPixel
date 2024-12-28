@@ -18,18 +18,27 @@ contract Canvas {
     uint256 public activeDuration;
     // Canvas active state
     bool public isActive;
+    // Address of the deployer who will receive funds
+    address public walletAddress;
 
     // Constructor to set the active duration and initialize creation time
-    constructor(uint256 _activeDuration) {
+    constructor(uint256 _activeDuration, address _walletAddress) {
         activeDuration = _activeDuration;
         creationTime = block.timestamp;
         isActive = true;
+        walletAddress = _walletAddress;
     }
 
     // Modifier to check if canvas is still active
     modifier checkAndLock() {
         if (isActive && block.timestamp >= creationTime + activeDuration) {
             isActive = false;
+
+            // Transfer all funds to the owner
+            uint256 balance = address(this).balance;
+            if (balance > 0) {
+                payable(walletAddress).transfer(balance);
+            }
             emit CanvasLocked(address(this));
         }
         _;

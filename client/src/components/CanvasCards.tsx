@@ -37,10 +37,10 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
         return canvas.owner === address;
       } else if (filterMode === FilterMode.JOINED) {
         return canvas.pixels.some((pixel) => pixel.owner === address);
-      } else if (filterMode === FilterMode.FUNDED) {
-        return canvas.isFunded;
+      } else if (filterMode === FilterMode.LISTED) {
+        return canvas.isListed;
       } else {
-        return canvas;
+        return canvas.isSold;
       }
     })
     .filter((canvas) => {
@@ -65,7 +65,8 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
             destination,
             chainId,
             creationTime,
-            isFunded,
+            isListed,
+            isSold,
             nounImageId,
           }) => (
             <CanvasCard
@@ -79,7 +80,8 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
               destination={destination}
               chainId={chainId}
               creationTime={creationTime}
-              isFunded={isFunded}
+              isListed={isListed}
+              isSold={isSold}
               nounImageId={nounImageId}
             />
           )
