@@ -36,7 +36,7 @@ const mintERC721 = async ({ canvasId, image, royalties }) => {
   }
 };
 
-const listNftForSale = async ({ canvasId, price }) => {
+const listForSale = async ({ canvasId, price }) => {
   try {
     // List the NFT for sale
     console.log(`Listing NFT for sale...`);
@@ -46,4 +46,24 @@ const listNftForSale = async ({ canvasId, price }) => {
     console.error("Error in listNftForSale:", error.message);
     throw error;
   }
+};
+
+const manageERC721 = async ({ canvasId }) => {
+  try {
+    // Call all the functions in sequence
+    await constructImage({ canvasId });
+    const image = await publishToIPFS({ canvasId });
+    await mintERC721({ canvasId, image });
+    await listForSale({ canvasId });
+  } catch (error) {
+    console.error("Error in manageERC721:", error.message);
+    throw error;
+  }
+};
+
+export const ERC721Service = {
+  constructImage,
+  publishToIPFS,
+  mintERC721,
+  listForSale,
 };

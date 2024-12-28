@@ -9,7 +9,8 @@ export enum FilterMode {
   ALL = "ALL",
   OWNED = "OWNED",
   JOINED = "JOINED",
-  FUNDED = "FUNDED",
+  LISTED = "LISTED",
+  SOLD = "SOLD",
 }
 
 const Canvases = () => {
@@ -47,8 +48,14 @@ const Canvases = () => {
             Joined
           </s.Tab>
           <s.Tab
-            onClick={() => setFilterMode(FilterMode.FUNDED)}
-            $active={filterMode === FilterMode.FUNDED}
+            onClick={() => setFilterMode(FilterMode.LISTED)}
+            $active={filterMode === FilterMode.LISTED}
+          >
+            Funded
+          </s.Tab>
+          <s.Tab
+            onClick={() => setFilterMode(FilterMode.SOLD)}
+            $active={filterMode === FilterMode.SOLD}
           >
             Funded
           </s.Tab>
