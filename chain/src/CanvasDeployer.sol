@@ -17,6 +17,15 @@ contract CanvasDeployer {
         uint256 creationTime
     );
 
+    // Address of the owner of the CanvasDeployer contract
+    address public walletAddress;
+
+    // Constructor to set the owner of the deployer of the CanvasDeployer
+    constructor() {
+        walletAddress = msg.sender;
+    }
+
+    // Function to deploy additional Canvas contracts
     function deployCanvas(
         string memory _name,
         uint256 _height,
@@ -24,7 +33,7 @@ contract CanvasDeployer {
         uint256 _mode,
         uint256 _activeDuration
     ) public returns (address) {
-        Canvas newCanvas = new Canvas(_activeDuration);
+        Canvas newCanvas = new Canvas(_activeDuration, walletAddress);
 
         emit CanvasDeployed(
             msg.sender,
