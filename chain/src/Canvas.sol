@@ -25,8 +25,12 @@ contract Canvas {
         walletAddress = _walletAddress;
     }
 
-    modifier checkAndLock() {
-        if (isActive && block.timestamp >= creationTime + activeDuration) {
+    // Function to accept Ether and emit the PixelRegistered event
+    receive() external payable {
+        require(isActive, "Canvas is locked");
+        emit PixelRegistered(msg.value, msg.sender, address(this));
+
+        if (block.timestamp >= creationTime + activeDuration) {
             isActive = false;
 
             // Transfer all funds to the wallet address
@@ -34,14 +38,8 @@ contract Canvas {
             if (balance > 0) {
                 payable(walletAddress).transfer(balance);
             }
+
             emit CanvasLocked(address(this));
         }
-        _;
-    }
-
-    // Function to accept Ether and emit the PixelRegistered event
-    receive() external payable checkAndLock {
-        require(isActive, "Canvas is locked");
-        emit PixelRegistered(msg.value, msg.sender, address(this));
     }
 }
