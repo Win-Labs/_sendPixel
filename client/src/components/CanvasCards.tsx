@@ -33,7 +33,9 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
 
   const displayedCanvases = canvases
     .filter((canvas) => {
-      if (filterMode === FilterMode.OWNED) {
+      if (filterMode === FilterMode.ALL) {
+        return canvas;
+      } else if (filterMode === FilterMode.OWNED) {
         return canvas.owner === address;
       } else if (filterMode === FilterMode.JOINED) {
         return canvas.pixels.some((pixel) => pixel.owner === address);
