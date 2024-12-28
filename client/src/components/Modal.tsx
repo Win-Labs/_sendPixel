@@ -101,7 +101,7 @@ const Modal = ({ toggle }) => {
   const handleInitializeCanvas = async () => {
     const hash = await writeContractAsync({
       functionName: "deployCanvas",
-      args: [name, Number("10"), Number("10"), 300, destinationAddress],
+      args: [name, Number(height), Number(width), 300, destinationAddress],
       abi: canvasDeployerAbi,
       address: DEPLOYER_CONTRACT_ADDRESSES[accountChainId as number],
       account: address,
