@@ -193,6 +193,7 @@ export const config = createConfig({
 
 export const DEPLOYER_CONTRACT_ADDRESSES = {
   [localhost.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LOCALHOST,
+  [neoXT4.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_NEOXT,
   // [holesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_HOLESKY,
   // [sepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_SEPOLIA,
   // [celoAlfajores.id]: import.meta.env
@@ -205,177 +206,236 @@ export const DEPLOYER_CONTRACT_ADDRESSES = {
 };
 
 export const canvasDeployerAbi = [
-  { type: "constructor", inputs: [], stateMutability: "nonpayable" },
   {
-    type: "function",
-    name: "deployCanvas",
-    inputs: [
-      { name: "_name", type: "string", internalType: "string" },
-      { name: "_height", type: "uint256", internalType: "uint256" },
-      { name: "_width", type: "uint256", internalType: "uint256" },
-      { name: "_mode", type: "uint256", internalType: "uint256" },
-      {
-        name: "_activeDuration",
-        type: "uint256",
-        internalType: "uint256",
-      },
-    ],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
-    stateMutability: "nonpayable",
-  },
-  {
-    type: "function",
-    name: "walletAddress",
     inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
-    stateMutability: "view",
+    stateMutability: "nonpayable",
+    type: "constructor",
   },
   {
-    type: "event",
-    name: "CanvasDeployed",
+    anonymous: false,
     inputs: [
       {
-        name: "deployer",
-        type: "address",
         indexed: true,
         internalType: "address",
+        name: "deployer",
+        type: "address",
       },
       {
-        name: "deployedCanvasContract",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "deployedCanvasContract",
+        type: "address",
       },
       {
-        name: "name",
-        type: "string",
         indexed: false,
         internalType: "string",
+        name: "name",
+        type: "string",
       },
       {
+        indexed: false,
+        internalType: "uint256",
         name: "height",
         type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
       {
+        indexed: false,
+        internalType: "uint256",
         name: "width",
         type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
       {
+        indexed: false,
+        internalType: "uint256",
         name: "mode",
         type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
       {
+        indexed: false,
+        internalType: "uint256",
         name: "chainId",
         type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
       {
+        indexed: false,
+        internalType: "uint256",
         name: "activeDuration",
         type: "uint256",
-        indexed: false,
-        internalType: "uint256",
       },
       {
-        name: "creationTime",
-        type: "uint256",
         indexed: false,
         internalType: "uint256",
+        name: "creationTime",
+        type: "uint256",
       },
     ],
-    anonymous: false,
+    name: "CanvasDeployed",
+    type: "event",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_name",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_height",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_width",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_mode",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_activeDuration",
+        type: "uint256",
+      },
+    ],
+    name: "deployCanvas",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "walletAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
   },
 ];
 
 export const canvasAbi = [
   {
-    type: "constructor",
     inputs: [
       {
+        internalType: "uint256",
         name: "_activeDuration",
         type: "uint256",
-        internalType: "uint256",
       },
       {
+        internalType: "address",
         name: "_walletAddress",
         type: "address",
-        internalType: "address",
       },
     ],
     stateMutability: "nonpayable",
-  },
-  { type: "receive", stateMutability: "payable" },
-  {
-    type: "function",
-    name: "activeDuration",
-    inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
+    type: "constructor",
   },
   {
-    type: "function",
-    name: "creationTime",
-    inputs: [],
-    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "isActive",
-    inputs: [],
-    outputs: [{ name: "", type: "bool", internalType: "bool" }],
-    stateMutability: "view",
-  },
-  {
-    type: "function",
-    name: "walletAddress",
-    inputs: [],
-    outputs: [{ name: "", type: "address", internalType: "address" }],
-    stateMutability: "view",
-  },
-  {
-    type: "event",
-    name: "CanvasLocked",
+    anonymous: false,
     inputs: [
       {
-        name: "contractAddress",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "contractAddress",
+        type: "address",
       },
     ],
-    anonymous: false,
+    name: "CanvasLocked",
+    type: "event",
   },
   {
-    type: "event",
-    name: "PixelRegistered",
+    anonymous: false,
     inputs: [
       {
-        name: "amount",
-        type: "uint256",
         indexed: false,
         internalType: "uint256",
+        name: "amount",
+        type: "uint256",
       },
       {
+        indexed: false,
+        internalType: "address",
         name: "sender",
         type: "address",
-        indexed: false,
-        internalType: "address",
       },
       {
-        name: "contractAddress",
-        type: "address",
         indexed: false,
         internalType: "address",
+        name: "contractAddress",
+        type: "address",
       },
     ],
-    anonymous: false,
+    name: "PixelRegistered",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "activeDuration",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "creationTime",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "isActive",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "walletAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
   },
 ];
 

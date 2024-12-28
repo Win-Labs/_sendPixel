@@ -2,6 +2,7 @@ import express from "express";
 import canvasController from "../controllers/canvasController.js";
 import Canvas from "../models/canvasModel.js";
 import worldIdController from "../controllers/worldIdController.js";
+import ghostMarketController from "../controllers/ghostMarketController.js";
 
 const router = express.Router();
 
@@ -75,5 +76,11 @@ router.get("/test-insert", async (_, res) => {
   }
 });
 router.post("/world-id-verify", worldIdController.initVerification);
+
+router.get("/ghost-market/get-nfts", ghostMarketController.getNFTs);
+
+router.get("/ghost-market/mint-nft", ghostMarketController.mintNFT);
+
+router.get("/ghost-market/create-order", ghostMarketController.createOrder);
 
 export default router;

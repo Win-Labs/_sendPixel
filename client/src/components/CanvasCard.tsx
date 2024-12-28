@@ -40,7 +40,7 @@ const CanvasCard = ({
 
   const isOwner = address === owner;
   const isBeneficiary = address === destination;
-  const isPlayable = !isExpired && !isFunded;
+  const isPlayable = !isFunded;
 
   // Handle canvas initialization (Step 1)
   const handleClaimTokens = () => {
@@ -76,7 +76,7 @@ const CanvasCard = ({
   };
 
   useEffect(() => {
-    const expirationDate = add(new Date(creationTime * 1000), { hours: 6 });
+    const expirationDate = add(new Date(creationTime * 1000), { minutes: 10 });
 
     const updateTimer = () => {
       const secondsLeft = differenceInSeconds(expirationDate, new Date());

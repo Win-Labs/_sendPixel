@@ -32,10 +32,10 @@ mongoose
     // console.log("Canvas collection cleared");
 
     // Start event listeners
-    await watcherService.startWatchers();
+    // await watcherService.startWatchers();
 
     canvasService.processCanvas({
-      canvasId: "0xeEBe00Ac0756308ac4AaBfD76c05c4F3088B8883",
+      canvasId: "0xa6372C00e72d2FaAD2B6ED06A52557AC468b93B4",
     });
   })
   .catch((error) => {
