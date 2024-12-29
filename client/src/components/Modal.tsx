@@ -72,6 +72,7 @@ const Modal = ({ toggle }) => {
     const chain = supportedChains.find(
       (chain) => chain.id === accountChainId!
     )!;
+    //@ts-ignore
     const explorerUrl = chain?.blockExplorers?.custom.url;
     const fullUrl = `${explorerUrl}tx/${hash}`;
 
