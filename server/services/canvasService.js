@@ -144,25 +144,25 @@ const processCanvas = async ({ canvasId }) => {
     // const response = await royaltyService.computeRoyaltiesBps(canvasId);
     // console.log(`Royalties computed for canvas ${canvasId}:`, response);
 
-    const ipfsHash =
-      "bafkreigqiuwwnylnhnduq5kqeejclcwr5mnjvpxbwd5zq7wofry4ivymy4";
-    const royaltiesData = [
-      {
-        address: "0xA0Dc1C6Fa5593ADd23B34683542181A2177c8a7d",
-        value: 3510,
-      },
-      {
-        address: "0x2692beAB820DACb0AA8C76B76E29660b1f22E80e",
-        value: 6489,
-      },
-      { address: "0xD612E58915c883393a644e6Ec1fF05E06c16Bcbc", value: 1 },
-    ];
+    // const ipfsHash =
+    //   "bafkreigqiuwwnylnhnduq5kqeejclcwr5mnjvpxbwd5zq7wofry4ivymy4";
+    // const royaltiesData = [
+    //   {
+    //     address: "0xA0Dc1C6Fa5593ADd23B34683542181A2177c8a7d",
+    //     value: 3510,
+    //   },
+    //   {
+    //     address: "0x2692beAB820DACb0AA8C76B76E29660b1f22E80e",
+    //     value: 6489,
+    //   },
+    //   { address: "0xD612E58915c883393a644e6Ec1fF05E06c16Bcbc", value: 1 },
+    // ];
 
-    const nftResponse = await ghostMarketService.mintNFT(
-      royaltiesData,
-      ipfsHash
-    );
-    console.log(`NFT minted for canvas ${canvasId}:`, nftResponse);
+    // const nftResponse = await ghostMarketService.mintNFT(
+    //   royaltiesData,
+    //   ipfsHash
+    // );
+    // console.log(`NFT minted for canvas ${canvasId}:`, nftResponse);
 
     // Update the canvas status to locked
     // canvas.isLocked = true;

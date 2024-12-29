@@ -32,11 +32,7 @@ mongoose
     // console.log("Canvas collection cleared");
 
     // Start event listeners
-    // await watcherService.startWatchers();
-
-    canvasService.processCanvas({
-      canvasId: "0xa6372C00e72d2FaAD2B6ED06A52557AC468b93B4",
-    });
+    await watcherService.startWatchers();
   })
   .catch((error) => {
     console.error("DB connection failed:", error.message);
