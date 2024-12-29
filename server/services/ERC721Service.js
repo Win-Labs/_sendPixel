@@ -1,5 +1,4 @@
-import { PinataSDK } from "pinata";
-import { v4 as uuidv4 } from "uuid";
+import { PinataSDK } from "pinata-web3";
 import dotenv from "dotenv";
 import { createCanvas } from "canvas";
 
@@ -60,27 +59,18 @@ const constructImage = async (canvasData) => {
 const publishToIPFS = async (data) => {
   console.log(`Publishing image to IPFS...`);
   try {
-    const id = uuidv4();
-
     const uploadImageResponse = await pinataClient.upload.base64(
-      data.imageBase64.split(",")[1],
-      {
-        metadata: { name: `${id}_${data.name}` },
-      }
+      data.imageBase64.split(",")[1]
     );
 
-    console.log("uploadImageResponse", uploadImageResponse);
-
-    const json = JSON.stringify({
+    const json = await pinataClient.upload.json({
       name: data.name,
-      image: `${pinataClient.config.pinataGateway}/ipfs/${uploadImageResponse.cid}`,
+      description: data.name,
+      image: `ipfs://${uploadImageResponse.IpfsHash}`,
     });
-    const file = new File([json], `${id}.json`, {
-      type: "application/json",
-    });
-    const uploadJsonResponse = await pinataClient.upload.file(file);
-    console.log("Published to IPFS: ", uploadJsonResponse.name);
-    return uploadJsonResponse;
+
+    console.log("json: ", json);
+    return json;
   } catch (error) {
     console.error("Error in publishToIPFS:", error.message);
     throw error;
