@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
 import {
