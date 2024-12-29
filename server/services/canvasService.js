@@ -2,7 +2,6 @@ import Canvas from "../models/canvasModel.js";
 import BlockSync from "../models/blockSyncModel.js";
 import ERC721Service from "./ERC721Service.js";
 import royaltyService from "./royaltyService.js";
-import ghostMarketService from "./ghostMarketService.js";
 
 const getAllCanvases = async () => {
   return await Canvas.find();
@@ -158,11 +157,7 @@ const processCanvas = async ({ canvasId }) => {
     //   { address: "0xD612E58915c883393a644e6Ec1fF05E06c16Bcbc", value: 1 },
     // ];
 
-    // const nftResponse = await ghostMarketService.mintNFT(
-    //   royaltiesData,
-    //   ipfsHash
-    // );
-    // console.log(`NFT minted for canvas ${canvasId}:`, nftResponse);
+    // MINT NFT
 
     // Update the canvas status to locked
     // canvas.isLocked = true;
