@@ -36,12 +36,12 @@ const neoXT4 = defineChain({
 });
 
 const chainsConfig = [
-  {
-    chain: { ...localhost, id: 31337 },
-    rpcUrl: `http://localhost:8545`,
-    webSocketUrl: `ws://localhost:8545`,
-    address: process.env.DEPLOYER_ADDRESS_LOCALHOST,
-  },
+  // {
+  //   chain: { ...localhost, id: 31337 },
+  //   rpcUrl: `http://localhost:8545`,
+  //   webSocketUrl: `ws://localhost:8545`,
+  //   address: process.env.DEPLOYER_ADDRESS_LOCALHOST,
+  // },
   {
     chain: neoXT4,
     rpcUrl: neoXT4.rpcUrls.default.http[0],
