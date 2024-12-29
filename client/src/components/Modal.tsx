@@ -73,7 +73,7 @@ const Modal = ({ toggle }) => {
       (chain) => chain.id === accountChainId!
     )!;
     //@ts-ignore
-    const explorerUrl = chain?.blockExplorers?.custom.url;
+    const explorerUrl = chain?.blockExplorers?.custom?.url;
     const fullUrl = `${explorerUrl}tx/${hash}`;
 
     enqueueSnackbar(
