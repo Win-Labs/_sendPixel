@@ -19,6 +19,7 @@ router.get("/clear", canvasController.clear);
 router.get("/test", (_, res) => {
   res.status(200).json({ message: "Bye World!" });
 });
+
 router.get("/test-insert", async (_, res) => {
   const newCanvas = new Canvas({
     canvasId: "canvas123",

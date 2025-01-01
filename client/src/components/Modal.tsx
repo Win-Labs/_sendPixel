@@ -8,10 +8,6 @@ import {
   DEPLOYER_CONTRACT_ADDRESSES,
 } from "../config";
 import { useAccount, useWriteContract } from "wagmi";
-import {
-  notification,
-  usePushNotifications,
-} from "../utils/usePushNotifications";
 import { getGasPrice } from "@wagmi/core";
 import { formatEther } from "viem";
 import {
@@ -28,7 +24,6 @@ import {
 const Modal = ({ toggle }) => {
   const { chainId: accountChainId, address } = useAccount();
 
-  const { user, isSubscribed } = usePushNotifications();
   const {
     writeContractAsync,
     data: hashInitializeCanvas,
@@ -62,13 +57,6 @@ const Modal = ({ toggle }) => {
     });
     toggle();
 
-    if (isSubscribed) {
-      notification(
-        user,
-        `Wallet ${user.account} created "${name}" (${width}x${height})`
-      );
-    }
-
     const chain = supportedChains.find(
       (chain) => chain.id === accountChainId!
     )!;
@@ -93,18 +81,8 @@ const Modal = ({ toggle }) => {
   };
 
   const handleChainIdChange = (chainId: number) => {
-    switchChain(config, { chainId }).then((data) => {
-      console.log("Switched chain: ", data);
-    });
+    switchChain(config, { chainId }).then((data) => {});
   };
-
-  useEffect(() => {
-    console.log("hashInitializeCanvas", hashInitializeCanvas);
-  }, [hashInitializeCanvas]);
-
-  useEffect(() => {
-    console.log("chain id", accountChainId);
-  }, [accountChainId]);
 
   useEffect(() => {
     //@ts-ignore

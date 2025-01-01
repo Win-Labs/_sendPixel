@@ -6,10 +6,7 @@ import { useSendTransaction } from "wagmi";
 import { backendUrl, supportedChains } from "../config";
 import { ICanvas } from "../models";
 import Pixel from "./Pixel";
-import {
-  notification,
-  usePushNotifications,
-} from "../utils/usePushNotifications";
+
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../utils/api";
 import {
@@ -39,7 +36,6 @@ export interface PixelItem {
 const Canvas = () => {
   const { canvasId: paramCanvasId } = useParams();
   const navigate = useNavigate();
-  const { user, isSubscribed } = usePushNotifications();
   const {
     data: hash,
     sendTransaction,
