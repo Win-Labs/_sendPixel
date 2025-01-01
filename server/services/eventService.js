@@ -1,5 +1,5 @@
 import { webSocket } from "viem";
-import { canvasAbi } from "../config.js";
+import { CANVAS_ABI } from "../constants/abis.js";
 import canvasService from "../services/canvasService.js";
 import watcherService from "./watcherService.js";
 import royaltyService from "./royaltyService.js";
@@ -32,7 +32,7 @@ const handleInitializeCanvas = async (log, _, chain, rpcUrl, webSocketUrl) => {
       rpcUrl,
       webSocketUrl,
       canvasData.canvasId,
-      canvasAbi,
+      CANVAS_ABI,
       [
         { eventName: "PixelRegistered", handleEvent: handleRegisterPixel },
         { eventName: "CanvasLocked", handleEvent: handleCanvasLocked },

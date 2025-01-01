@@ -1,7 +1,9 @@
 import blockSyncService from "./blockSyncService.js";
 import eventService from "./eventService.js";
-import { canvasDeployerAbi, chainsConfig } from "../config.js";
+import { chainsConfig } from "../config.js";
 import { createPublicClient, http, webSocket } from "viem";
+import { CANVAS_DEPLOYER_ABI } from "../constants/abis.js";
+import { chains } from "../constants/chains.js";
 
 // Helper function to create an HTTP client for a given chain
 const createHttpClient = (chain, rpcUrl) =>
@@ -192,7 +194,7 @@ const startWatchers = async () => {
           rpcUrl,
           webSocketUrl,
           address,
-          canvasDeployerAbi,
+          CANVAS_DEPLOYER_ABI,
           events
         );
       } catch (error) {
