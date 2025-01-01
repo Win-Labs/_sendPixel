@@ -9,43 +9,37 @@ contract Canvas {
         address contractAddress
     );
 
-    // Event emitted when a destination address is funded
-    event FundsTransferred(address contractAddress, uint256 amount);
+    // Event emitted when the canvas is locked after the duration
+    event CanvasLocked(address contractAddress);
 
-    // Address to which funds can be withdrawn after 1 hour
-    address public destination;
-    // Timestamp of contract creation
     uint256 public creationTime;
+    uint256 public activeDuration;
+    bool public isActive;
+    // Address of the deployer who will receive funds
+    address public walletAddress;
 
-    // Modifier to ensure the function runs only after 1 hour from creation
-    modifier onlyAfterSixHours() {
-        require(block.timestamp >= creationTime + 6 hours, "Funds can only be transferred 6 hours after contract creation");
-        _;
-    }
-
-    modifier onlyDestination() {
-        require(msg.sender == destination);
-        _;
-    }
-
-    // Constructor to set the destination address and initialize creation time
-    constructor(address _destination) {
-        destination = _destination;
+    constructor(uint256 _activeDuration, address _walletAddress) {
+        activeDuration = _activeDuration;
         creationTime = block.timestamp;
+        isActive = true;
+        walletAddress = _walletAddress;
     }
 
     // Function to accept Ether and emit the PixelRegistered event
     receive() external payable {
+        require(isActive, "Canvas is locked");
         emit PixelRegistered(msg.value, msg.sender, address(this));
-    }
 
-    // Function to transfer all funds to the destination after 1 hour
-    function transferFunds() external onlyAfterSixHours onlyDestination {
-        uint256 balance = address(this).balance;
-        require(balance > 0, "No funds to transfer");
-        payable(destination).transfer(balance);
+        if (block.timestamp >= creationTime + activeDuration) {
+            isActive = false;
 
-        // Emit FundsTransferred event after successful transfer
-        emit FundsTransferred(address(this), balance);
+            // Transfer all funds to the wallet address
+            uint256 balance = address(this).balance;
+            if (balance > 0) {
+                payable(walletAddress).transfer(balance);
+            }
+
+            emit CanvasLocked(address(this));
+        }
     }
 }

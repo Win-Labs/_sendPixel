@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import Canvas from "./models/canvasModel.js";
 import BlockSync from "./models/blockSyncModel.js";
 import watcherService from "./services/watcherService.js";
+import ERC721Service from "./services/ERC721Service.js";
+import canvasService from "./services/canvasService.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -27,10 +29,10 @@ mongoose
     // Clear the Canvas collection on startup
     // await Canvas.deleteMany({});
     // await BlockSync.deleteMany({});
-    console.log("Canvas collection cleared");
+    // console.log("Canvas collection cleared");
 
     // Start event listeners
-    await watcherService.startDeployerWatcher();
+    await watcherService.startWatchers();
   })
   .catch((error) => {
     console.error("DB connection failed:", error.message);

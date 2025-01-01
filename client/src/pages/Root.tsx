@@ -8,7 +8,7 @@ import {
   usePushNotifications,
 } from "../utils/usePushNotifications";
 import { CONSTANTS, PushAPI } from "@pushprotocol/restapi";
-import { groupChatId } from "../config";
+import { backendUrl, groupChatId } from "../config";
 import { usePrivy, useLogout } from "@privy-io/react-auth";
 import { enqueueSnackbar } from "notistack";
 import logo from "../assets/logo.svg";
@@ -17,6 +17,17 @@ const Root = () => {
   const { address } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
+
+  const handleClearDb = async () => {
+    try {
+      await fetch(`${backendUrl}/clear`, {
+        method: "GET",
+      });
+    } catch (error) {
+      console.error("Error in handleClearDb:", error.message);
+    }
+  };
+
   const navigate = useNavigate();
   const signer = useEthersSigner();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -124,6 +135,19 @@ const Root = () => {
                 >
                   Disconnect
                 </button>
+                <button
+                  className="btn btn-warning"
+                  onClick={() => {
+                    handleClearDb();
+                    try {
+                      logout();
+                    } catch (e) {
+                      console.log("Error: ", e);
+                    }
+                  }}
+                >
+                  Clear DB
+                </button>
               </div>
             ) : (
               <s.ConnectWalletBtnWrapper>
@@ -147,6 +171,7 @@ const Root = () => {
         >
           Blog
         </a>
+        <div>Branch: Grind</div>
       </s.FooterLinksContainer>
 
       {isModalOpen && (

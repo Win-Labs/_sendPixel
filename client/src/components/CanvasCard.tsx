@@ -2,9 +2,8 @@ import { useNavigate } from "react-router-dom";
 import * as s from "./CanvasCardsStyles";
 import { useAccount, useWriteContract } from "wagmi";
 import { enqueueSnackbar } from "notistack";
-import { canvasContractAbi } from "../common";
 import { switchChain } from "@wagmi/core";
-import { config } from "../config";
+import { config, canvasAbi } from "../config";
 import { useEffect, useState } from "react";
 import { add, differenceInSeconds } from "date-fns";
 import WorldIdButton from "./WorldIdButton";
@@ -41,7 +40,7 @@ const CanvasCard = ({
 
   const isOwner = address === owner;
   const isBeneficiary = address === destination;
-  const isPlayable = !isExpired && !isFunded;
+  const isPlayable = !isFunded;
 
   // Handle canvas initialization (Step 1)
   const handleClaimTokens = () => {
@@ -64,7 +63,7 @@ const CanvasCard = ({
 
   const claim = () => {
     writeContractAsync({
-      abi: canvasContractAbi,
+      abi: canvasAbi,
       address: canvasId,
       functionName: "transferFunds",
       args: [],
@@ -77,7 +76,7 @@ const CanvasCard = ({
   };
 
   useEffect(() => {
-    const expirationDate = add(new Date(creationTime * 1000), { hours: 6 });
+    const expirationDate = add(new Date(creationTime * 1000), { minutes: 10 });
 
     const updateTimer = () => {
       const secondsLeft = differenceInSeconds(expirationDate, new Date());
