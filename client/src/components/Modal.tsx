@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
 import {
@@ -15,61 +14,16 @@ import {
 } from "../utils/usePushNotifications";
 import { getGasPrice } from "@wagmi/core";
 import { formatEther } from "viem";
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalContainer = styled.div`
-  width: 100%;
-  z-index: 2;
-  max-width: 500px;
-  border-radius: 10px;
-  gap: 10px;
-  padding: 30px;
-  background-color: #fff;
-  position: absolute;
-`;
-
-const Title = styled.h2`
-  margin-bottom: 20px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-`;
-
-export const SelectBox = styled.select`
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-`;
-
-const Label = styled.p``;
-
-const SubmitBtnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-`;
+import {
+  Overlay,
+  ModalContainer,
+  Title,
+  InputContainer,
+  SelectBox,
+  Label,
+  SubmitBtnContainer,
+  Input,
+} from "./ModalStyles";
 
 const Modal = ({ toggle }) => {
   const { chainId: accountChainId, address } = useAccount();
@@ -101,7 +55,7 @@ const Modal = ({ toggle }) => {
   const handleInitializeCanvas = async () => {
     const hash = await writeContractAsync({
       functionName: "deployCanvas",
-      args: [name, Number("10"), Number("10"), 300, destinationAddress],
+      args: [name, Number(height), Number(width), 600, destinationAddress],
       abi: canvasDeployerAbi,
       address: DEPLOYER_CONTRACT_ADDRESSES[accountChainId as number],
       account: address,
@@ -118,7 +72,8 @@ const Modal = ({ toggle }) => {
     const chain = supportedChains.find(
       (chain) => chain.id === accountChainId!
     )!;
-    const explorerUrl = chain?.blockExplorers?.custom.url;
+    //@ts-ignore
+    const explorerUrl = chain?.blockExplorers?.custom?.url;
     const fullUrl = `${explorerUrl}tx/${hash}`;
 
     enqueueSnackbar(

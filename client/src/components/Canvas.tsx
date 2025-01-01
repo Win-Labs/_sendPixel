@@ -75,27 +75,30 @@ const Canvas = () => {
   }, [dataCanvas]);
 
   useEffect(() => {
-    if (canvas && canvas.width && canvas.height) {
-      const grid = Array.from(
-        { length: canvas.width * canvas.height },
-        (_, index) => ({
+    if (canvas && canvas.width > 0 && canvas.height > 0) {
+      // Initialize grid with default values
+      const grid = new Array(canvas.width * canvas.height)
+        .fill(null)
+        .map((_, index) => ({
           _id: index,
           owner: null,
           x: index % canvas.width,
-          y: Math.floor(index / canvas.width),
+          y: Math.floor(index / canvas.width), // Correct y calculation
           color: { r: 255, g: 255, b: 255 },
-        })
-      );
+        }));
+
+      // Overwrite grid pixels with dataCanvas pixels
       dataCanvas.pixels.forEach((pixel) => {
         grid[pixel.y * canvas.width + pixel.x] = pixel;
       });
+
+      // Update state
       setPixels(grid);
     }
-
     return () => {
       setPixels([]);
     };
-  }, [canvas]);
+  }, [canvas, dataCanvas]); // Add dependencies
 
   const handleClickOutside = (event) => {
     if (
@@ -152,17 +155,6 @@ const Canvas = () => {
 
     return packedValue;
   }
-
-  const onConstruct = (
-    x: number,
-    y: number,
-    r: number,
-    g: number,
-    b: number
-  ) => {
-    console.log("Constructing Ethereum transaction...");
-    encodeToNativeCoin(x, y, r, g, b);
-  };
 
   useEffect(() => {
     refetchCanvas();
@@ -232,7 +224,7 @@ const Canvas = () => {
                 <Pixel
                   key={pixel._id}
                   pixelData={pixel}
-                  onConstruct={onConstruct}
+                  onConstruct={encodeToNativeCoin}
                   activePixelId={activePixelId}
                   setActivePixelId={setActivePixelId}
                   isPixelTransactionPending={isPixelTransactionPending}

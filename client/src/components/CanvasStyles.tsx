@@ -56,10 +56,11 @@ const PixelsContainer = styled.div<PixelsContainerProps>`
   display: grid;
   grid-template-columns: repeat(${(props) => props.width}, 1fr);
   grid-template-rows: repeat(${(props) => props.height}, 1fr);
-  aspect-ratio: 1;
+  width: 500px; /* Fixed width */
+  height: calc(
+    500px * ${(props) => props.height / props.width}
+  ); /* Adjust height based on aspect ratio */
   background-color: black;
-  width: 500px;
-  height: 500px;
   margin: 0 auto;
 `;
 

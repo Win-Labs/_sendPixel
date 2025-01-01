@@ -193,6 +193,7 @@ export const config = createConfig({
 
 export const DEPLOYER_CONTRACT_ADDRESSES = {
   [localhost.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_LOCALHOST,
+  [neoXT4.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_NEOXT,
   // [holesky.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_HOLESKY,
   // [sepolia.id]: import.meta.env.VITE_PUBLIC_DEPLOYER_ADDRESS_SEPOLIA,
   // [celoAlfajores.id]: import.meta.env
@@ -257,9 +258,9 @@ export const canvasDeployerAbi = [
       },
       {
         indexed: false,
-        internalType: "address",
-        name: "destination",
-        type: "address",
+        internalType: "uint256",
+        name: "activeDuration",
+        type: "uint256",
       },
       {
         indexed: false,
@@ -294,9 +295,9 @@ export const canvasDeployerAbi = [
         type: "uint256",
       },
       {
-        internalType: "address",
-        name: "_destination",
-        type: "address",
+        internalType: "uint256",
+        name: "_activeDuration",
+        type: "uint256",
       },
     ],
     name: "deployCanvas",
@@ -310,14 +311,32 @@ export const canvasDeployerAbi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [],
+    name: "walletAddress",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 export const canvasAbi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "_activeDuration",
+        type: "uint256",
+      },
+      {
         internalType: "address",
-        name: "_destination",
+        name: "_walletAddress",
         type: "address",
       },
     ],
@@ -333,14 +352,8 @@ export const canvasAbi = [
         name: "contractAddress",
         type: "address",
       },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
     ],
-    name: "FundsTransferred",
+    name: "CanvasLocked",
     type: "event",
   },
   {
@@ -370,6 +383,19 @@ export const canvasAbi = [
   },
   {
     inputs: [],
+    name: "activeDuration",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "creationTime",
     outputs: [
       {
@@ -383,7 +409,20 @@ export const canvasAbi = [
   },
   {
     inputs: [],
-    name: "destination",
+    name: "isActive",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "walletAddress",
     outputs: [
       {
         internalType: "address",
@@ -392,13 +431,6 @@ export const canvasAbi = [
       },
     ],
     stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "transferFunds",
-    outputs: [],
-    stateMutability: "nonpayable",
     type: "function",
   },
   {
