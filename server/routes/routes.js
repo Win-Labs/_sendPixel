@@ -1,7 +1,6 @@
 import express from "express";
 import canvasController from "../controllers/canvasController.js";
 import Canvas from "../models/canvasModel.js";
-import worldIdController from "../controllers/worldIdController.js";
 
 const router = express.Router();
 
@@ -74,6 +73,5 @@ router.get("/test-insert", async (_, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-router.post("/world-id-verify", worldIdController.initVerification);
 
 export default router;

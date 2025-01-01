@@ -63,7 +63,6 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
             owner,
             width,
             height,
-            worldIdVerified,
             destination,
             chainId,
             creationTime,
@@ -78,7 +77,6 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
               owner={owner}
               width={width}
               height={height}
-              worldIdVerified={worldIdVerified}
               destination={destination}
               chainId={chainId}
               creationTime={creationTime}
