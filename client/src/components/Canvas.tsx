@@ -3,14 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { useSendTransaction } from "wagmi";
-import { backendUrl, supportedChains } from "../config";
+import { backendUrl, config } from "../config";
 import { ICanvas } from "../models";
 import Pixel from "./Pixel";
 
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../utils/api";
 import {
-  BlockScoutLink,
   BoldText,
   CanvasHeader,
   CanvasHeaderLeft,
@@ -142,13 +141,6 @@ const Canvas = () => {
       value: packedValue,
     });
 
-    if (isSubscribed) {
-      notification(
-        user,
-        `Wallet ${user.account} colored canvas "${canvas.name}" to R${r} G${g} B${b} color at coordinates ${x}:${y}`
-      );
-    }
-
     return packedValue;
   }
 
@@ -156,11 +148,7 @@ const Canvas = () => {
     refetchCanvas();
   }, [hash]);
 
-  const chain = supportedChains.find(
-    (chain) => chain.id === dataCanvas?.chainId
-  );
-  const explorerUrl = chain?.blockExplorers?.custom?.url || "";
-  const fullUrl = `${explorerUrl}address/${canvas?.canvasId}`;
+  const chain = config.chains.find((chain) => chain.id === dataCanvas?.chainId);
 
   return (
     <PageContainer>
@@ -191,19 +179,11 @@ const Canvas = () => {
                   <span>Deployed network:</span>
                   <BoldText>
                     {
-                      supportedChains.find(
-                        (chain) => chain.id === canvas.chainId
-                      )?.name
+                      config.chains.find((chain) => chain.id === canvas.chainId)
+                        ?.name
                     }
                   </BoldText>
                 </InfoRow>
-                <BlockScoutLink
-                  href={fullUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Explore history on BlockScout
-                </BlockScoutLink>
               </CanvasHeaderLeft>
               <CanvasHeaderRight>
                 <div>Recommended image:</div>

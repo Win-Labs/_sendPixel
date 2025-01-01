@@ -53,41 +53,11 @@ const Root = () => {
                 style={{ display: "flex", gap: "20px", alignItems: "center" }}
               >
                 <div style={{ color: "white" }}>{address}</div>
-                {!isSubscribed && (
-                  <button
-                    onClick={handleSubscribe}
-                    className="btn btn-warning"
-                    type="button"
-                    disabled={isSubscribtionLoading}
-                  >
-                    {isSubscribtionLoading ? (
-                      <>
-                        <span
-                          className="spinner-border spinner-border-sm"
-                          aria-hidden="true"
-                          style={{ marginRight: "10px" }}
-                        ></span>
-                        <span role="status">Joining...</span>
-                      </>
-                    ) : (
-                      <>🔔 Channel</>
-                    )}
-                  </button>
-                )}
-                {isSubscribed && (
-                  <button className="btn btn-warning">
-                    🔔 Joined to channel!
-                  </button>
-                )}
+
                 <button
                   className="btn btn-warning"
                   onClick={() => {
                     disconnect();
-                    try {
-                      logout();
-                    } catch (e) {
-                      console.log("Error: ", e);
-                    }
                   }}
                 >
                   Disconnect
@@ -96,11 +66,6 @@ const Root = () => {
                   className="btn btn-warning"
                   onClick={() => {
                     handleClearDb();
-                    try {
-                      logout();
-                    } catch (e) {
-                      console.log("Error: ", e);
-                    }
                   }}
                 >
                   Clear DB
@@ -152,13 +117,7 @@ const Root = () => {
                   {connector.name}
                 </button>
               ))}
-              <button className="btn btn-warning" onClick={login}>
-                Privy
-              </button>
             </div>
-            <button className="btn btn-warning" onClick={closeModal}>
-              Close
-            </button>
           </s.ModalContainer>
         </s.ModalOverlay>
       )}

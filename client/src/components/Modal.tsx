@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
-import {
-  config,
-  supportedChains,
-  canvasDeployerAbi,
-  DEPLOYER_CONTRACT_ADDRESSES,
-} from "../config";
+import { config } from "../config";
+import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
+import { CANVAS_DEPLOYER_ABI, CANVAS_ABI } from "../constants/abis";
 import { useAccount, useWriteContract } from "wagmi";
 import { getGasPrice } from "@wagmi/core";
 import { formatEther } from "viem";
@@ -41,41 +38,27 @@ const Modal = ({ toggle }) => {
     new Map()
   );
 
-  const isNetworkSupported = supportedChains.some(
+  const isNetworkSupported = config.chains.some(
     (chain) => chain.id === accountChainId
   );
   const isFormValid =
     name && height && width && isNetworkSupported && destinationAddress;
 
   const handleInitializeCanvas = async () => {
-    const hash = await writeContractAsync({
+    if (!isFormValid) return;
+    await writeContractAsync({
       functionName: "deployCanvas",
       args: [name, Number(height), Number(width), 600, destinationAddress],
-      abi: canvasDeployerAbi,
-      address: DEPLOYER_CONTRACT_ADDRESSES[accountChainId as number],
+      abi: CANVAS_DEPLOYER_ABI,
+      address: CANVAS_DEPLOYERS[accountChainId],
       account: address,
     });
     toggle();
 
-    const chain = supportedChains.find(
-      (chain) => chain.id === accountChainId!
-    )!;
-    //@ts-ignore
-    const explorerUrl = chain?.blockExplorers?.custom?.url;
-    const fullUrl = `${explorerUrl}tx/${hash}`;
+    const chain = config.chains.find((chain) => chain.id === accountChainId!)!;
 
     enqueueSnackbar(
-      <>
-        Canvas has been created and will be displayed soon.&nbsp;
-        <a
-          href={fullUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "inherit", textDecoration: "underline" }}
-        >
-          View on Blockscout
-        </a>
-      </>,
+      <>Canvas has been created and will be displayed soon.&nbsp;</>,
       { variant: "success" }
     );
   };
@@ -91,7 +74,7 @@ const Modal = ({ toggle }) => {
 
   const allChainsGasPrices = async () => {
     const gasPricesData = await Promise.all(
-      supportedChains.map((chain) =>
+      config.chains.map((chain) =>
         getGasPrice(config, { chainId: chain.id }).then((price) => ({
           chainId: chain.id,
           price,
@@ -157,7 +140,7 @@ const Modal = ({ toggle }) => {
             <option value="" disabled>
               Network with chain ID: {accountChainId} is not supported
             </option>
-            {supportedChains.map((chain) => (
+            {config.chains.map((chain) => (
               <option
                 key={chain.id}
                 value={chain.id}

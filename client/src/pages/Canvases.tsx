@@ -1,7 +1,7 @@
 import { useState } from "react";
 import * as s from "./styles/CanvasesStyles";
 import Modal from "../components/Modal";
-import { supportedChains } from "../config";
+import { config } from "../config";
 import { useOutletContext } from "react-router-dom";
 import CanvasCards from "../components/CanvasCards";
 
@@ -17,7 +17,7 @@ const Canvases = () => {
   const { address } = useOutletContext<{ address: string | undefined }>();
   const [filterMode, setFilterMode] = useState(FilterMode.ALL);
   const [selectedChainId, setSelectedChainId] = useState<number>(
-    supportedChains[0].id
+    config.chains[0].id
   );
 
   const [showModal, setShowModal] = useState(false);
@@ -61,7 +61,7 @@ const Canvases = () => {
           </s.Tab>
         </div>
         <s.SubTabsWrapper>
-          {supportedChains.map((chain) => (
+          {config.chains.map((chain) => (
             <s.SubTab
               key={chain.id}
               onClick={() => setSelectedChainId(chain.id)}

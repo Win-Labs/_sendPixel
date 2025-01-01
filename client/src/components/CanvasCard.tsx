@@ -3,7 +3,8 @@ import * as s from "./styles/CanvasCardsStyles";
 import { useAccount, useWriteContract } from "wagmi";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
-import { config, canvasAbi } from "../config";
+import { config } from "../config";
+import { CANVAS_ABI } from "../constants/abis";
 import { useEffect, useState } from "react";
 import { add, differenceInSeconds } from "date-fns";
 
@@ -60,7 +61,7 @@ const CanvasCard = ({
 
   const claim = () => {
     writeContractAsync({
-      abi: canvasAbi,
+      abi: CANVAS_ABI,
       address: canvasId,
       functionName: "transferFunds",
       args: [],

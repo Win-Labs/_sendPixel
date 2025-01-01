@@ -7,8 +7,8 @@ import {
   scrollSepolia as scrollSepoliaDefault,
   morphHolesky as morphHoleskyDefault,
   localhost as localhostDefault,
-} from "@wagmi/core/chains";
-import { defineChain } from "viem";
+} from "viem/chains";
+import { defineChain, webSocket } from "viem";
 
 const alchemyApiKey: string = import.meta.env.VITE_PUBLIC_ALCHEMY_API_KEY;
 
@@ -27,12 +27,6 @@ const neoXT4 = defineChain({
       webSocket: ["wss://neoxt4wss1.ngd.network"],
     },
   },
-  blockExplorers: {
-    default: {
-      name: "NEOX Chain explorer",
-      url: "https://xt4scan.ngd.network/",
-    },
-  },
   testnet: true,
 });
 
@@ -42,13 +36,7 @@ const holesky = {
     ...holeskyDefault.rpcUrls,
     custom: {
       http: [`https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-  blockExplorers: {
-    ...holeskyDefault.blockExplorers,
-    custom: {
-      name: "Blockscout",
-      url: "https://eth-holesky.blockscout.com/",
+      webSocket: [`https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
 };
@@ -59,13 +47,7 @@ const sepolia = {
     ...sepoliaDefault.rpcUrls,
     custom: {
       http: [`https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-  blockExplorers: {
-    ...sepoliaDefault.blockExplorers,
-    custom: {
-      name: "Blockscout",
-      url: "https://eth-sepolia.blockscout.com/",
+      webSocket: [`https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
 };
@@ -76,13 +58,7 @@ const celoAlfajores = {
     ...celoAlfajoresDefault.rpcUrls,
     custom: {
       http: ["https://alfajores-forno.celo-testnet.org"],
-    },
-  },
-  blockExplorers: {
-    ...celoAlfajoresDefault.blockExplorers,
-    custom: {
-      name: "Celo Alfajores Explorer",
-      url: "https://celo-alfajores.blockscout.com/",
+      webSocket: [`https://alfajores-forno.celo-testnet.org/`],
     },
   },
 };
@@ -93,13 +69,7 @@ const baseSepolia = {
     ...baseSepoliaDefault.rpcUrls,
     custom: {
       http: [`https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-  blockExplorers: {
-    ...baseSepoliaDefault.blockExplorers,
-    custom: {
-      name: "Blockscout",
-      url: "https://base-sepolia.blockscout.com/",
+      webSocket: [`https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
 };
@@ -110,13 +80,7 @@ const lineaSepolia = {
     ...lineaSepoliaDefault.rpcUrls,
     custom: {
       http: [`https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-  blockExplorers: {
-    ...lineaSepoliaDefault.blockExplorers,
-    custom: {
-      name: "Linea Explorer",
-      url: "https://explorer.sepolia.linea.build/",
+      webSocket: [`https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
 };
@@ -127,13 +91,7 @@ const scrollSepolia = {
     ...scrollSepoliaDefault.rpcUrls,
     custom: {
       http: [`https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-  blockExplorers: {
-    ...scrollSepoliaDefault.blockExplorers,
-    custom: {
-      name: "Scroll Explorer",
-      url: "https://sepolia.scrollscan.com/",
+      webSocket: [`https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
     },
   },
 };
@@ -143,14 +101,8 @@ const morphHolesky = {
   rpcUrls: {
     ...morphHoleskyDefault.rpcUrls,
     custom: {
-      http: morphHoleskyDefault.rpcUrls.default.http,
-    },
-  },
-  blockExplorers: {
-    ...morphHoleskyDefault.blockExplorers,
-    custom: {
-      name: "Morph Explorer",
-      url: "https://explorer-holesky.morphl2.io",
+      http: morphHoleskyDefault.rpcUrls.default.http[0],
+      webSocket: [`wss://rpc-quicknode-holesky.morphl2.io`],
     },
   },
 };
