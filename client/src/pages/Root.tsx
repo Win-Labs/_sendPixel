@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import * as s from "./RootStyles";
+import * as s from "./styles/RootStyles";
 
 import { backendUrl } from "../config";
 import logo from "../assets/logo.svg";

@@ -19,7 +19,7 @@ import {
   Label,
   SubmitBtnContainer,
   Input,
-} from "./ModalStyles";
+} from "./styles/ModalStyles";
 
 const Modal = ({ toggle }) => {
   const { chainId: accountChainId, address } = useAccount();

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import * as s from "./CanvasesStyles";
+import * as s from "./styles/CanvasesStyles";
 import Modal from "../components/Modal";
 import { supportedChains } from "../config";
 import { useOutletContext } from "react-router-dom";

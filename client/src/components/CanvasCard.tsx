@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import * as s from "./CanvasCardsStyles";
+import * as s from "./styles/CanvasCardsStyles";
 import { useAccount, useWriteContract } from "wagmi";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";

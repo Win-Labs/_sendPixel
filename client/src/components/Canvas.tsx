@@ -19,7 +19,7 @@ import {
   InfoRow,
   PageContainer,
   PixelsContainer,
-} from "./CanvasStyles";
+} from "./styles/CanvasStyles";
 
 export interface PixelItem {
   _id?: number;
