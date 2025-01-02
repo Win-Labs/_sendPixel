@@ -4,7 +4,7 @@ import canvasService from "../services/canvasService.js";
 import watcherService from "./watcherService.js";
 import royaltyService from "./royaltyService.js";
 
-const handleInitializeCanvas = async (log, _, chain, rpcUrl, webSocketUrl) => {
+const handleInitializeCanvas = async (log, _, chain) => {
   console.log("Handling InitializeCanvas event");
   try {
     const canvasData = {
@@ -29,8 +29,6 @@ const handleInitializeCanvas = async (log, _, chain, rpcUrl, webSocketUrl) => {
 
     await watcherService.checkPastThenWatch(
       chain,
-      rpcUrl,
-      webSocketUrl,
       canvasData.canvasId,
       CANVAS_ABI,
       [

@@ -7,7 +7,7 @@ import {
   scrollSepolia as scrollSepoliaDefault,
   morphHolesky as morphHoleskyDefault,
   localhost as localhostDefault,
-} from "@wagmi/core/chains";
+} from "viem/chains";
 import { defineChain } from "viem";
 
 dotenv.config({ path: "./.env" });
@@ -109,7 +109,7 @@ const morphHolesky = {
   },
 };
 
-export {
+export default {
   holesky,
   sepolia,
   celoAlfajores,

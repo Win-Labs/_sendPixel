@@ -7,7 +7,7 @@ import {
   lineaSepolia,
   scrollSepolia,
   neoXT4,
-} from "./chains";
+} from "./chains.js";
 
 const CANVAS_DEPLOYERS = {
   [localhost.id]: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
