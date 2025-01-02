@@ -6,6 +6,12 @@ import royaltyService from "./royaltyService.js";
 
 const handleInitializeCanvas = async (log, _, chain) => {
   console.log("Handling InitializeCanvas event");
+
+  const events = [
+    { eventName: "PixelRegistered", handleEvent: handleRegisterPixel },
+    { eventName: "CanvasLocked", handleEvent: handleCanvasLocked },
+  ];
+
   try {
     const canvasData = {
       canvasId: log.args.deployedCanvasContract,
@@ -31,10 +37,7 @@ const handleInitializeCanvas = async (log, _, chain) => {
       chain,
       canvasData.canvasId,
       CANVAS_ABI,
-      [
-        { eventName: "PixelRegistered", handleEvent: handleRegisterPixel },
-        { eventName: "CanvasLocked", handleEvent: handleCanvasLocked },
-      ]
+      events
     );
   } catch (error) {
     console.error("Error in handleInitializeCanvas:", error.message);

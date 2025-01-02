@@ -38,7 +38,7 @@ const isNewLog = (log, lastProcessedEvent) => {
 };
 
 // Function to process logs
-const processLog = async (log, events, address, chain) => {
+const processLog = async (log, chain, address, events) => {
   const event = events.find((e) => e.eventName === log.eventName);
 
   if (event && event.handleEvent) {
@@ -56,8 +56,6 @@ const processLog = async (log, events, address, chain) => {
 // Function to fetch missed events for a specific contract on a specific chain
 const fetchMissedEvents = async (
   chain,
-  rpcUrl,
-  webSocketUrl,
   address,
   abi,
   events,
@@ -82,7 +80,7 @@ const fetchMissedEvents = async (
     for (const log of logs) {
       if (isNewLog(log, lastProcessedEvent)) {
         console.log(`Processing missed event log on ${chain.name}:`, log);
-        await processLog(log, events, address, chain, rpcUrl, webSocketUrl);
+        await processLog(log, chain, address, events);
       } else {
         console.log(`Skipping already processed log on ${chain.name}:`, log);
       }
@@ -99,9 +97,6 @@ const fetchMissedEvents = async (
 const checkPastThenWatch = async (chain, address, abi, events) => {
   console.log("checkPastThenWatch chain: ", chain.id);
 
-  const rpcUrl = chain.rpcUrls.custom.http[0];
-  const webSocketUrl = chain.rpcUrls.custom.webSocket[0];
-
   try {
     const clientHttp = createHttpClient(chain);
     const clientWebSocket = createWebSocketClient(chain);
@@ -115,8 +110,6 @@ const checkPastThenWatch = async (chain, address, abi, events) => {
       const fromBlock = BigInt(lastProcessedEvent.lastBlockNumber);
       await fetchMissedEvents(
         chain,
-        rpcUrl,
-        webSocketUrl,
         address,
         abi,
         events,
@@ -144,14 +137,7 @@ const checkPastThenWatch = async (chain, address, abi, events) => {
             await blockSyncService.getLastProcessedEvent(address);
           for (const log of logs) {
             if (isNewLog(log, lastProcessedEvent)) {
-              await processLog(
-                log,
-                events,
-                address,
-                chain,
-                rpcUrl,
-                webSocketUrl
-              );
+              await processLog(log, chain, address, events);
             }
           }
         } catch (error) {
