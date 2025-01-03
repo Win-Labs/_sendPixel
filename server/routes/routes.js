@@ -75,4 +75,10 @@ router.get("/test-insert", async (_, res) => {
   }
 });
 
+router.get("/ghost-market/get-nfts", ghostMarketController.getNFTs);
+
+router.get("/ghost-market/mint-nft", ghostMarketController.mintNFT);
+
+router.get("/ghost-market/create-order", ghostMarketController.createOrder);
+
 export default router;
