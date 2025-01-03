@@ -1,5 +1,7 @@
 import Canvas from "../models/canvasModel.js";
 import BlockSync from "../models/blockSyncModel.js";
+import ERC721Service from "./ERC721Service.js";
+import royaltyService from "./royaltyService.js";
 
 const getAllCanvases = async () => {
   return await Canvas.find();
@@ -134,16 +136,40 @@ const processCanvas = async ({ canvasId }) => {
       throw new Error(`Canvas with ID ${canvasId} not found`);
     }
 
-    // Update the canvas status to locked
-    canvas.isLocked = true;
-    await canvas.save();
+    // const imageObj = await ERC721Service.constructImage(canvas);
+    // const ipfsResponse = await ERC721Service.publishToIPFS(imageObj);
+    // console.log(`Image published to IPFS: ${ipfsResponse.cid}`);
 
-    console.log(`Canvas ${canvasId} locked.`);
+    // const response = await royaltyService.computeRoyaltiesBps(canvasId);
+    // console.log(`Royalties computed for canvas ${canvasId}:`, response);
+
+    // const ipfsHash =
+    //   "bafkreigqiuwwnylnhnduq5kqeejclcwr5mnjvpxbwd5zq7wofry4ivymy4";
+    // const royaltiesData = [
+    //   {
+    //     address: "0xA0Dc1C6Fa5593ADd23B34683542181A2177c8a7d",
+    //     value: 3510,
+    //   },
+    //   {
+    //     address: "0x2692beAB820DACb0AA8C76B76E29660b1f22E80e",
+    //     value: 6489,
+    //   },
+    //   { address: "0xD612E58915c883393a644e6Ec1fF05E06c16Bcbc", value: 1 },
+    // ];
+
+    // MINT NFT
+
+    // Update the canvas status to locked
+    // canvas.isLocked = true;
+    // await canvas.save();
+
+    // console.log(`Canvas ${canvasId} locked.`);
 
     // Here we will do the following:
 
-    // call function build image
-    // call function to upload image to IPFS
+    // call function build image DONE
+    // call function to upload image to IPFS  DONE
+
     // call function to compute royalties in bps
     // call function to mint ERC721 and pass array of royalties to it
     // call function to list NFT for sale

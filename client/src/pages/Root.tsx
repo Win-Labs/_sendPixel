@@ -1,16 +1,9 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import * as s from "./RootStyles";
-import { useEthersSigner } from "../hooks/useEtherSigner";
-import {
-  notification,
-  usePushNotifications,
-} from "../utils/usePushNotifications";
-import { CONSTANTS, PushAPI } from "@pushprotocol/restapi";
-import { backendUrl, groupChatId } from "../config";
-import { usePrivy, useLogout } from "@privy-io/react-auth";
-import { enqueueSnackbar } from "notistack";
+import * as s from "./styles/RootStyles";
+
+import { backendUrl } from "../config";
 import logo from "../assets/logo.svg";
 
 const Root = () => {
@@ -29,15 +22,8 @@ const Root = () => {
   };
 
   const navigate = useNavigate();
-  const signer = useEthersSigner();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const {
-    isSubscribed,
-    setUser,
-    setIsSubscribed,
-    setIsSubscribtionLoading,
-    isSubscribtionLoading,
-  } = usePushNotifications();
+
   const handleLoginClick = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
@@ -48,35 +34,6 @@ const Root = () => {
       navigate("/");
     }
   }, [address, navigate]);
-
-  const { login } = usePrivy();
-  const { logout } = useLogout();
-
-  const handleSubscribe = async () => {
-    setIsSubscribtionLoading(true);
-    try {
-      const user = await PushAPI.initialize(signer, {
-        env: CONSTANTS.ENV.STAGING,
-      });
-      await user.chat.group.join(groupChatId);
-      const stream = await user.initStream([CONSTANTS.STREAM.CHAT]);
-      stream.on(CONSTANTS.STREAM.CHAT, (data) => {
-        console.log("message: ", data);
-        const from = data.from.split(":")[1];
-        if (from !== address) {
-          enqueueSnackbar(data?.message?.content, { variant: "success" });
-        }
-      });
-      stream.connect();
-      setUser(user);
-      setIsSubscribed(true);
-      notification(user, `${address} has joined the chat.`);
-    } catch (e) {
-      enqueueSnackbar("Enable to join the chat", { variant: "error" });
-    } finally {
-      setIsSubscribtionLoading(false);
-    }
-  };
 
   return (
     <div
@@ -96,41 +53,11 @@ const Root = () => {
                 style={{ display: "flex", gap: "20px", alignItems: "center" }}
               >
                 <div style={{ color: "white" }}>{address}</div>
-                {!isSubscribed && (
-                  <button
-                    onClick={handleSubscribe}
-                    className="btn btn-warning"
-                    type="button"
-                    disabled={isSubscribtionLoading}
-                  >
-                    {isSubscribtionLoading ? (
-                      <>
-                        <span
-                          className="spinner-border spinner-border-sm"
-                          aria-hidden="true"
-                          style={{ marginRight: "10px" }}
-                        ></span>
-                        <span role="status">Joining...</span>
-                      </>
-                    ) : (
-                      <>🔔 Channel</>
-                    )}
-                  </button>
-                )}
-                {isSubscribed && (
-                  <button className="btn btn-warning">
-                    🔔 Joined to channel!
-                  </button>
-                )}
+
                 <button
                   className="btn btn-warning"
                   onClick={() => {
                     disconnect();
-                    try {
-                      logout();
-                    } catch (e) {
-                      console.log("Error: ", e);
-                    }
                   }}
                 >
                   Disconnect
@@ -139,11 +66,6 @@ const Root = () => {
                   className="btn btn-warning"
                   onClick={() => {
                     handleClearDb();
-                    try {
-                      logout();
-                    } catch (e) {
-                      console.log("Error: ", e);
-                    }
                   }}
                 >
                   Clear DB
@@ -195,13 +117,7 @@ const Root = () => {
                   {connector.name}
                 </button>
               ))}
-              <button className="btn btn-warning" onClick={login}>
-                Privy
-              </button>
             </div>
-            <button className="btn btn-warning" onClick={closeModal}>
-              Close
-            </button>
           </s.ModalContainer>
         </s.ModalOverlay>
       )}

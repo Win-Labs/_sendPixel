@@ -33,16 +33,6 @@ export const PushNotificationsProvider = ({ children }) => {
   );
 };
 
-export const usePushNotifications = () => {
-  const context = useContext(PushNotificationsContext);
-  if (!context) {
-    throw new Error(
-      "usePushNotifications must be used within a PushNotificationsProvider"
-    );
-  }
-  return context;
-};
-
 export const notification = async (user, customMessage) => {
   await user.chat.send(groupChatId, {
     content: customMessage,

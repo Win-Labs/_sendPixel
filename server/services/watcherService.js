@@ -1,20 +1,22 @@
 import blockSyncService from "./blockSyncService.js";
 import eventService from "./eventService.js";
-import { canvasDeployerAbi, chainsConfig } from "../config.js";
 import { createPublicClient, http, webSocket } from "viem";
+import { CANVAS_DEPLOYER_ABI } from "../constants/abis.js";
+import chains from "../constants/chains.js";
+import { CANVAS_DEPLOYERS } from "../constants/contractAddresses.js";
 
 // Helper function to create an HTTP client for a given chain
-const createHttpClient = (chain, rpcUrl) =>
+const createHttpClient = (chain) =>
   createPublicClient({
     chain,
-    transport: http(rpcUrl),
+    transport: http(chain.rpcUrls.custom?.http[0]),
   });
 
 // Helper function to create a WebSocket client for a given chain
-const createWebSocketClient = (chain, webSocketUrl) => {
+const createWebSocketClient = (chain) => {
   return createPublicClient({
     chain,
-    transport: webSocket(webSocketUrl),
+    transport: webSocket(chain.rpcUrls.custom?.webSocket[0]),
   });
 };
 
@@ -36,18 +38,11 @@ const isNewLog = (log, lastProcessedEvent) => {
 };
 
 // Function to process logs
-const processLog = async (
-  log,
-  events,
-  address,
-  chain,
-  rpcUrl,
-  webSocketUrl
-) => {
+const processLog = async (log, chain, address, events) => {
   const event = events.find((e) => e.eventName === log.eventName);
 
   if (event && event.handleEvent) {
-    await event.handleEvent(log, address, chain, rpcUrl, webSocketUrl);
+    await event.handleEvent(log, address, chain);
 
     await blockSyncService.updateLastProcessedEvent({
       address,
@@ -61,8 +56,6 @@ const processLog = async (
 // Function to fetch missed events for a specific contract on a specific chain
 const fetchMissedEvents = async (
   chain,
-  rpcUrl,
-  webSocketUrl,
   address,
   abi,
   events,
@@ -70,7 +63,7 @@ const fetchMissedEvents = async (
   toBlock
 ) => {
   try {
-    const clientHttp = createHttpClient(chain, rpcUrl);
+    const clientHttp = createHttpClient(chain);
     const logs = await clientHttp.getContractEvents({
       address: address,
       abi: abi,
@@ -87,7 +80,7 @@ const fetchMissedEvents = async (
     for (const log of logs) {
       if (isNewLog(log, lastProcessedEvent)) {
         console.log(`Processing missed event log on ${chain.name}:`, log);
-        await processLog(log, events, address, chain, rpcUrl, webSocketUrl);
+        await processLog(log, chain, address, events);
       } else {
         console.log(`Skipping already processed log on ${chain.name}:`, log);
       }
@@ -101,18 +94,12 @@ const fetchMissedEvents = async (
 };
 
 // Function to watch and sync events for a specific contract on a specific chain
-const checkPastThenWatch = async (
-  chain,
-  rpcUrl,
-  webSocketUrl,
-  address,
-  abi,
-  events
-) => {
-  console.log("chain: ", chain.id);
+const checkPastThenWatch = async (chain, address, abi, events) => {
+  console.log("checkPastThenWatch chain: ", chain.id);
+
   try {
-    const clientHttp = createHttpClient(chain, rpcUrl);
-    const clientWebSocket = createWebSocketClient(chain, webSocketUrl);
+    const clientHttp = createHttpClient(chain);
+    const clientWebSocket = createWebSocketClient(chain);
 
     const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(
       address
@@ -123,8 +110,6 @@ const checkPastThenWatch = async (
       const fromBlock = BigInt(lastProcessedEvent.lastBlockNumber);
       await fetchMissedEvents(
         chain,
-        rpcUrl,
-        webSocketUrl,
         address,
         abi,
         events,
@@ -152,14 +137,7 @@ const checkPastThenWatch = async (
             await blockSyncService.getLastProcessedEvent(address);
           for (const log of logs) {
             if (isNewLog(log, lastProcessedEvent)) {
-              await processLog(
-                log,
-                events,
-                address,
-                chain,
-                rpcUrl,
-                webSocketUrl
-              );
+              await processLog(log, chain, address, events);
             }
           }
         } catch (error) {
@@ -185,14 +163,12 @@ const startWatchers = async () => {
   ];
 
   try {
-    for (const { chain, rpcUrl, webSocketUrl, address } of chainsConfig) {
+    for (const chain of Object.values(chains)) {
       try {
         await checkPastThenWatch(
           chain,
-          rpcUrl,
-          webSocketUrl,
-          address,
-          canvasDeployerAbi,
+          CANVAS_DEPLOYERS[chain.id],
+          CANVAS_DEPLOYER_ABI,
           events
         );
       } catch (error) {

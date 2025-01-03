@@ -1,22 +1,76 @@
-import { Canvas } from "../models/canvas.js";
+import { PinataSDK } from "pinata-web3";
+import dotenv from "dotenv";
+import { createCanvas } from "canvas";
 
-const constructImage = async ({ canvasId }) => {
+dotenv.config({ path: "./.env" });
+
+const pinataClient = new PinataSDK({
+  pinataJwt: process.env.PINATA_JWT,
+  pinataGateway: process.env.GATEWAY_URL,
+});
+
+const constructImage = async (canvasData) => {
+  console.log(`Constructing image for canvas ${canvasData.canvasId}...`);
   try {
-    // TODO
     // build the image based on the pixel data
+    const { width, height, pixels } = canvasData;
+    console.log(`Canvas dimensions: ${width}x${height}`);
+    console.log(`Number of pixels: ${pixels.length}`);
+
+    // create canvas
+    const canvas = createCanvas(width, height);
+    const ctx = canvas.getContext("2d");
+
+    // Fill the entire canvas with white color
+    ctx.fillStyle = "rgb(255, 255, 255)";
+    ctx.fillRect(0, 0, width, height);
+
+    pixels.forEach((pixel) => {
+      const { x, y, color } = pixel;
+      console.log(`Drawing pixel at (${x}, ${y}) with color ${color}`);
+      ctx.fillStyle = `rgb(${color.r},${color.g},${color.b})`;
+      ctx.fillRect(x, y, 1, 1);
+    });
+
+    // Convert the canvas to a base64-encoded JPEG
+    // const buffer = canvas.toBuffer("image/png");
+    // fs.writeFileSync(`./${canvasId}.png`, buffer);
+    const imageBase64 = canvas.toDataURL("image/png");
+    console.log("imageBase64: ", imageBase64);
+    console.log(
+      `Image for canvas ${canvasData.canvasId} constructed successfully`
+    );
+
+    // Save the base64-encoded image to a file
+    // const buffer = Buffer.from(base64Image, "base64");
+    // fs.writeFileSync(`./${canvasId}.png`, buffer);
+    // console.log(`Base64 image for canvas ${canvasId} saved successfully`);
+
+    return {
+      imageBase64,
+      name: canvasData.name,
+    };
   } catch (error) {
     console.error("Error in constructImage:", error.message);
     throw error;
   }
 };
 
-const publishToIPFS = async ({ image }) => {
+const publishToIPFS = async (data) => {
+  console.log(`Publishing image to IPFS...`);
   try {
-    // Publish the image to IPFS
-    console.log(`Publishing image to IPFS...`);
-    console.log(`Image: ${image}`);
-    const imageUrl = "ipfs://QmPZ6";
-    return imageUrl;
+    const uploadImageResponse = await pinataClient.upload.base64(
+      data.imageBase64.split(",")[1]
+    );
+
+    const json = await pinataClient.upload.json({
+      name: data.name,
+      description: data.name,
+      image: `ipfs://${uploadImageResponse.IpfsHash}`,
+    });
+
+    console.log("json: ", json);
+    return json;
   } catch (error) {
     console.error("Error in publishToIPFS:", error.message);
     throw error;
@@ -61,9 +115,11 @@ const manageERC721 = async ({ canvasId }) => {
   }
 };
 
-export const ERC721Service = {
+const ERC721Service = {
   constructImage,
   publishToIPFS,
   mintERC721,
   listForSale,
 };
+
+export default ERC721Service;

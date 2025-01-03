@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 import Canvas from "./models/canvasModel.js";
 import BlockSync from "./models/blockSyncModel.js";
 import watcherService from "./services/watcherService.js";
+import ERC721Service from "./services/ERC721Service.js";
+import canvasService from "./services/canvasService.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -15,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/v1", routes);
 
-const DB = process.env.DATABASE_LOCAL.replace(
+const DB = process.env.DATABASE.replace(
   "<PASSWORD>",
   process.env.DATABASE_PASSWORD
 );

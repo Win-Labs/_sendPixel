@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import * as s from "./CanvasCardsStyles";
+import * as s from "./styles/CanvasCardsStyles";
 import { useAccount, useWriteContract } from "wagmi";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
-import { config, canvasAbi } from "../config";
+import { config } from "../config";
+import { CANVAS_ABI } from "../constants/abis";
 import { useEffect, useState } from "react";
 import { add, differenceInSeconds } from "date-fns";
-import WorldIdButton from "./WorldIdButton";
-import worldIdIcon from "../assets/world-id-logo.svg";
 
 const CanvasCard = ({
   canvasId,
@@ -15,7 +14,6 @@ const CanvasCard = ({
   owner,
   width,
   height,
-  worldIdVerified,
   destination,
   chainId: canvasChainId,
   creationTime,
@@ -40,7 +38,7 @@ const CanvasCard = ({
 
   const isOwner = address === owner;
   const isBeneficiary = address === destination;
-  const isPlayable = !isExpired && !isFunded;
+  const isPlayable = !isFunded;
 
   // Handle canvas initialization (Step 1)
   const handleClaimTokens = () => {
@@ -63,7 +61,7 @@ const CanvasCard = ({
 
   const claim = () => {
     writeContractAsync({
-      abi: canvasAbi,
+      abi: CANVAS_ABI,
       address: canvasId,
       functionName: "transferFunds",
       args: [],
@@ -76,7 +74,7 @@ const CanvasCard = ({
   };
 
   useEffect(() => {
-    const expirationDate = add(new Date(creationTime * 1000), { hours: 6 });
+    const expirationDate = add(new Date(creationTime * 1000), { minutes: 10 });
 
     const updateTimer = () => {
       const secondsLeft = differenceInSeconds(expirationDate, new Date());
@@ -133,24 +131,7 @@ const CanvasCard = ({
           </s.PropWrapper>
         )}
       </s.PropsWrapper>
-      {worldIdVerified ? (
-        <span
-          className="badge rounded-pill bg-success"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={worldIdIcon}
-            style={{ height: "15px", marginRight: "10px" }}
-          />
-          <span>World ID Verified</span>
-        </span>
-      ) : (
-        isOwner && <WorldIdButton canvasId={canvasId}></WorldIdButton>
-      )}
+
       {isBeneficiary && (
         <button
           className="btn btn-warning"

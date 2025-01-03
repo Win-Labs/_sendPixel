@@ -3,17 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { useSendTransaction } from "wagmi";
-import { backendUrl, supportedChains } from "../config";
+import { backendUrl, config } from "../config";
 import { ICanvas } from "../models";
 import Pixel from "./Pixel";
-import {
-  notification,
-  usePushNotifications,
-} from "../utils/usePushNotifications";
+
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../utils/api";
 import {
-  BlockScoutLink,
   BoldText,
   CanvasHeader,
   CanvasHeaderLeft,
@@ -22,7 +18,7 @@ import {
   InfoRow,
   PageContainer,
   PixelsContainer,
-} from "./CanvasStyles";
+} from "./styles/CanvasStyles";
 
 export interface PixelItem {
   _id?: number;
@@ -39,7 +35,6 @@ export interface PixelItem {
 const Canvas = () => {
   const { canvasId: paramCanvasId } = useParams();
   const navigate = useNavigate();
-  const { user, isSubscribed } = usePushNotifications();
   const {
     data: hash,
     sendTransaction,
@@ -75,27 +70,30 @@ const Canvas = () => {
   }, [dataCanvas]);
 
   useEffect(() => {
-    if (canvas && canvas.width && canvas.height) {
-      const grid = Array.from(
-        { length: canvas.width * canvas.height },
-        (_, index) => ({
+    if (canvas && canvas.width > 0 && canvas.height > 0) {
+      // Initialize grid with default values
+      const grid = new Array(canvas.width * canvas.height)
+        .fill(null)
+        .map((_, index) => ({
           _id: index,
           owner: null,
           x: index % canvas.width,
-          y: Math.floor(index / canvas.width),
+          y: Math.floor(index / canvas.width), // Correct y calculation
           color: { r: 255, g: 255, b: 255 },
-        })
-      );
+        }));
+
+      // Overwrite grid pixels with dataCanvas pixels
       dataCanvas.pixels.forEach((pixel) => {
         grid[pixel.y * canvas.width + pixel.x] = pixel;
       });
+
+      // Update state
       setPixels(grid);
     }
-
     return () => {
       setPixels([]);
     };
-  }, [canvas]);
+  }, [canvas, dataCanvas]); // Add dependencies
 
   const handleClickOutside = (event) => {
     if (
@@ -143,36 +141,14 @@ const Canvas = () => {
       value: packedValue,
     });
 
-    if (isSubscribed) {
-      notification(
-        user,
-        `Wallet ${user.account} colored canvas "${canvas.name}" to R${r} G${g} B${b} color at coordinates ${x}:${y}`
-      );
-    }
-
     return packedValue;
   }
-
-  const onConstruct = (
-    x: number,
-    y: number,
-    r: number,
-    g: number,
-    b: number
-  ) => {
-    console.log("Constructing Ethereum transaction...");
-    encodeToNativeCoin(x, y, r, g, b);
-  };
 
   useEffect(() => {
     refetchCanvas();
   }, [hash]);
 
-  const chain = supportedChains.find(
-    (chain) => chain.id === dataCanvas?.chainId
-  );
-  const explorerUrl = chain?.blockExplorers?.custom?.url || "";
-  const fullUrl = `${explorerUrl}address/${canvas?.canvasId}`;
+  const chain = config.chains.find((chain) => chain.id === dataCanvas?.chainId);
 
   return (
     <PageContainer>
@@ -203,19 +179,11 @@ const Canvas = () => {
                   <span>Deployed network:</span>
                   <BoldText>
                     {
-                      supportedChains.find(
-                        (chain) => chain.id === canvas.chainId
-                      )?.name
+                      config.chains.find((chain) => chain.id === canvas.chainId)
+                        ?.name
                     }
                   </BoldText>
                 </InfoRow>
-                <BlockScoutLink
-                  href={fullUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Explore history on BlockScout
-                </BlockScoutLink>
               </CanvasHeaderLeft>
               <CanvasHeaderRight>
                 <div>Recommended image:</div>
@@ -232,7 +200,7 @@ const Canvas = () => {
                 <Pixel
                   key={pixel._id}
                   pixelData={pixel}
-                  onConstruct={onConstruct}
+                  onConstruct={encodeToNativeCoin}
                   activePixelId={activePixelId}
                   setActivePixelId={setActivePixelId}
                   isPixelTransactionPending={isPixelTransactionPending}

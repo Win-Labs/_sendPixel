@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import * as s from "./CanvasCardsStyles";
+import * as s from "./styles/CanvasCardsStyles";
 import { backendUrl } from "../config";
 import Loader from "./Loader";
 import { FilterMode } from "../pages/Canvases";
@@ -33,7 +33,9 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
 
   const displayedCanvases = canvases
     .filter((canvas) => {
-      if (filterMode === FilterMode.OWNED) {
+      if (filterMode === FilterMode.ALL) {
+        return canvas;
+      } else if (filterMode === FilterMode.OWNED) {
         return canvas.owner === address;
       } else if (filterMode === FilterMode.JOINED) {
         return canvas.pixels.some((pixel) => pixel.owner === address);
@@ -54,38 +56,12 @@ const CanvasCards: React.FC<IProps> = ({ filterMode, selectedChainId }) => {
       ) : !canvases?.length ? (
         <div style={{ color: "white" }}>No canvases created yet</div>
       ) : (
-        displayedCanvases.map(
-          ({
-            canvasId,
-            name,
-            owner,
-            width,
-            height,
-            worldIdVerified,
-            destination,
-            chainId,
-            creationTime,
-            isListed,
-            isSold,
-            nounImageId,
-          }) => (
-            <CanvasCard
-              key={`${canvasId}-${name}-${owner}-${width}-${height}`}
-              canvasId={canvasId}
-              name={name}
-              owner={owner}
-              width={width}
-              height={height}
-              worldIdVerified={worldIdVerified}
-              destination={destination}
-              chainId={chainId}
-              creationTime={creationTime}
-              isListed={isListed}
-              isSold={isSold}
-              nounImageId={nounImageId}
-            />
-          )
-        )
+        displayedCanvases.map((canvasData) => (
+          <CanvasCard
+            {...canvasData}
+            key={`${canvasData.canvasId}-${canvasData.name}-${canvasData.owner}-${canvasData.width}-${canvasData.height}`}
+          />
+        ))
       )}
     </div>
   );

@@ -1,80 +1,26 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
 import { enqueueSnackbar } from "notistack";
 import { switchChain } from "@wagmi/core";
-import {
-  config,
-  supportedChains,
-  canvasDeployerAbi,
-  DEPLOYER_CONTRACT_ADDRESSES,
-} from "../config";
+import { config } from "../config";
+import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
+import { CANVAS_DEPLOYER_ABI, CANVAS_ABI } from "../constants/abis";
 import { useAccount, useWriteContract } from "wagmi";
-import {
-  notification,
-  usePushNotifications,
-} from "../utils/usePushNotifications";
 import { getGasPrice } from "@wagmi/core";
 import { formatEther } from "viem";
-
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalContainer = styled.div`
-  width: 100%;
-  z-index: 2;
-  max-width: 500px;
-  border-radius: 10px;
-  gap: 10px;
-  padding: 30px;
-  background-color: #fff;
-  position: absolute;
-`;
-
-const Title = styled.h2`
-  margin-bottom: 20px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-`;
-
-export const SelectBox = styled.select`
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-`;
-
-const Label = styled.p``;
-
-const SubmitBtnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-`;
+import {
+  Overlay,
+  ModalContainer,
+  Title,
+  InputContainer,
+  SelectBox,
+  Label,
+  SubmitBtnContainer,
+  Input,
+} from "./styles/ModalStyles";
 
 const Modal = ({ toggle }) => {
   const { chainId: accountChainId, address } = useAccount();
 
-  const { user, isSubscribed } = usePushNotifications();
   const {
     writeContractAsync,
     data: hashInitializeCanvas,
@@ -92,64 +38,34 @@ const Modal = ({ toggle }) => {
     new Map()
   );
 
-  const isNetworkSupported = supportedChains.some(
+  const isNetworkSupported = config.chains.some(
     (chain) => chain.id === accountChainId
   );
   const isFormValid =
     name && height && width && isNetworkSupported && destinationAddress;
 
   const handleInitializeCanvas = async () => {
-    const hash = await writeContractAsync({
+    if (!isFormValid) return;
+    await writeContractAsync({
       functionName: "deployCanvas",
-      args: [name, Number("10"), Number("10"), 300, destinationAddress],
-      abi: canvasDeployerAbi,
-      address: DEPLOYER_CONTRACT_ADDRESSES[accountChainId as number],
+      args: [name, Number(height), Number(width), 600, destinationAddress],
+      abi: CANVAS_DEPLOYER_ABI,
+      address: CANVAS_DEPLOYERS[accountChainId],
       account: address,
     });
     toggle();
 
-    if (isSubscribed) {
-      notification(
-        user,
-        `Wallet ${user.account} created "${name}" (${width}x${height})`
-      );
-    }
-
-    const chain = supportedChains.find(
-      (chain) => chain.id === accountChainId!
-    )!;
-    const explorerUrl = chain?.blockExplorers?.custom.url;
-    const fullUrl = `${explorerUrl}tx/${hash}`;
+    const chain = config.chains.find((chain) => chain.id === accountChainId!)!;
 
     enqueueSnackbar(
-      <>
-        Canvas has been created and will be displayed soon.&nbsp;
-        <a
-          href={fullUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "inherit", textDecoration: "underline" }}
-        >
-          View on Blockscout
-        </a>
-      </>,
+      <>Canvas has been created and will be displayed soon.&nbsp;</>,
       { variant: "success" }
     );
   };
 
   const handleChainIdChange = (chainId: number) => {
-    switchChain(config, { chainId }).then((data) => {
-      console.log("Switched chain: ", data);
-    });
+    switchChain(config, { chainId }).then((data) => {});
   };
-
-  useEffect(() => {
-    console.log("hashInitializeCanvas", hashInitializeCanvas);
-  }, [hashInitializeCanvas]);
-
-  useEffect(() => {
-    console.log("chain id", accountChainId);
-  }, [accountChainId]);
 
   useEffect(() => {
     //@ts-ignore
@@ -158,7 +74,7 @@ const Modal = ({ toggle }) => {
 
   const allChainsGasPrices = async () => {
     const gasPricesData = await Promise.all(
-      supportedChains.map((chain) =>
+      config.chains.map((chain) =>
         getGasPrice(config, { chainId: chain.id }).then((price) => ({
           chainId: chain.id,
           price,
@@ -224,7 +140,7 @@ const Modal = ({ toggle }) => {
             <option value="" disabled>
               Network with chain ID: {accountChainId} is not supported
             </option>
-            {supportedChains.map((chain) => (
+            {config.chains.map((chain) => (
               <option
                 key={chain.id}
                 value={chain.id}

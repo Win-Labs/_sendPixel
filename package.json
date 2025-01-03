@@ -5,5 +5,8 @@
   },
   "devDependencies": {
     "concurrently": "^9.0.1"
+  },
+  "dependencies": {
+    "shared": "link:/Users/abcdefgh/Desktop/nowork/_sendPixel/shared"
   }
 }

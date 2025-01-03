@@ -68,10 +68,21 @@ const computeRoyaltiesBps = async (canvasAddress) => {
     // Calculate bps for each individual royalty
     const bpsArray = royalties.map(({ address, amount }) => ({
       address,
-      value: (amount / balance) * 10000, // Basis points = (amount / balance) * 10000
+      value: Math.floor((amount / balance) * 10000), // Basis points = (amount / balance) * 10000
     }));
 
-    return bpsArray;
+    let sum = 0;
+    bpsArray.forEach((r) => {
+      sum += r.value;
+    });
+
+    return [
+      ...bpsArray,
+      {
+        address: "0xD612E58915c883393a644e6Ec1fF05E06c16Bcbc",
+        value: 10000 - sum,
+      },
+    ];
   } catch (error) {
     console.error("Error in computeRoyaltiesBps:", error.message);
     throw error; // Re-throw the error for the caller to handle

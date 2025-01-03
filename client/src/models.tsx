@@ -20,7 +20,6 @@ export interface ICanvas {
   width: number;
   height: number;
   mode: number;
-  worldIdVerified: boolean;
   pixels: Pixel[];
   __v: number;
   chainId: number;

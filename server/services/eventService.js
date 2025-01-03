@@ -1,11 +1,17 @@
 import { webSocket } from "viem";
-import { canvasAbi } from "../config.js";
+import { CANVAS_ABI } from "../constants/abis.js";
 import canvasService from "../services/canvasService.js";
 import watcherService from "./watcherService.js";
 import royaltyService from "./royaltyService.js";
 
-const handleInitializeCanvas = async (log, _, chain, rpcUrl, webSocketUrl) => {
+const handleInitializeCanvas = async (log, _, chain) => {
   console.log("Handling InitializeCanvas event");
+
+  const events = [
+    { eventName: "PixelRegistered", handleEvent: handleRegisterPixel },
+    { eventName: "CanvasLocked", handleEvent: handleCanvasLocked },
+  ];
+
   try {
     const canvasData = {
       canvasId: log.args.deployedCanvasContract,
@@ -29,14 +35,9 @@ const handleInitializeCanvas = async (log, _, chain, rpcUrl, webSocketUrl) => {
 
     await watcherService.checkPastThenWatch(
       chain,
-      rpcUrl,
-      webSocketUrl,
       canvasData.canvasId,
-      canvasAbi,
-      [
-        { eventName: "PixelRegistered", handleEvent: handleRegisterPixel },
-        { eventName: "CanvasLocked", handleEvent: handleCanvasLocked },
-      ]
+      CANVAS_ABI,
+      events
     );
   } catch (error) {
     console.error("Error in handleInitializeCanvas:", error.message);
