@@ -9,14 +9,14 @@ import { CANVAS_DEPLOYERS } from "../constants/contractAddresses.js";
 const createHttpClient = (chain) =>
   createPublicClient({
     chain,
-    transport: http(chain.rpcUrls.custom.http[0]),
+    transport: http(chain.rpcUrls.custom?.http[0]),
   });
 
 // Helper function to create a WebSocket client for a given chain
 const createWebSocketClient = (chain) => {
   return createPublicClient({
     chain,
-    transport: webSocket(chain.rpcUrls.custom.webSocket[0]),
+    transport: webSocket(chain.rpcUrls.custom?.webSocket[0]),
   });
 };
 
@@ -163,7 +163,7 @@ const startWatchers = async () => {
   ];
 
   try {
-    for (const chain of chains) {
+    for (const chain of Object.values(chains)) {
       try {
         await checkPastThenWatch(
           chain,
