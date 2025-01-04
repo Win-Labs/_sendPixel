@@ -12,11 +12,7 @@ interface ColorProps {
 }
 
 const PixelContainer = styled.div<ColorProps>`
-  background-color: rgb(
-    ${({ $color }) => $color.r},
-    ${({ $color }) => $color.g},
-    ${({ $color }) => $color.b}
-  );
+  background-color: rgb(${({ $color }) => $color.r}, ${({ $color }) => $color.g}, ${({ $color }) => $color.b});
   position: relative;
   width: 100%;
   height: 100%;
@@ -46,32 +42,23 @@ interface IProps {
   isPixelTransactionPending: boolean;
 }
 
-const Pixel: React.FC<IProps> = React.memo((props) => {
+const Pixel: React.FC<IProps> = React.memo(props => {
   const [color, setColor] = useState(props.pixelData.color);
 
-  const handleChange = useCallback((newColor) => {
+  const handleChange = useCallback(newColor => {
     setColor(newColor.rgb);
   }, []);
 
-  const handlePropagation = useCallback((e) => e.stopPropagation(), []);
+  const handlePropagation = useCallback(e => e.stopPropagation(), []);
 
   const handleConfirm = useCallback(() => {
-    props.onConstruct(
-      props.pixelData.x,
-      props.pixelData.y,
-      color.r,
-      color.g,
-      color.b
-    );
+    props.onConstruct(props.pixelData.x, props.pixelData.y, color.r, color.g, color.b);
   }, [color, props.onConstruct, props.pixelData]);
 
   const isActive = props.activePixelId === props.pixelData._id;
 
   return (
-    <PixelContainer
-      $color={color}
-      onClick={() => props.setActivePixelId(props.pixelData._id!)}
-    >
+    <PixelContainer $color={color} onClick={() => props.setActivePixelId(props.pixelData._id!)}>
       {isActive && (
         <PaletteContainer onClick={handlePropagation}>
           <div
@@ -87,11 +74,7 @@ const Pixel: React.FC<IProps> = React.memo((props) => {
             <div>{props.pixelData?.owner || "none"}</div>
           </div>
           <SketchPicker color={color} onChange={handleChange} />
-          <button
-            className="btn btn-warning"
-            onClick={handleConfirm}
-            disabled={props.isPixelTransactionPending}
-          >
+          <button onClick={handleConfirm} disabled={props.isPixelTransactionPending}>
             Confirm
           </button>
         </PaletteContainer>

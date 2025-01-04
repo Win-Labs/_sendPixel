@@ -53,15 +53,7 @@ const Input = styled.input`
   border-radius: 5px;
   border: 1px solid #ccc;
   width: 100%;
+  font-family: inherit;
 `;
 
-export {
-  Overlay,
-  ModalContainer,
-  Title,
-  InputContainer,
-  SelectBox,
-  Label,
-  SubmitBtnContainer,
-  Input,
-};
+export { Overlay, ModalContainer, Title, InputContainer, SelectBox, Label, SubmitBtnContainer, Input };

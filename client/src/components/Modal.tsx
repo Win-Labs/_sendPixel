@@ -5,6 +5,7 @@ import { useAccount, useWriteContract } from "wagmi";
 import { Overlay, ModalContainer, Title, InputContainer, Label, SubmitBtnContainer, Input } from "./styles/ModalStyles";
 import { useTransactionReceipt } from "wagmi";
 import { useFormState } from "../hooks/useFormState";
+import Loader from "./Loader";
 
 const Modal = ({ toggle }) => {
   const { chainId, address } = useAccount();
@@ -18,14 +19,15 @@ const Modal = ({ toggle }) => {
 
   const { writeContract, isPending, data } = useWriteContract({
     mutation: {
-      onSuccess: () => {
-        toggle();
-      },
+      onSuccess: () => {},
     },
   });
 
   const { data: transactionReceipt } = useTransactionReceipt({
     hash: data,
+    query: {
+      enabled: !!data,
+    },
   });
 
   const isFormValid = formState.name && formState.height && formState.width;
@@ -45,12 +47,13 @@ const Modal = ({ toggle }) => {
   };
 
   useEffect(() => {
-    if (transactionReceipt) {
-      toggle();
-    }
-  }, [transactionReceipt]);
+    console.log(transactionReceipt);
+    console.log(isPending);
+  }, [transactionReceipt, isPending]);
 
-  return (
+  return isPending || (data && !transactionReceipt) ? (
+    <Loader />
+  ) : (
     <Overlay onClick={toggle}>
       <ModalContainer
         onClick={e => {
@@ -87,12 +90,7 @@ const Modal = ({ toggle }) => {
         </InputContainer>
 
         <SubmitBtnContainer>
-          <button
-            onClick={handleInitializeCanvas}
-            className="btn btn-warning"
-            type="button"
-            disabled={isPending || !isFormValid}
-          >
+          <button onClick={handleInitializeCanvas} type="button" disabled={isPending || !isFormValid}>
             Create Canvas
           </button>
         </SubmitBtnContainer>

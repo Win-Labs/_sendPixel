@@ -35,11 +35,7 @@ export interface PixelItem {
 const Canvas = () => {
   const { canvasId: paramCanvasId } = useParams();
   const navigate = useNavigate();
-  const {
-    data: hash,
-    sendTransaction,
-    isPending: isPixelTransactionPending,
-  } = useSendTransaction();
+  const { data: hash, sendTransaction, isPending: isPixelTransactionPending } = useSendTransaction();
   const {
     isPending: isPendingCanvas,
     error: errorCanvas,
@@ -72,18 +68,16 @@ const Canvas = () => {
   useEffect(() => {
     if (canvas && canvas.width > 0 && canvas.height > 0) {
       // Initialize grid with default values
-      const grid = new Array(canvas.width * canvas.height)
-        .fill(null)
-        .map((_, index) => ({
-          _id: index,
-          owner: null,
-          x: index % canvas.width,
-          y: Math.floor(index / canvas.width), // Correct y calculation
-          color: { r: 255, g: 255, b: 255 },
-        }));
+      const grid = new Array(canvas.width * canvas.height).fill(null).map((_, index) => ({
+        _id: index,
+        owner: null,
+        x: index % canvas.width,
+        y: Math.floor(index / canvas.width), // Correct y calculation
+        color: { r: 255, g: 255, b: 255 },
+      }));
 
       // Overwrite grid pixels with dataCanvas pixels
-      dataCanvas.pixels.forEach((pixel) => {
+      dataCanvas.pixels.forEach(pixel => {
         grid[pixel.y * canvas.width + pixel.x] = pixel;
       });
 
@@ -95,11 +89,8 @@ const Canvas = () => {
     };
   }, [canvas, dataCanvas]); // Add dependencies
 
-  const handleClickOutside = (event) => {
-    if (
-      pixelsContainerRef.current &&
-      !pixelsContainerRef.current.contains(event.target)
-    ) {
+  const handleClickOutside = event => {
+    if (pixelsContainerRef.current && !pixelsContainerRef.current.contains(event.target)) {
       setActivePixelId(null);
     }
   };
@@ -111,13 +102,7 @@ const Canvas = () => {
     };
   }, []);
 
-  async function encodeToNativeCoin(
-    x: number,
-    y: number,
-    r: number,
-    g: number,
-    b: number
-  ) {
+  async function encodeToNativeCoin(x: number, y: number, r: number, g: number, b: number) {
     if (!canvas) return;
 
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
@@ -127,12 +112,7 @@ const Canvas = () => {
       throw new Error("Coordinates are out of canvas bounds.");
     }
 
-    const packedValue =
-      (BigInt(r) << 32n) |
-      (BigInt(g) << 24n) |
-      (BigInt(b) << 16n) |
-      (BigInt(x) << 8n) |
-      BigInt(y);
+    const packedValue = (BigInt(r) << 32n) | (BigInt(g) << 24n) | (BigInt(b) << 16n) | (BigInt(x) << 8n) | BigInt(y);
 
     console.log("Packed value:", packedValue.toString());
 
@@ -148,7 +128,7 @@ const Canvas = () => {
     refetchCanvas();
   }, [hash]);
 
-  const chain = config.chains.find((chain) => chain.id === dataCanvas?.chainId);
+  const chain = config.chains.find(chain => chain.id === dataCanvas?.chainId);
 
   return (
     <PageContainer>
@@ -177,12 +157,7 @@ const Canvas = () => {
                 </InfoRow>
                 <InfoRow>
                   <span>Deployed network:</span>
-                  <BoldText>
-                    {
-                      config.chains.find((chain) => chain.id === canvas.chainId)
-                        ?.name
-                    }
-                  </BoldText>
+                  <BoldText>{config.chains.find(chain => chain.id === canvas.chainId)?.name}</BoldText>
                 </InfoRow>
               </CanvasHeaderLeft>
               <CanvasHeaderRight>
@@ -191,12 +166,8 @@ const Canvas = () => {
               </CanvasHeaderRight>
             </CanvasHeader>
             );
-            <PixelsContainer
-              width={canvas.width}
-              height={canvas.height}
-              ref={pixelsContainerRef}
-            >
-              {pixels.map((pixel) => (
+            <PixelsContainer width={canvas.width} height={canvas.height} ref={pixelsContainerRef}>
+              {pixels.map(pixel => (
                 <Pixel
                   key={pixel._id}
                   pixelData={pixel}
@@ -208,9 +179,7 @@ const Canvas = () => {
               ))}
             </PixelsContainer>
             <CenteredButtonContainer>
-              <button className="btn btn-warning" onClick={() => navigate(-1)}>
-                Back to Canvases
-              </button>
+              <button onClick={() => navigate(-1)}>Back to Canvases</button>
             </CenteredButtonContainer>
           </>
         )

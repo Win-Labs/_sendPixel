@@ -2,7 +2,6 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { Tab, SubTab, SubTabsWrapper } from "./styles/CanvasesStyles";
 import Modal from "../components/Modal";
 import { config, apiEndpoint } from "../config";
-import { useOutletContext } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 import CanvasCard from "../components/CanvasCard";
@@ -44,11 +43,11 @@ const Canvases = () => {
   });
 
   return (
-    <main className="page-container">
+    <main>
       <div>
-        <div className="tabs-wrapper mb-3">{Tabs}</div>
+        <div>{Tabs}</div>
 
-        <div className="canvas-cards-container">
+        <div>
           {isLoading ? (
             <Loader />
           ) : error ? (
@@ -64,10 +63,8 @@ const Canvases = () => {
       </div>
 
       {address && (
-        <div className="create-canvas-button-container mt-4">
-          <button className="btn btn-warning" onClick={toggleModal}>
-            Create New Canvas
-          </button>
+        <div>
+          <button onClick={toggleModal}>Create New Canvas</button>
         </div>
       )}
 

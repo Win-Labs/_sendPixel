@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import * as s from "./styles/RootStyles";
+import { ConnectWalletBtnWrapper, FooterLinksContainer } from "./styles/RootStyles";
 
 import { apiEndpoint } from "../config";
 import logo from "../assets/logo.svg";
@@ -17,21 +17,20 @@ const Root = () => {
   };
 
   return (
-    <div className="container" style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <div className="nav-bar-container mb-4">
-        <div className="nav-bar-container-logo">
-          <a className="nav-bar-container-logo-link" href="/">
+    <div>
+      <div>
+        <div>
+          <a href="/">
             <img src={logo} height="65px" alt="Logo" />
           </a>
         </div>
-        <div className="nav-bar-container-info">
+        <div>
           <div>
             {address ? (
-              <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-                <div style={{ color: "white" }}>{address}</div>
+              <div>
+                <div>{address}</div>
 
                 <button
-                  className="btn btn-warning"
                   onClick={() => {
                     disconnect();
                   }}
@@ -39,7 +38,6 @@ const Root = () => {
                   Disconnect
                 </button>
                 <button
-                  className="btn btn-warning"
                   onClick={() => {
                     handleClearDb();
                   }}
@@ -48,11 +46,9 @@ const Root = () => {
                 </button>
               </div>
             ) : (
-              <s.ConnectWalletBtnWrapper>
-                <button className="btn btn-warning" onClick={handleLoginClick}>
-                  Login
-                </button>
-              </s.ConnectWalletBtnWrapper>
+              <ConnectWalletBtnWrapper>
+                <button onClick={() => connect({ connector: connectors[0] })}>Login</button>
+              </ConnectWalletBtnWrapper>
             )}
           </div>
         </div>
@@ -60,12 +56,12 @@ const Root = () => {
 
       <Outlet />
 
-      <s.FooterLinksContainer>
-        <a href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer" className="footer-link">
+      <FooterLinksContainer>
+        <a href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer">
           Blog
         </a>
         <div>Branch: Grind</div>
-      </s.FooterLinksContainer>
+      </FooterLinksContainer>
     </div>
   );
 };
