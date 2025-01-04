@@ -12,38 +12,19 @@ import Loader from "../components/Loader";
 import { GET } from "../utils/api";
 
 export enum FilterTab {
-  ALL = "ALL",
-  OWNED = "OWNED",
-  JOINED = "JOINED",
-  LISTED = "LISTED",
-  SOLD = "SOLD",
+  ARENA = "ARENA",
+  MARKETPLACE = "MARKETPLACE",
 }
 
 const Canvases = () => {
   const { address } = useAccount();
-  const [filterTab, setFilterTab] = useState(FilterTab.ALL);
-  const [selectedChainId, setSelectedChainId] = useState(
-    config.chains[0]?.id || 0
-  );
+  const [filterTab, setFilterTab] = useState("All");
+
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = useCallback(() => {
     setShowModal((prev) => !prev);
   }, []);
-
-  // Generate the query URL dynamically
-  const url = useMemo(() => {
-    if (!address) return `${apiEndpoint}/canvases`;
-
-    switch (filterTab) {
-      case FilterTab.OWNED:
-        return `${apiEndpoint}/addresses/${address}/canvases/joined`;
-      case FilterTab.JOINED:
-        return `${apiEndpoint}/addresses/${address}/canvases/generated`;
-      default:
-        return `${apiEndpoint}/canvases`;
-    }
-  }, [filterTab, address]);
 
   // Memoized tabs
   const Tabs = useMemo(() => {
@@ -58,23 +39,10 @@ const Canvases = () => {
     ));
   }, [filterTab]);
 
-  // Memoized sub-tabs
-  const SubTabs = useMemo(() => {
-    return config.chains.map((chain) => (
-      <SubTab
-        key={chain.id}
-        onClick={() => setSelectedChainId(chain.id)}
-        $active={selectedChainId === chain.id}
-      >
-        {chain.name}
-      </SubTab>
-    ));
-  }, [selectedChainId]);
-
   // Fetch data using react-query
   const { isLoading, error, data } = useQuery({
     queryKey: ["canvases", filterTab, address],
-    queryFn: () => GET(url),
+    queryFn: () => GET(`${apiEndpoint}/canvases`),
     enabled: !!address || filterTab === FilterTab.ALL,
     refetchInterval: 1000,
   });
@@ -83,7 +51,6 @@ const Canvases = () => {
     <main className="page-container">
       <div>
         <div className="tabs-wrapper mb-3">{Tabs}</div>
-        <SubTabsWrapper>{SubTabs}</SubTabsWrapper>
 
         <div className="canvas-cards-container">
           {isLoading ? (
