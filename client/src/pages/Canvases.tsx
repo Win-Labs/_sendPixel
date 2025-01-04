@@ -23,17 +23,13 @@ const Canvases = () => {
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = useCallback(() => {
-    setShowModal((prev) => !prev);
+    setShowModal(prev => !prev);
   }, []);
 
   // Memoized tabs
   const Tabs = useMemo(() => {
-    return Object.values(FilterTab).map((tab) => (
-      <Tab
-        key={tab}
-        onClick={() => setFilterTab(tab)}
-        $active={filterTab === tab}
-      >
+    return Object.values(FilterTab).map(tab => (
+      <Tab key={tab} onClick={() => setFilterTab(tab)} $active={filterTab === tab}>
         {tab[0] + tab.slice(1).toLowerCase()}
       </Tab>
     ));
@@ -43,7 +39,7 @@ const Canvases = () => {
   const { isLoading, error, data } = useQuery({
     queryKey: ["canvases", filterTab, address],
     queryFn: () => GET(`${apiEndpoint}/canvases`),
-    enabled: !!address || filterTab === FilterTab.ALL,
+    enabled: true,
     refetchInterval: 1000,
   });
 
@@ -56,15 +52,10 @@ const Canvases = () => {
           {isLoading ? (
             <Loader />
           ) : error ? (
-            <div style={{ color: "red" }}>
-              Failed to load canvases. Please try again.
-            </div>
+            <div style={{ color: "red" }}>Failed to load canvases. Please try again.</div>
           ) : data?.length ? (
             data.map((canvasData: ICanvas) => (
-              <CanvasCard
-                key={`${canvasData.canvasId}-${canvasData.name}`}
-                {...canvasData}
-              />
+              <CanvasCard key={`${canvasData.canvasId}-${canvasData.name}`} {...canvasData} />
             ))
           ) : (
             <div style={{ color: "white" }}>No canvases available.</div>

@@ -1,29 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
 import { CANVAS_DEPLOYER_ABI, CANVAS_ABI } from "../constants/abis";
 import { useAccount, useWriteContract } from "wagmi";
 import { Overlay, ModalContainer, Title, InputContainer, Label, SubmitBtnContainer, Input } from "./styles/ModalStyles";
+import { useTransactionReceipt } from "wagmi";
+import { useFormState } from "../hooks/useFormState";
 
 const Modal = ({ toggle }) => {
   const { chainId, address } = useAccount();
 
-  const [formState, setFormState] = useState({
+  const { formState, handleChange } = useFormState({
     name: "default",
     height: "8",
     width: "8",
     duration: "600",
   });
 
-  const handleChange = (field: string) => e => {
-    setFormState(prev => ({ ...prev, [field]: e.target.value }));
-  };
-
-  const { writeContract, isPending } = useWriteContract({
+  const { writeContract, isPending, data } = useWriteContract({
     mutation: {
       onSuccess: () => {
         toggle();
       },
     },
+  });
+
+  const { data: transactionReceipt } = useTransactionReceipt({
+    hash: data,
   });
 
   const isFormValid = formState.name && formState.height && formState.width;
@@ -35,12 +37,18 @@ const Modal = ({ toggle }) => {
 
     writeContract({
       functionName: "deployCanvas",
-      args: [name, Number(height), Number(width), Number(duration)],
+      args: [name, Number(height), Number(width), 0, Number(duration)],
       abi: CANVAS_DEPLOYER_ABI,
       address: CANVAS_DEPLOYERS[chainId],
       account: address,
     });
   };
+
+  useEffect(() => {
+    if (transactionReceipt) {
+      toggle();
+    }
+  }, [transactionReceipt]);
 
   return (
     <Overlay onClick={toggle}>
