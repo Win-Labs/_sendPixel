@@ -2,7 +2,7 @@ import { http, injected } from "@wagmi/core";
 import { createConfig } from "@wagmi/core";
 import { localhost } from "./constants/chains";
 
-export const backendUrl = `http://localhost:3333/api/v1`;
+export const apiEndpoint = `http://localhost:3333/api/v1`;
 
 export const config = createConfig({
   chains: [localhost],

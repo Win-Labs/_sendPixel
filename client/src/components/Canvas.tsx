@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { useSendTransaction } from "wagmi";
-import { backendUrl, config } from "../config";
+import { apiEndpoint, config } from "../config";
 import { ICanvas } from "../models";
 import Pixel from "./Pixel";
 
@@ -47,7 +47,7 @@ const Canvas = () => {
     refetch: refetchCanvas,
   } = useQuery({
     queryKey: ["pixels", paramCanvasId],
-    queryFn: () => GET(`${backendUrl}/canvases/${paramCanvasId}`),
+    queryFn: () => GET(`${apiEndpoint}/canvases/${paramCanvasId}`),
     enabled: !!paramCanvasId,
     refetchInterval: 3000,
   });

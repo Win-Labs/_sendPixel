@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from "react-router";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import * as s from "./styles/RootStyles";
 
-import { backendUrl } from "../config";
+import { apiEndpoint } from "../config";
 import logo from "../assets/logo.svg";
 
 const Root = () => {
@@ -13,7 +13,7 @@ const Root = () => {
 
   const handleClearDb = async () => {
     try {
-      await fetch(`${backendUrl}/clear`, {
+      await fetch(`${apiEndpoint}/clear`, {
         method: "GET",
       });
     } catch (error) {
