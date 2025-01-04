@@ -18,90 +18,89 @@ export enum FilterTab {
   LISTED = "LISTED",
   SOLD = "SOLD",
 }
+
 const Canvases = () => {
   const { address } = useAccount();
-
   const [filterTab, setFilterTab] = useState(FilterTab.ALL);
-  const [selectedChainId, setSelectedChainId] = useState<number>(
-    config.chains[0].id
+  const [selectedChainId, setSelectedChainId] = useState(
+    config.chains[0]?.id || 0
   );
   const [showModal, setShowModal] = useState(false);
-  const [canvases, setCanvases] = useState<ICanvas[]>([]);
 
   const toggleModal = useCallback(() => {
     setShowModal((prev) => !prev);
   }, []);
 
-  const tabs = useMemo(
-    () =>
-      Object.values(FilterTab).map((mode) => (
-        <Tab
-          key={mode}
-          onClick={() => setFilterTab(mode)}
-          $active={filterTab === mode}
-        >
-          {mode[0] + mode.slice(1).toLowerCase()}
-        </Tab>
-      )),
-    [filterTab]
-  );
+  // Generate the query URL dynamically
+  const url = useMemo(() => {
+    if (!address) return `${apiEndpoint}/canvases`;
 
-  const subTabs = useMemo(
-    () =>
-      config.chains.map((chain) => (
-        <SubTab
-          key={chain.id}
-          onClick={() => setSelectedChainId(chain.id)}
-          $active={selectedChainId === chain.id}
-        >
-          {chain.name}
-        </SubTab>
-      )),
-    [selectedChainId]
-  );
-
-  const [key, setKey] = useState(["canvases"]);
-  const [url, setUrl] = useState(`${apiEndpoint}/canvases`);
-
-  const { isPending, error, data, refetch, isFetching } = useQuery({
-    queryKey: key,
-    queryFn: () => GET(url),
-    enabled: true,
-    refetchInterval: 1000,
-  });
-
-  useEffect(() => {
-    if (!address) return;
-
-    if (filterTab === FilterTab.ALL) {
-      setKey(["canvases"]);
-      setUrl(`${apiEndpoint}/canvases`);
-    } else if (filterTab === FilterTab.OWNED) {
-      setKey(["canvasesJoined", address]);
-      setUrl(`${apiEndpoint}/addresses/${address}/canvases/joined`);
-    } else if (filterTab === FilterTab.JOINED) {
-      setKey(["canvasesGenerated", address]);
-      setUrl(`${apiEndpoint}/addresses/${address}/canvases/generated`);
+    switch (filterTab) {
+      case FilterTab.OWNED:
+        return `${apiEndpoint}/addresses/${address}/canvases/joined`;
+      case FilterTab.JOINED:
+        return `${apiEndpoint}/addresses/${address}/canvases/generated`;
+      default:
+        return `${apiEndpoint}/canvases`;
     }
   }, [filterTab, address]);
+
+  // Memoized tabs
+  const Tabs = useMemo(() => {
+    return Object.values(FilterTab).map((tab) => (
+      <Tab
+        key={tab}
+        onClick={() => setFilterTab(tab)}
+        $active={filterTab === tab}
+      >
+        {tab[0] + tab.slice(1).toLowerCase()}
+      </Tab>
+    ));
+  }, [filterTab]);
+
+  // Memoized sub-tabs
+  const SubTabs = useMemo(() => {
+    return config.chains.map((chain) => (
+      <SubTab
+        key={chain.id}
+        onClick={() => setSelectedChainId(chain.id)}
+        $active={selectedChainId === chain.id}
+      >
+        {chain.name}
+      </SubTab>
+    ));
+  }, [selectedChainId]);
+
+  // Fetch data using react-query
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["canvases", filterTab, address],
+    queryFn: () => GET(url),
+    enabled: !!address || filterTab === FilterTab.ALL,
+    refetchInterval: 1000,
+  });
 
   return (
     <main className="page-container">
       <div>
-        <div className="tabs-wrapper mb-3">{tabs}</div>
-        <SubTabsWrapper>{subTabs}</SubTabsWrapper>
+        <div className="tabs-wrapper mb-3">{Tabs}</div>
+        <SubTabsWrapper>{SubTabs}</SubTabsWrapper>
+
         <div className="canvas-cards-container">
-          {isPending ? (
+          {isLoading ? (
             <Loader />
-          ) : !canvases?.length ? (
-            <div style={{ color: "white" }}>No canvases created yet</div>
-          ) : (
-            data.map((canvasData) => (
+          ) : error ? (
+            <div style={{ color: "red" }}>
+              Failed to load canvases. Please try again.
+            </div>
+          ) : data?.length ? (
+            data.map((canvasData: ICanvas) => (
               <CanvasCard
+                key={`${canvasData.canvasId}-${canvasData.name}`}
                 {...canvasData}
-                key={`${canvasData.canvasId}-${canvasData.name}-${canvasData.owner}-${canvasData.width}-${canvasData.height}`}
               />
             ))
+          ) : (
+            <div style={{ color: "white" }}>No canvases available.</div>
           )}
         </div>
       </div>
