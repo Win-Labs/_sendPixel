@@ -32,18 +32,18 @@ export interface PixelItem {
 }
 
 const Canvas = () => {
-  const { canvasId: paramCanvasId } = useParams();
+  const { canvasId } = useParams();
   const navigate = useNavigate();
-  const { data: hash, sendTransaction, isPending: isPixelTransactionPending } = useSendTransaction();
+  const { data, sendTransaction, isPending } = useSendTransaction();
   const {
     isPending: isPendingCanvas,
     error: errorCanvas,
     data: dataCanvas,
     refetch: refetchCanvas,
   } = useQuery({
-    queryKey: ["pixels", paramCanvasId],
-    queryFn: () => GET(`${apiEndpoint}/canvases/${paramCanvasId}`),
-    enabled: !!paramCanvasId,
+    queryKey: ["pixels", canvasId],
+    queryFn: () => GET(`${apiEndpoint}/canvases/${canvasId}`),
+    enabled: !!canvasId,
     refetchInterval: 3000,
   });
 
@@ -125,7 +125,7 @@ const Canvas = () => {
 
   useEffect(() => {
     refetchCanvas();
-  }, [hash]);
+  }, [data]);
 
   return (
     <PageContainer>
@@ -161,7 +161,7 @@ const Canvas = () => {
                   onConstruct={encodeToNativeCoin}
                   activePixelId={activePixelId}
                   setActivePixelId={setActivePixelId}
-                  isPixelTransactionPending={isPixelTransactionPending}
+                  isPixelTransactionPending={isPending}
                 />
               ))}
             </PixelsContainer>
