@@ -86,7 +86,7 @@ const Canvas = () => {
     return () => {
       setPixels([]);
     };
-  }, [canvas, dataCanvas]); // Add dependencies
+  }, [canvas, dataCanvas]);
 
   const handleClickOutside = event => {
     if (pixelsContainerRef.current && !pixelsContainerRef.current.contains(event.target)) {
@@ -134,7 +134,6 @@ const Canvas = () => {
       ) : (
         canvas && (
           <>
-            const BoldText = styled.span` font-weight: bold; `; return (
             <CanvasHeader>
               <CanvasHeaderLeft>
                 <h1>{canvas.name}</h1>
@@ -154,7 +153,6 @@ const Canvas = () => {
                 <img src={`https://noun.pics/${canvas.nounImageId}`} />
               </CanvasHeaderRight>
             </CanvasHeader>
-            );
             <PixelsContainer width={canvas.width} height={canvas.height} ref={pixelsContainerRef}>
               {pixels.map(pixel => (
                 <Pixel
