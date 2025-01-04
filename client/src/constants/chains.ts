@@ -1,14 +1,9 @@
 import {
   holesky as holeskyDefault,
   sepolia as sepoliaDefault,
-  celoAlfajores as celoAlfajoresDefault,
   baseSepolia as baseSepoliaDefault,
-  lineaSepolia as lineaSepoliaDefault,
-  scrollSepolia as scrollSepoliaDefault,
-  morphHolesky as morphHoleskyDefault,
   localhost as localhostDefault,
 } from "viem/chains";
-import { defineChain, webSocket } from "viem";
 
 const alchemyApiKey: string = import.meta.env.VITE_PUBLIC_ALCHEMY_API_KEY;
 
@@ -16,19 +11,6 @@ const localhost = {
   ...localhostDefault,
   id: 31337,
 };
-
-const neoXT4 = defineChain({
-  id: 12227332,
-  nativeCurrency: { name: "GAS", symbol: "GAS", decimals: 18 },
-  name: "NeoX T4",
-  rpcUrls: {
-    default: {
-      http: ["https://neoxt4seed1.ngd.network/"],
-      webSocket: ["wss://neoxt4wss1.ngd.network"],
-    },
-  },
-  testnet: true,
-});
 
 const holesky = {
   ...holeskyDefault,
@@ -52,17 +34,6 @@ const sepolia = {
   },
 };
 
-const celoAlfajores = {
-  ...celoAlfajoresDefault,
-  rpcUrls: {
-    ...celoAlfajoresDefault.rpcUrls,
-    custom: {
-      http: ["https://alfajores-forno.celo-testnet.org"],
-      webSocket: [`https://alfajores-forno.celo-testnet.org/`],
-    },
-  },
-};
-
 const baseSepolia = {
   ...baseSepoliaDefault,
   rpcUrls: {
@@ -74,47 +45,4 @@ const baseSepolia = {
   },
 };
 
-const lineaSepolia = {
-  ...lineaSepoliaDefault,
-  rpcUrls: {
-    ...lineaSepoliaDefault.rpcUrls,
-    custom: {
-      http: [`https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://linea-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-};
-
-const scrollSepolia = {
-  ...scrollSepoliaDefault,
-  rpcUrls: {
-    ...scrollSepoliaDefault.rpcUrls,
-    custom: {
-      http: [`https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://scroll-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-};
-
-const morphHolesky = {
-  ...morphHoleskyDefault,
-  rpcUrls: {
-    ...morphHoleskyDefault.rpcUrls,
-    custom: {
-      http: morphHoleskyDefault.rpcUrls.default.http[0],
-      webSocket: [`wss://rpc-quicknode-holesky.morphl2.io`],
-    },
-  },
-};
-
-export {
-  holesky,
-  sepolia,
-  celoAlfajores,
-  baseSepolia,
-  lineaSepolia,
-  scrollSepolia,
-  morphHolesky,
-  localhost,
-  neoXT4,
-};
+export { holesky, sepolia, baseSepolia, localhost };
