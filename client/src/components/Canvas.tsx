@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import styled from "styled-components";
 
 import { useSendTransaction } from "wagmi";
 import { apiEndpoint, config } from "../config";
@@ -128,8 +127,6 @@ const Canvas = () => {
     refetchCanvas();
   }, [hash]);
 
-  const chain = config.chains.find(chain => chain.id === dataCanvas?.chainId);
-
   return (
     <PageContainer>
       {isPendingCanvas ? (
@@ -150,14 +147,6 @@ const Canvas = () => {
                   <BoldText>
                     {canvas.width}x{canvas.height}
                   </BoldText>
-                </InfoRow>
-                <InfoRow>
-                  <span>Funding recipient:</span>
-                  <BoldText>{canvas.destination}</BoldText>
-                </InfoRow>
-                <InfoRow>
-                  <span>Deployed network:</span>
-                  <BoldText>{config.chains.find(chain => chain.id === canvas.chainId)?.name}</BoldText>
                 </InfoRow>
               </CanvasHeaderLeft>
               <CanvasHeaderRight>

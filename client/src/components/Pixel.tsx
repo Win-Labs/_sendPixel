@@ -61,15 +61,7 @@ const Pixel: React.FC<IProps> = React.memo(props => {
     <PixelContainer $color={color} onClick={() => props.setActivePixelId(props.pixelData._id!)}>
       {isActive && (
         <PaletteContainer onClick={handlePropagation}>
-          <div
-            style={{
-              color: "white",
-              fontSize: "8px",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
+          <div>
             <div>Last owner:</div>
             <div>{props.pixelData?.owner || "none"}</div>
           </div>
