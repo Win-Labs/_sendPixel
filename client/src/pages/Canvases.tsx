@@ -1,9 +1,12 @@
-import { useState } from "react";
-import * as s from "./styles/CanvasesStyles";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { Tab, SubTab, SubTabsWrapper } from "./styles/CanvasesStyles";
 import Modal from "../components/Modal";
-import { config } from "../config";
+import { config, backendUrl } from "../config";
 import { useOutletContext } from "react-router-dom";
-import CanvasCards from "../components/CanvasCards";
+import { useQuery } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
+import CanvasCard from "../components/CanvasCard";
+import Loader from "../components/Loader";
 
 export enum FilterMode {
   ALL = "ALL",
@@ -12,89 +15,108 @@ export enum FilterMode {
   LISTED = "LISTED",
   SOLD = "SOLD",
 }
-
 const Canvases = () => {
   const { address } = useOutletContext<{ address: string | undefined }>();
+  const { address: accountAddress } = useAccount();
+
   const [filterMode, setFilterMode] = useState(FilterMode.ALL);
   const [selectedChainId, setSelectedChainId] = useState<number>(
     config.chains[0].id
   );
-
   const [showModal, setShowModal] = useState(false);
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  const [canvases, setCanvases] = useState([]);
+
+  const toggleModal = useCallback(() => {
+    setShowModal((prev) => !prev);
+  }, []);
+
+  const tabs = useMemo(
+    () =>
+      Object.values(FilterMode).map((mode) => (
+        <Tab
+          key={mode}
+          onClick={() => setFilterMode(mode)}
+          $active={filterMode === mode}
+        >
+          {mode[0] + mode.slice(1).toLowerCase()}
+        </Tab>
+      )),
+    [filterMode]
+  );
+
+  const subTabs = useMemo(
+    () =>
+      config.chains.map((chain) => (
+        <SubTab
+          key={chain.id}
+          onClick={() => setSelectedChainId(chain.id)}
+          $active={selectedChainId === chain.id}
+        >
+          {chain.name}
+        </SubTab>
+      )),
+    [selectedChainId]
+  );
+
+  const { isLoading: isLoadingCanvases, data: dataCanvases } = useQuery({
+    queryKey: ["canvases"],
+    queryFn: () => fetch(`${backendUrl}/canvases`).then((res) => res.json()),
+    enabled: true,
+    refetchInterval: 3000,
+  });
+
+  useEffect(() => {
+    if (dataCanvases) {
+      setCanvases(dataCanvases);
+    }
+  }, [dataCanvases]);
+
+  const displayedCanvases = canvases
+    .filter((canvas) => {
+      if (filterMode === FilterMode.ALL) {
+        return canvas;
+      } else if (filterMode === FilterMode.OWNED) {
+        return canvas.owner === accountAddress;
+      } else if (filterMode === FilterMode.JOINED) {
+        return canvas.pixels.some((pixel) => pixel.owner === accountAddress);
+      } else if (filterMode === FilterMode.LISTED) {
+        return canvas.isListed;
+      } else {
+        return canvas.isSold;
+      }
+    })
+    .filter((canvas) => {
+      return canvas.chainId === selectedChainId;
+    });
 
   return (
     <main className="page-container">
       <div>
-        <div className="tabs-wrapper mb-3">
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.ALL)}
-            $active={filterMode === FilterMode.ALL}
-          >
-            All
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.OWNED)}
-            $active={filterMode === FilterMode.OWNED}
-          >
-            Owned
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.JOINED)}
-            $active={filterMode === FilterMode.JOINED}
-          >
-            Joined
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.LISTED)}
-            $active={filterMode === FilterMode.LISTED}
-          >
-            LISTED
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.SOLD)}
-            $active={filterMode === FilterMode.SOLD}
-          >
-            SOLD
-          </s.Tab>
-        </div>
-        <s.SubTabsWrapper>
-          {config.chains.map((chain) => (
-            <s.SubTab
-              key={chain.id}
-              onClick={() => setSelectedChainId(chain.id)}
-              $active={selectedChainId === chain.id}
-            >
-              {chain.name}
-            </s.SubTab>
-          ))}
-        </s.SubTabsWrapper>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <CanvasCards
-            filterMode={filterMode}
-            selectedChainId={selectedChainId}
-          />
+        <div className="tabs-wrapper mb-3">{tabs}</div>
+        <SubTabsWrapper>{subTabs}</SubTabsWrapper>
+        <div className="canvas-cards-container">
+          {isLoadingCanvases ? (
+            <Loader />
+          ) : !canvases?.length ? (
+            <div style={{ color: "white" }}>No canvases created yet</div>
+          ) : (
+            displayedCanvases.map((canvasData) => (
+              <CanvasCard
+                {...canvasData}
+                key={`${canvasData.canvasId}-${canvasData.name}-${canvasData.owner}-${canvasData.width}-${canvasData.height}`}
+              />
+            ))
+          )}
         </div>
       </div>
 
-      <div
-        style={{ display: "flex", width: "100%", justifyContent: "center" }}
-        className="mt-4"
-      >
-        {address && (
+      {address && (
+        <div className="create-canvas-button-container mt-4">
           <button className="btn btn-warning" onClick={toggleModal}>
             Create New Canvas
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {showModal && <Modal toggle={toggleModal} />}
     </main>
