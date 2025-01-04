@@ -19,29 +19,11 @@ const getCanvas = async (canvasId) => {
   return await Canvas.findOne({ canvasId });
 };
 
-const initializeCanvas = async ({
-  canvasId,
-  owner,
-  name,
-  width,
-  height,
-  mode,
-  chainId,
-  destination,
-  creationTime,
-}) => {
+const initializeCanvas = async (canvasData) => {
   try {
     const newCanvas = new Canvas({
-      canvasId,
-      owner,
-      name,
-      width,
-      height,
-      mode,
-      chainId,
+      ...canvasData,
       pixels: [],
-      destination,
-      creationTime,
       nounImageId: Math.floor(Math.random() * 1000) + 1,
     });
 
