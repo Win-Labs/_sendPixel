@@ -1,45 +1,53 @@
-import * as s from "./styles/CanvasCardsStyles";
+import {
+  Card,
+  NameIdEditWrapper,
+  NameIdWrapper,
+  Name,
+  Id,
+  PropWrapper,
+  PropTitle,
+  PropValue,
+  PropsWrapper,
+} from "./styles/CanvasCardsStyles";
 import useExpirationTimer from "../hooks/useExpirationTimer";
 
 const CanvasCard = ({ canvasId, name, owner, width, height, creationTime, nounImageId }) => {
   const { isExpired, timeLeft } = useExpirationTimer(creationTime, 10); // 10 minutes expiration
+  const resolution = `${width}x${height}`;
+  const timeLeftString = `${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`;
 
   return (
-    <s.Card>
+    <Card>
       <div>
         <img src={`https://noun.pics/${nounImageId}`} alt={name} />
       </div>
-      <s.NameIdEditWrapper>
-        <s.NameIdWrapper>
-          <s.Name>{name}</s.Name>
-          <s.Id>{canvasId}</s.Id>
-        </s.NameIdWrapper>
-      </s.NameIdEditWrapper>
-      <s.PropWrapper>
-        <s.PropTitle>Deployer</s.PropTitle>
-        <s.Id>{owner}</s.Id>
-      </s.PropWrapper>
-      <s.PropWrapper>
-        <s.PropTitle>Resolution</s.PropTitle>
-        <s.PropValue>
-          {width}x{height}
-        </s.PropValue>
-      </s.PropWrapper>
-      <s.PropsWrapper>
+      <NameIdEditWrapper>
+        <NameIdWrapper>
+          <Name>{name}</Name>
+          <Id>{canvasId}</Id>
+        </NameIdWrapper>
+      </NameIdEditWrapper>
+      <PropWrapper>
+        <PropTitle>Deployer</PropTitle>
+        <Id>{owner}</Id>
+      </PropWrapper>
+      <PropWrapper>
+        <PropTitle>Resolution</PropTitle>
+        <PropValue>{resolution}</PropValue>
+      </PropWrapper>
+      <PropsWrapper>
         {isExpired ? (
-          <s.PropWrapper>
-            <s.PropTitle>Expired</s.PropTitle>
-          </s.PropWrapper>
+          <PropWrapper>
+            <PropTitle>Expired</PropTitle>
+          </PropWrapper>
         ) : (
-          <s.PropWrapper>
-            <s.PropTitle>Expires in:</s.PropTitle>
-            <s.PropValue>
-              {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-            </s.PropValue>
-          </s.PropWrapper>
+          <PropWrapper>
+            <PropTitle>Expires in:</PropTitle>
+            <PropValue>{timeLeftString}</PropValue>
+          </PropWrapper>
         )}
-      </s.PropsWrapper>
-    </s.Card>
+      </PropsWrapper>
+    </Card>
   );
 };
 
