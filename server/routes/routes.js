@@ -31,35 +31,13 @@ router.get("/test-insert", async (_, res) => {
     pixels: [
       {
         _id: "pixel2",
-        owner: "user123",
-        x: 0,
-        y: 0,
-        color: {
-          r: 255,
-          g: 0,
-          b: 0,
-        },
-      },
-      {
-        _id: "pixel2",
         owner: "user456",
         x: 1,
-        y: 0,
+        y: 1,
         color: {
           r: 0,
           g: 255,
           b: 0,
-        },
-      },
-      {
-        _id: "pixel3",
-        owner: "user789",
-        x: 2,
-        y: 0,
-        color: {
-          r: 0,
-          g: 0,
-          b: 255,
         },
       },
     ],
