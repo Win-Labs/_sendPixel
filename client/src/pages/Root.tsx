@@ -12,56 +12,37 @@ const Root = () => {
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
 
-  const handleClearDb = async () => {
-    await GET(`${apiEndpoint}/clear`);
-  };
-
   return (
-    <div>
-      <div>
+    <div className="w-full ">
+      <div className="w-full flex justify-between">
         <div>
           <a href="/">
             <img src={logo} height="65px" alt="Logo" />
           </a>
         </div>
-        <div>
-          <div>
-            {address ? (
-              <div>
-                <div>{address}</div>
 
-                <button
-                  onClick={() => {
-                    disconnect();
-                  }}
-                >
-                  Disconnect
-                </button>
-                <button
-                  onClick={() => {
-                    handleClearDb();
-                  }}
-                >
-                  Clear DB
-                </button>
-              </div>
-            ) : (
-              <ConnectWalletBtnWrapper>
-                <button onClick={() => connect({ connector: connectors[0] })}>Login</button>
-              </ConnectWalletBtnWrapper>
-            )}
-          </div>
+        <div className="flex flex-row items-center">
+          {address ? (
+            <>
+              <div>{address}</div>
+              <button onClick={() => disconnect()}>Disconnect</button>
+            </>
+          ) : (
+            <div>
+              <button onClick={() => connect({ connector: connectors[0] })}>Login</button>
+            </div>
+          )}
         </div>
       </div>
 
-      <Outlet />
+      {/* <Outlet /> */}
 
-      <FooterLinksContainer>
+      {/* <FooterLinksContainer>
         <a href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer">
           Blog
         </a>
         <div>Branch: Grind</div>
-      </FooterLinksContainer>
+      </FooterLinksContainer> */}
     </div>
   );
 };
