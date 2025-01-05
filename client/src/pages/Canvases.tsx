@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Tab, SubTab, SubTabsWrapper, CardsContainer } from "./styles/CanvasesStyles";
 import Modal from "../components/Modal";
-import { config, apiEndpoint } from "../config";
+import { apiEndpoint } from "../config";
 import { useQuery } from "@tanstack/react-query";
 import { useAccount } from "wagmi";
 import CanvasCard from "../components/CanvasCard";
@@ -17,7 +16,7 @@ export enum FilterTab {
 
 const Canvases = () => {
   const { address } = useAccount();
-  const [filterTab, setFilterTab] = useState("All");
+  const [filterTab, setFilterTab] = useState(FilterTab.ARENA);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -28,9 +27,13 @@ const Canvases = () => {
   // Memoized tabs
   const Tabs = useMemo(() => {
     return Object.values(FilterTab).map(tab => (
-      <Tab key={tab} onClick={() => setFilterTab(tab)} $active={filterTab === tab}>
+      <div
+        className={filterTab === tab ? `text-2xl text-yellow-400 cursor-pointer` : `text-2xl text-white cursor-pointer`}
+        key={tab}
+        onClick={() => setFilterTab(tab)}
+      >
         {tab[0] + tab.slice(1).toLowerCase()}
-      </Tab>
+      </div>
     ));
   }, [filterTab]);
 
@@ -44,22 +47,19 @@ const Canvases = () => {
 
   return (
     <main>
+      <div className="flex w-full gap-8">{Tabs}</div>
       <div>
-        <div className="flex w-full gap-8">{Tabs}</div>
-        <div>
-          {isLoading ? (
-            <Loader />
-          ) : (
-            <CardsContainer>
-              {data.map((canvasData: ICanvas) => (
-                <CanvasCard key={`${canvasData.canvasId}-${canvasData.name}`} {...canvasData} />
-              ))}
-            </CardsContainer>
-          )}
-        </div>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="flex w-full gap-3 pt-8 items-center mb-8">
+            {data.map((canvasData: ICanvas) => (
+              <CanvasCard key={`${canvasData.canvasId}-${canvasData.name}`} {...canvasData} />
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Create New Canvas Button */}
       {address && (
         <div className="flex w-full justify-center">
           <button
@@ -71,7 +71,6 @@ const Canvases = () => {
         </div>
       )}
 
-      {/* Modal */}
       {showModal && <Modal toggle={toggleModal} />}
     </main>
   );

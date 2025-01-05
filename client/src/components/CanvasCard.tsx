@@ -1,14 +1,3 @@
-import {
-  Card,
-  NameIdEditWrapper,
-  NameIdWrapper,
-  Name,
-  Id,
-  PropWrapper,
-  PropTitle,
-  PropValue,
-  PropsWrapper,
-} from "./styles/CanvasCardsStyles";
 import useExpirationTimer from "../hooks/useExpirationTimer";
 
 const CanvasCard = ({ name, width, height, creationTime, nounImageId }) => {
