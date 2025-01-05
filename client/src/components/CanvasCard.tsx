@@ -17,7 +17,7 @@ const CanvasCard = ({ name, width, height, creationTime, nounImageId }) => {
   const timeLeftString = `${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`;
 
   return (
-    <div className="border-4 rounded-md flex flex-col gap-3 border-yellow-400 p-3 shadow-md  shadow-orange-600">
+    <div className="border-4 rounded-md flex flex-col gap-3 border-yellow-400 p-4 shadow-md  shadow-orange-600">
       <div>
         <img src={`https://noun.pics/${nounImageId}`} alt={name} />
       </div>

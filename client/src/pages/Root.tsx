@@ -15,7 +15,7 @@ const Root = () => {
   return (
     <div className="container flex flex-col xl mx-auto h-full">
       <div className="w-full h-24 flex justify-between py-4 mb-8">
-        <img className="flex-none" src={logo} alt="Logo" />
+        <img src={logo} alt="Logo" className="h-16 w-auto object-contain" />
 
         <div className="flex flex-row items-center gap-x-5">
           {address ? (
