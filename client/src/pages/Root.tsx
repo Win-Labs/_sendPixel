@@ -13,19 +13,29 @@ const Root = () => {
   const { disconnect } = useDisconnect();
 
   return (
-    <div className="container xl mx-auto">
-      <div className="w-full h-20 flex justify-between">
-        <img src={logo} height="65px" alt="Logo" />
+    <div className="container flex flex-col xl mx-auto h-full">
+      <div className="w-full h-24 flex justify-between py-4 mb-8">
+        <img className="flex-none" src={logo} alt="Logo" />
 
         <div className="flex flex-row items-center gap-x-5">
           {address ? (
             <>
-              <div>{address}</div>
-              <button onClick={() => disconnect()}>Disconnect</button>
+              <span className="text-yellow-400">{address}</span>
+              <button
+                className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color bg-yellow-400 px-6 py-2"
+                onClick={() => disconnect()}
+              >
+                Disconnect
+              </button>
             </>
           ) : (
             <div>
-              <button onClick={() => connect({ connector: connectors[0] })}>Login</button>
+              <button
+                className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color bg-yellow-400 px-6 py-2"
+                onClick={() => connect({ connector: connectors[0] })}
+              >
+                Login
+              </button>
             </div>
           )}
         </div>
@@ -33,8 +43,8 @@ const Root = () => {
 
       <Outlet />
 
-      <div>
-        <a href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer">
+      <div className="w-full flex py-4 mt-auto">
+        <a className="text-white" href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer">
           Blog
         </a>
       </div>

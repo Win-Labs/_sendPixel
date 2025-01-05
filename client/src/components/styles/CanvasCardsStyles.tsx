@@ -14,14 +14,15 @@ export const CardsContainer = styled.div`
 `;
 
 export const Card = styled.div`
-  border: 1px solid lightgrey;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 200px;
   padding: 20px;
+  max-width: 300px;
   background: rgba(34, 34, 34, 0.6);
   backdrop-filter: blur(100px);
+  border: 3px solid #ffffff;
+  border-radius: 0.375rem;
 `;
 
 export const NameIdEditWrapper = styled.div`

@@ -17,23 +17,23 @@ const CanvasCard = ({ name, width, height, creationTime, nounImageId }) => {
   const timeLeftString = `${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`;
 
   return (
-    <Card>
+    <div className="border-4 rounded-md flex flex-col gap-3 border-yellow-400 p-3 shadow-md  shadow-orange-600">
       <div>
         <img src={`https://noun.pics/${nounImageId}`} alt={name} />
       </div>
-      <NameIdEditWrapper>
-        <NameIdWrapper>
-          <Name>{name}</Name>
-        </NameIdWrapper>
-      </NameIdEditWrapper>
-      <PropWrapper>
-        <PropTitle>Resolution</PropTitle>
-        <PropValue>{resolution}</PropValue>
-      </PropWrapper>
-      <PropsWrapper>
-        <button className="btn btn-warning">Enter</button>
-      </PropsWrapper>
-    </Card>
+      <div className="flex flex-col items-center">
+        <span className="text-white text-xs">{name}</span>
+      </div>
+      <div className="flex flex-col items-center">
+        <span className="text-white text-xs">{resolution}</span>
+      </div>
+
+      <div className="flex w-full justify-center">
+        <button className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md bg-yellow-400 px-6 py-2 text-xs">
+          Enter
+        </button>
+      </div>
+    </div>
   );
 };
 

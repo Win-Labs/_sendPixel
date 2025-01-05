@@ -45,10 +45,7 @@ const Canvases = () => {
   return (
     <main>
       <div>
-        {/* Tabs Section */}
-        <div>{Tabs}</div>
-
-        {/* Content Section */}
+        <div className="flex w-full gap-8">{Tabs}</div>
         <div>
           {isLoading ? (
             <Loader />
@@ -64,8 +61,13 @@ const Canvases = () => {
 
       {/* Create New Canvas Button */}
       {address && (
-        <div>
-          <button onClick={toggleModal}>Create New Canvas</button>
+        <div className="flex w-full justify-center">
+          <button
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color bg-yellow-400 px-6 py-2"
+            onClick={toggleModal}
+          >
+            Create New Canvas
+          </button>
         </div>
       )}
 

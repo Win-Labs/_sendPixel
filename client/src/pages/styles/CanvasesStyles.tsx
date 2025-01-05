@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const CardsContainer = styled.div`
   display: flex;
   gap: 24px;
-  padding: 24px;
+  padding-top: 24px;
   align-items: center;
 
   margin-bottom: 63px;
@@ -61,7 +61,7 @@ interface TabProps {
 }
 
 export const Tab = styled.div<TabProps>`
-  color: ${(props) => (props.$active ? "#ffc107" : "white")};
+  color: ${props => (props.$active ? "#ffc107" : "white")};
   font-size: 30px;
   font-weight: 500;
   cursor: pointer;
