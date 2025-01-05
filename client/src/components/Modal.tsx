@@ -62,7 +62,7 @@ const Modal = ({ toggle }) => {
       >
         <Title>Canvas Parameters</Title>
         <InputContainer>
-          <Label>Canvas Name</Label>
+          <Label>Name</Label>
           <Input
             placeholder="Enter name of the canvas"
             type="text"
@@ -90,8 +90,13 @@ const Modal = ({ toggle }) => {
         </InputContainer>
 
         <SubmitBtnContainer>
-          <button onClick={handleInitializeCanvas} type="button" disabled={isPending || !isFormValid}>
-            Create Canvas
+          <button
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color bg-yellow-400 px-6 py-2"
+            onClick={handleInitializeCanvas}
+            type="button"
+            disabled={isPending || !isFormValid}
+          >
+            Confirm
           </button>
         </SubmitBtnContainer>
       </ModalContainer>
