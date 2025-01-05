@@ -2,11 +2,11 @@ import styled from "styled-components";
 
 export const CardsContainer = styled.div`
   display: flex;
+  width: 100%;
   flex-wrap: wrap;
   gap: 26px;
   padding: 21px;
-  overflow-y: scroll;
-  height: 600px;
+  overflow-y: auto;
   border-radius: 8px;
   border: 1px solid lightgrey;
   justify-content: center;
@@ -18,6 +18,7 @@ export const Card = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 200px;
   padding: 20px;
   background: rgba(34, 34, 34, 0.6);
   backdrop-filter: blur(100px);

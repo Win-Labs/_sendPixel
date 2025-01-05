@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { Tab, SubTab, SubTabsWrapper } from "./styles/CanvasesStyles";
+import { Tab, SubTab, SubTabsWrapper, CardsContainer } from "./styles/CanvasesStyles";
 import Modal from "../components/Modal";
 import { config, apiEndpoint } from "../config";
 import { useQuery } from "@tanstack/react-query";
@@ -45,29 +45,31 @@ const Canvases = () => {
   return (
     <main>
       <div>
+        {/* Tabs Section */}
         <div>{Tabs}</div>
 
+        {/* Content Section */}
         <div>
           {isLoading ? (
             <Loader />
-          ) : error ? (
-            <div style={{ color: "red" }}>Failed to load canvases. Please try again.</div>
-          ) : data?.length ? (
-            data.map((canvasData: ICanvas) => (
-              <CanvasCard key={`${canvasData.canvasId}-${canvasData.name}`} {...canvasData} />
-            ))
           ) : (
-            <div style={{ color: "white" }}>No canvases available.</div>
+            <CardsContainer>
+              {data.map((canvasData: ICanvas) => (
+                <CanvasCard key={`${canvasData.canvasId}-${canvasData.name}`} {...canvasData} />
+              ))}
+            </CardsContainer>
           )}
         </div>
       </div>
 
+      {/* Create New Canvas Button */}
       {address && (
         <div>
           <button onClick={toggleModal}>Create New Canvas</button>
         </div>
       )}
 
+      {/* Modal */}
       {showModal && <Modal toggle={toggleModal} />}
     </main>
   );

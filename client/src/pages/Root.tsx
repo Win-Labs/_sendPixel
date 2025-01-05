@@ -13,15 +13,11 @@ const Root = () => {
   const { disconnect } = useDisconnect();
 
   return (
-    <div className="w-full ">
-      <div className="w-full flex justify-between">
-        <div>
-          <a href="/">
-            <img src={logo} height="65px" alt="Logo" />
-          </a>
-        </div>
+    <div className="container xl mx-auto">
+      <div className="w-full h-20 flex justify-between">
+        <img src={logo} height="65px" alt="Logo" />
 
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center gap-x-5">
           {address ? (
             <>
               <div>{address}</div>
@@ -35,14 +31,13 @@ const Root = () => {
         </div>
       </div>
 
-      {/* <Outlet /> */}
+      <Outlet />
 
-      {/* <FooterLinksContainer>
+      <div>
         <a href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer">
           Blog
         </a>
-        <div>Branch: Grind</div>
-      </FooterLinksContainer> */}
+      </div>
     </div>
   );
 };
