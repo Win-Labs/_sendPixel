@@ -55,51 +55,54 @@ const Modal = ({ toggle }) => {
     <Loader />
   ) : (
     <Overlay onClick={toggle}>
-      <ModalContainer
+      <div
         onClick={e => {
           e.stopPropagation();
         }}
       >
-        <Title>Canvas Parameters</Title>
-        <InputContainer>
-          <Label>Name</Label>
-          <Input
+        <h2 className="mb-4 text-xl flex justify-center">Canvas Settings</h2>
+        <div className="flex flex-col mb-3">
+          <p>Name</p>
+          <input
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
             placeholder="Enter name of the canvas"
             type="text"
             value={formState.name}
             onChange={handleChange("name")}
           />
-        </InputContainer>
-        <InputContainer>
-          <Label>Width</Label>
-          <Input
+        </div>
+        <div className="flex flex-col mb-3">
+          <p>Width</p>
+          <input
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
             placeholder="Enter width of the canvas"
             type="text"
             value={formState.width}
             onChange={handleChange("width")}
           />
-        </InputContainer>
-        <InputContainer>
-          <Label>Height</Label>
-          <Input
+        </div>
+        <div className="flex flex-col mb-8">
+          <p>Height</p>
+          <input
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
             placeholder="Enter height of the canvas"
             type="text"
             value={formState.height}
             onChange={handleChange("height")}
           />
-        </InputContainer>
+        </div>
 
-        <SubmitBtnContainer>
+        <div className="flex justify-center">
           <button
-            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color bg-yellow-400 px-6 py-2"
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
             onClick={handleInitializeCanvas}
             type="button"
             disabled={isPending || !isFormValid}
           >
             Confirm
           </button>
-        </SubmitBtnContainer>
-      </ModalContainer>
+        </div>
+      </div>
     </Overlay>
   );
 };
