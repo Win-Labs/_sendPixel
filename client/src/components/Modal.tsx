@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
-import { CANVAS_DEPLOYER_ABI, CANVAS_ABI } from "../constants/abis";
+import { CANVAS_DEPLOYER_ABI } from "../constants/abis";
 import { useAccount, useWriteContract } from "wagmi";
-import { Overlay, ModalContainer, Title, InputContainer, Label, SubmitBtnContainer, Input } from "./styles/ModalStyles";
+import { Overlay } from "./styles/ModalStyles";
 import { useTransactionReceipt } from "wagmi";
 import { useFormState } from "../hooks/useFormState";
 import Loader from "./Loader";

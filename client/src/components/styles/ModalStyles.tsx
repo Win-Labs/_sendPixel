@@ -24,36 +24,4 @@ const ModalContainer = styled.div`
   position: absolute;
 `;
 
-const Title = styled.h2`
-  margin-bottom: 20px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-`;
-
-const SelectBox = styled.select`
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-`;
-
-const Label = styled.p``;
-
-const SubmitBtnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-  font-family: inherit;
-`;
-
-export { Overlay, ModalContainer, Title, InputContainer, SelectBox, Label, SubmitBtnContainer, Input };
+export { Overlay, ModalContainer };
