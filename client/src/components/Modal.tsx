@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
 import { CANVAS_DEPLOYER_ABI } from "../constants/abis";
 import { useAccount, useWriteContract } from "wagmi";
-import { Overlay } from "./styles/ModalStyles";
+
 import { useTransactionReceipt } from "wagmi";
 import { useFormState } from "../hooks/useFormState";
 import Loader from "./Loader";
@@ -54,8 +54,12 @@ const Modal = ({ toggle }) => {
   return isPending || (data && !transactionReceipt) ? (
     <Loader />
   ) : (
-    <Overlay onClick={toggle}>
+    <div
+      className="flex w-full h-full justify-center items-center fixed top-0 left-0 z-10 bg-black bg-opacity-50"
+      onClick={toggle}
+    >
       <div
+        className="w-full z-20 max-w-lg bg-white p-7 absolute rounded-lg"
         onClick={e => {
           e.stopPropagation();
         }}
@@ -103,7 +107,7 @@ const Modal = ({ toggle }) => {
           </button>
         </div>
       </div>
-    </Overlay>
+    </div>
   );
 };
 
