@@ -1,11 +1,7 @@
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet } from "react-router";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { ConnectWalletBtnWrapper, FooterLinksContainer } from "./styles/RootStyles";
 
-import { apiEndpoint } from "../config";
 import logo from "../assets/logo.svg";
-import { GET } from "../utils/api";
 
 const Root = () => {
   const { address } = useAccount();
