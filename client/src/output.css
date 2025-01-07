@@ -807,6 +807,10 @@ video {
   background-color: rgb(${color.r},${color.g},${color.b});
 }
 
+.bg-\[var\(--bg-color\)\] {
+  background-color: var(--bg-color);
+}
+
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }

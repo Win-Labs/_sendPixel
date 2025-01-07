@@ -26,11 +26,10 @@ const Pixel: React.FC<IProps> = React.memo(props => {
 
   const isActive = props.activePixelId === props.pixelData._id;
 
-  const tailwindClass = `bg-[rgb(${color.r},${color.g},${color.b})]`;
-
   return (
     <div
-      className={`relative w-full h-full cursor-pointer hover:border-2 border-black ${tailwindClass}`}
+      className={`relative w-full h-full cursor-pointer hover:border-2 border-black bg-[var(--bg-color)]`}
+      style={{ "--bg-color": `rgb(${color.r}, ${color.g}, ${color.b})` } as React.CSSProperties}
       onClick={() => props.setActivePixelId(props.pixelData._id!)}
     >
       {isActive && (
