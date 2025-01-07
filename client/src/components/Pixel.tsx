@@ -12,7 +12,7 @@ interface IProps {
 }
 
 const Pixel: React.FC<IProps> = React.memo(props => {
-  const [color, setColor] = useState(props.pixelData.color);
+  const [color, setColor] = useState(props.pixelData.color || { r: 255, g: 255, b: 255 });
 
   const handleChange = useCallback(newColor => {
     setColor(newColor.rgb);
@@ -26,10 +26,18 @@ const Pixel: React.FC<IProps> = React.memo(props => {
 
   const isActive = props.activePixelId === props.pixelData._id;
 
+  const tailwindClass = `bg-[rgb(${color.r},${color.g},${color.b})]`;
+
   return (
-    <PixelContainer $color={color} onClick={() => props.setActivePixelId(props.pixelData._id!)}>
+    <div
+      className={`relative w-full h-full cursor-pointer hover:border-2 border-black ${tailwindClass}`}
+      onClick={() => props.setActivePixelId(props.pixelData._id!)}
+    >
       {isActive && (
-        <PaletteContainer onClick={handlePropagation}>
+        <div
+          className="flex flex-col absolute gap-2.5 p-2.5 z-[100] top-[100%] bg-gray-200 rounded-lg"
+          onClick={handlePropagation}
+        >
           <div>
             <div>Last owner:</div>
             <div>{props.pixelData?.owner || "none"}</div>
@@ -38,9 +46,9 @@ const Pixel: React.FC<IProps> = React.memo(props => {
           <button onClick={handleConfirm} disabled={props.isPixelTransactionPending}>
             Confirm
           </button>
-        </PaletteContainer>
+        </div>
       )}
-    </PixelContainer>
+    </div>
   );
 });
 
