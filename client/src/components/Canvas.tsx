@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 
 import { useSendTransaction } from "wagmi";
-import { apiEndpoint, config } from "../config";
+import { apiEndpoint } from "../config";
 import { ICanvas } from "../models";
 import Pixel from "./Pixel";
 

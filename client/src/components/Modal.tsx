@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
 import { CANVAS_DEPLOYER_ABI } from "../constants/abis";
 import { useAccount, useWriteContract } from "wagmi";
