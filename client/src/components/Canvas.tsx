@@ -8,6 +8,8 @@ import Pixel from "./Pixel";
 
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../utils/api";
+import Loader from "./Loader";
+import { formatAddress } from "../utils";
 
 export interface PixelItem {
   _id?: number;
@@ -120,51 +122,57 @@ const Canvas = () => {
   return (
     <main className="p-2.5 w-full flex flex-1 flex-col justify-between">
       {isPendingCanvas ? (
-        <div>Loading...</div>
+        <Loader />
       ) : (
         canvas && (
           <>
-            <div className="flex flex-row justify-between mb-6">
-              <div className="flex flex-col text-white">
-                <h1>{canvas.name}</h1>
-                <div className="flex justify-between gap-10">
-                  <span>Canvas creator:</span>
-                  <span className="font-bold">{canvas.owner}</span>
+            <div className="flex flex-row items-start mb-6 justify-center gap-8">
+              <div className="flex flex-col gap-4 items-end">
+                <div className="flex flex-col bg-black text-yellow-500 border-4 border-yellow-500 p-10 rounded-md w-[800px]">
+                  <div className="flex justify-between gap-10">
+                    <span>NAME:</span>
+                    <span className="font-bold">{canvas.name}</span>
+                  </div>
+                  <div className="flex justify-between gap-10">
+                    <span>CREATOR:</span>
+                    <span className="font-bold">{formatAddress(canvas.owner)}</span>
+                  </div>
+                  <div className="flex justify-between gap-10">
+                    <span>RESOLUTION:</span>
+                    <span className="font-bold">
+                      {canvas.width}x{canvas.height}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex justify-between gap-10">
-                  <span>Canvas resolution:</span>
-                  <span className="font-bold">
-                    {canvas.width}x{canvas.height}
-                  </span>
+                <div
+                  className="grid bg-black my-0 w-[500px] grid-cols-[repeat(var(--canvas-columns),1fr)] grid-rows-[repeat(var(--canvas-rows),1fr)] h-[calc(var(--canvas-height))] border-yellow-500 border-4 bg-black"
+                  style={
+                    canvas &&
+                    ({
+                      "--canvas-columns": canvas.width,
+                      "--canvas-rows": canvas.height,
+                      "--canvas-height": `calc(500px * ${canvas.height / canvas.width})`,
+                    } as React.CSSProperties)
+                  }
+                >
+                  {pixels.map(pixel => (
+                    <Pixel
+                      key={pixel._id}
+                      pixelData={pixel}
+                      onConstruct={encodeToNativeCoin}
+                      activePixelId={activePixelId}
+                      setActivePixelId={setActivePixelId}
+                      isPixelTransactionPending={isPending}
+                    />
+                  ))}
                 </div>
               </div>
-              <div className="text-white">
-                <div>Recommended image:</div>
+              <div className="flex flex-col items-center gap-2 p-4 pb-4 pt-4  bg-black text-yellow-500 border-4 border-yellow-500">
+                <span>Recommended Image</span>
                 <img src={`https://noun.pics/${canvas.nounImageId}`} />
               </div>
             </div>
-            <div
-              className="grid bg-black my-0 mx-auto w-[500px] grid-cols-[repeat(var(--canvas-columns),1fr)] grid-rows-[repeat(var(--canvas-rows),1fr)] h-[calc(var(--canvas-height))]"
-              style={
-                canvas &&
-                ({
-                  "--canvas-columns": canvas.width,
-                  "--canvas-rows": canvas.height,
-                  "--canvas-height": `calc(500px * ${canvas.height / canvas.width})`,
-                } as React.CSSProperties)
-              }
-            >
-              {pixels.map(pixel => (
-                <Pixel
-                  key={pixel._id}
-                  pixelData={pixel}
-                  onConstruct={encodeToNativeCoin}
-                  activePixelId={activePixelId}
-                  setActivePixelId={setActivePixelId}
-                  isPixelTransactionPending={isPending}
-                />
-              ))}
-            </div>
+
             <div className="flex justify-center mt-5">
               <button onClick={() => navigate(-1)}>Back to Canvases</button>
             </div>

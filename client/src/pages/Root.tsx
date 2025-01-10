@@ -2,6 +2,7 @@ import { Outlet } from "react-router";
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 
 import logo from "../assets/logo.svg";
+import { NavLink } from "react-router-dom";
 
 const Root = () => {
   const { address } = useAccount();
@@ -11,7 +12,9 @@ const Root = () => {
   return (
     <div className="container flex flex-col xl mx-auto h-full">
       <div className="w-full h-24 flex justify-between py-4 mb-8">
-        <img src={logo} alt="Logo" className="h-16 w-auto object-contain" />
+        <NavLink to="/" className="text-white text-2xl">
+          <img src={logo} alt="Logo" className="h-16 w-auto object-contain" />
+        </NavLink>
 
         <div className="flex flex-row items-center gap-x-5">
           {address ? (
