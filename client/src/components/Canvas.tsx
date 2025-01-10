@@ -144,14 +144,14 @@ const Canvas = () => {
               </div>
             </div>
             <div
-              className="grid bg-white my-0 mx-auto w-[500px]"
+              className="grid bg-black my-0 mx-auto w-[500px] grid-cols-[repeat(var(--canvas-columns),1fr)] grid-rows-[repeat(var(--canvas-rows),1fr)] h-[calc(var(--canvas-height))]"
               style={
-                canvas && {
-                  width: "500px",
-                  gridTemplateColumns: `repeat(${canvas.width}, 1fr)`,
-                  gridTemplateRows: `repeat(${canvas.height}, 1fr)`,
-                  height: `calc(500px * ${canvas.height / canvas.width})`,
-                }
+                canvas &&
+                ({
+                  "--canvas-columns": canvas.width,
+                  "--canvas-rows": canvas.height,
+                  "--canvas-height": `calc(500px * ${canvas.height / canvas.width})`,
+                } as React.CSSProperties)
               }
             >
               {pixels.map(pixel => (
