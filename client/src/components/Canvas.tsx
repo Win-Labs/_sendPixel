@@ -8,16 +8,6 @@ import Pixel from "./Pixel";
 
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../utils/api";
-import {
-  BoldText,
-  CanvasHeader,
-  CanvasHeaderLeft,
-  CanvasHeaderRight,
-  CenteredButtonContainer,
-  InfoRow,
-  PageContainer,
-  PixelsContainer,
-} from "./styles/CanvasStyles";
 
 export interface PixelItem {
   _id?: number;
@@ -128,32 +118,42 @@ const Canvas = () => {
   }, [data]);
 
   return (
-    <PageContainer>
+    <main className="p-2.5 w-full flex flex-1 flex-col justify-between">
       {isPendingCanvas ? (
         <div>Loading...</div>
       ) : (
         canvas && (
           <>
-            <CanvasHeader>
-              <CanvasHeaderLeft>
+            <div className="flex flex-row justify-between mb-6">
+              <div className="flex flex-col text-white">
                 <h1>{canvas.name}</h1>
-                <InfoRow>
+                <div className="flex justify-between gap-10">
                   <span>Canvas creator:</span>
-                  <BoldText>{canvas.owner}</BoldText>
-                </InfoRow>
-                <InfoRow>
+                  <span className="font-bold">{canvas.owner}</span>
+                </div>
+                <div className="flex justify-between gap-10">
                   <span>Canvas resolution:</span>
-                  <BoldText>
+                  <span className="font-bold">
                     {canvas.width}x{canvas.height}
-                  </BoldText>
-                </InfoRow>
-              </CanvasHeaderLeft>
-              <CanvasHeaderRight>
+                  </span>
+                </div>
+              </div>
+              <div className="text-white">
                 <div>Recommended image:</div>
                 <img src={`https://noun.pics/${canvas.nounImageId}`} />
-              </CanvasHeaderRight>
-            </CanvasHeader>
-            <PixelsContainer width={canvas.width} height={canvas.height} ref={pixelsContainerRef}>
+              </div>
+            </div>
+            <div
+              className="grid bg-white my-0 mx-auto w-[500px]"
+              style={
+                canvas && {
+                  width: "500px",
+                  gridTemplateColumns: `repeat(${canvas.width}, 1fr)`,
+                  gridTemplateRows: `repeat(${canvas.height}, 1fr)`,
+                  height: `calc(500px * ${canvas.height / canvas.width})`,
+                }
+              }
+            >
               {pixels.map(pixel => (
                 <Pixel
                   key={pixel._id}
@@ -164,14 +164,14 @@ const Canvas = () => {
                   isPixelTransactionPending={isPending}
                 />
               ))}
-            </PixelsContainer>
-            <CenteredButtonContainer>
+            </div>
+            <div className="flex justify-center mt-5">
               <button onClick={() => navigate(-1)}>Back to Canvases</button>
-            </CenteredButtonContainer>
+            </div>
           </>
         )
       )}
-    </PageContainer>
+    </main>
   );
 };
 

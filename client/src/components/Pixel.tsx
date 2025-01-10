@@ -1,7 +1,6 @@
 import React, { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { SketchPicker } from "react-color";
 import { PixelItem } from "./Canvas";
-import { PaletteContainer, PixelContainer } from "./styles/PixelStyles";
 
 interface IProps {
   pixelData: PixelItem;
