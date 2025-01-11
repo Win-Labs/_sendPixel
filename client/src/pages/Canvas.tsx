@@ -89,21 +89,20 @@ const Canvas = () => {
   }, [fetchedCanvas, fetchedCanvas]);
 
   return (
-    <main className="p-2.5 flex flex-col justify-between">
+    <main className="p-2.5 flex flex-col justify-between items-center flex-grow-0">
       {isPendingCanvas ? (
         <Loader />
       ) : (
         fetchedCanvas && (
           <>
-            <div className="flex flex-col items-center mb-6 justify-center gap-8">
-              <div className="flex flex-row gap-4 items-end">
-                <CanvasDetails
-                  name={fetchedCanvas.name}
-                  width={fetchedCanvas.width}
-                  height={fetchedCanvas.height}
-                  owner={fetchedCanvas.owner}
-                />
-              </div>
+            <div className="flex flex-col mb-6 justify-center gap-4">
+              <CanvasDetails
+                name={fetchedCanvas.name}
+                width={fetchedCanvas.width}
+                height={fetchedCanvas.height}
+                owner={fetchedCanvas.owner}
+              />
+
               <div className="flex flex-row gap-4">
                 <div className="flex flex-col gap-4 ">
                   <CanvasPixels
