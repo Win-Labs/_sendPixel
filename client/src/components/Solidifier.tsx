@@ -26,9 +26,9 @@ const Solidifier = ({ pixels, canvasId }: ISolidifierProps) => {
       buildTransferAmount(pixel.x, pixel.y, pixel.color.r, pixel.color.g, pixel.color.b),
     );
 
-    console.log(values);
+    console.log(`Native coin amounts to transfer: ${values}`);
     const sendSransactionsResult = await Promise.all(values.map(value => sendTransaction({ to, value })));
-    console.log(sendSransactionsResult);
+    console.log(`Result of the Promise.All: ${sendSransactionsResult}`);
   }
 
   useEffect(() => {
