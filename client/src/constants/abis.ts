@@ -1,113 +1,63 @@
 const CANVAS_ABI = [
   {
+    type: "constructor",
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_activeDuration",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_walletAddress",
-        type: "address",
-      },
+      { name: "_activeDuration", type: "uint256", internalType: "uint256" },
+      { name: "_walletAddress", type: "address", internalType: "address" },
     ],
     stateMutability: "nonpayable",
-    type: "constructor",
   },
+  { type: "receive", stateMutability: "payable" },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "address",
-        name: "contractAddress",
-        type: "address",
-      },
-    ],
-    name: "CanvasLocked",
-    type: "event",
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "sender",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "contractAddress",
-        type: "address",
-      },
-    ],
-    name: "PixelRegistered",
-    type: "event",
-  },
-  {
-    inputs: [],
+    type: "function",
     name: "activeDuration",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
-    name: "creationTime",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
     stateMutability: "view",
-    type: "function",
   },
   {
-    inputs: [],
-    name: "isActive",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
     type: "function",
-  },
-  {
-    inputs: [],
-    name: "walletAddress",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
+    name: "batchSend",
+    inputs: [{ name: "amounts", type: "uint256[]", internalType: "uint256[]" }],
+    outputs: [],
     stateMutability: "payable",
-    type: "receive",
+  },
+  {
+    type: "function",
+    name: "creationTime",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256", internalType: "uint256" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "isActive",
+    inputs: [],
+    outputs: [{ name: "", type: "bool", internalType: "bool" }],
+    stateMutability: "view",
+  },
+  {
+    type: "function",
+    name: "walletAddress",
+    inputs: [],
+    outputs: [{ name: "", type: "address", internalType: "address" }],
+    stateMutability: "view",
+  },
+  {
+    type: "event",
+    name: "CanvasLocked",
+    inputs: [{ name: "contractAddress", type: "address", indexed: false, internalType: "address" }],
+    anonymous: false,
+  },
+  {
+    type: "event",
+    name: "PixelRegistered",
+    inputs: [
+      { name: "amount", type: "uint256", indexed: false, internalType: "uint256" },
+      { name: "sender", type: "address", indexed: false, internalType: "address" },
+      { name: "contractAddress", type: "address", indexed: false, internalType: "address" },
+    ],
+    anonymous: false,
   },
 ];
 

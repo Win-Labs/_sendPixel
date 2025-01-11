@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useSendTransaction } from "wagmi";
 import Spinner from "./Spinner";
+import { useSignBatchSend } from "../hooks/useSignBatchSend";
 
 interface ISolidifierProps {
   pixels: { x: number; y: number; color: { r: number; g: number; b: number } }[];
@@ -8,9 +8,9 @@ interface ISolidifierProps {
 }
 
 const Solidifier = ({ pixels, canvasId }: ISolidifierProps) => {
-  const { data, sendTransaction, isPending } = useSendTransaction();
+  const { signBatchSend, isPending, data, isError, error } = useSignBatchSend();
 
-  function buildTransferAmount(x: number, y: number, r: number, g: number, b: number) {
+  function buildTransferAmount(x: number, y: number, r: number, g: number, b: number): bigint {
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
       throw new Error("RGB values must be between 0 and 255.");
     }
@@ -25,15 +25,20 @@ const Solidifier = ({ pixels, canvasId }: ISolidifierProps) => {
     const values = pixels.map(pixel =>
       buildTransferAmount(pixel.x, pixel.y, pixel.color.r, pixel.color.g, pixel.color.b),
     );
-
     console.log(`Native coin amounts to transfer: ${values}`);
-    const sendSransactionsResult = await Promise.all(values.map(value => sendTransaction({ to, value })));
-    console.log(`Result of the Promise.All: ${sendSransactionsResult}`);
+
+    signBatchSend(to, values);
   }
 
   useEffect(() => {
+    if (isPending) {
+      console.log("Transaction is pending...");
+    }
+    if (isError) {
+      console.error("Error transacting: ", error);
+    }
     console.log(`Transacted. Hash: ${data}`);
-  }, [data]);
+  }, [data, isPending, isError, error]);
 
   return (
     <button
