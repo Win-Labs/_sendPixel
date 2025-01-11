@@ -5,6 +5,7 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
+    "tailwind": "pnpx tailwindcss -i ./src/index.css -o ./src/output.css --watch",
     "test": "jest --detectOpenHandles",
     "dev": "NODE_ENV=development nodemon",
     "start": "NODE_ENV=production node ./dist/server.js"
