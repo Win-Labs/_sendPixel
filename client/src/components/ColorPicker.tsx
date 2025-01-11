@@ -18,10 +18,10 @@ const ColorPicker = ({ brushColor, handleBrushColor }: IColorPickerProps) => {
 
   return (
     <div
-      className="flex flex-col gap-2.5 p-2.5 z-[100] top-[100%] bg-black rounded-lg text-yellow-500 border-4 border-yellow-500"
+      className="flex flex-col gap-2.5 p-2.5  bg-black rounde-lg text-yellow-500 border-4 border-yellow-500"
       onClick={handlePropagation}
     >
-      <SketchPicker color={brushColor} onChange={handleChange} />
+      <SketchPicker width="320px" color={brushColor} onChange={handleChange} />
     </div>
   );
 };
