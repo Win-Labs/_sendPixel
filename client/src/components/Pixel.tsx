@@ -17,10 +17,11 @@ const Pixel = React.memo(({ pixelData, brushColor, handlePaintedPixels }: IPixel
 
   return (
     <div
-      className={`relative w-full h-full cursor-pointer hover:bg-yellow-100 bg-[var(--bg-color)]`}
+      className={`relative w-full h-full cursor-pointer hover:bg-[var(--brush-color)] bg-[var(--bg-color)]`}
       style={
         {
           "--bg-color": `rgb(${color.r}, ${color.g}, ${color.b})`,
+          "--brush-color": `rgb(${brushColor.r}, ${brushColor.g}, ${brushColor.b})`,
         } as React.CSSProperties
       }
       onClick={() => handleClick()}

@@ -1128,6 +1128,14 @@ body {
   background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
 }
 
+.hover\:bg-\[bg-var\(--brush-color\)\]:hover {
+  background-color: bg-var(--brush-color);
+}
+
+.hover\:bg-\[var\(--brush-color\)\]:hover {
+  background-color: var(--brush-color);
+}
+
 .hover\:outline-2:hover {
   outline-width: 2px;
 }
