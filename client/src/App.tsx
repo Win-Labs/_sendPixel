@@ -1,4 +1,4 @@
-import Canvas from "./components/Canvas";
+import Canvas from "./pages/Canvas";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import Root from "./pages/Root";
