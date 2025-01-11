@@ -746,6 +746,10 @@ video {
   flex: 1 1 0%;
 }
 
+.flex-grow-0 {
+  flex-grow: 0;
+}
+
 @keyframes spinCustom {
   0% {
     transform: rotate(0deg);

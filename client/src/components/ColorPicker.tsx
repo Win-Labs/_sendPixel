@@ -7,28 +7,21 @@ interface IColorPickerProps {
   handleBrushColor: (color: { r: number; g: number; b: number }) => void;
 }
 
-const ColorPicker = (props: IColorPickerProps) => {
-  const [color, setColor] = useState(props.brushColor);
-
+const ColorPicker = ({ brushColor, handleBrushColor }: IColorPickerProps) => {
   const handleChange = newColor => {
-    setColor(newColor.rgb);
+    handleBrushColor(newColor.rgb);
   };
 
   const handlePropagation = event => {
     event.stopPropagation();
   };
 
-  const handleConfirm = () => {
-    props.handleBrushColor(color);
-  };
-
   return (
     <div
-      className="flex w-auto items-center flex-col gap-2.5 p-2.5 z-[100] top-[100%] bg-black rounded-lg text-yellow-500 border-4 border-yellow-500"
+      className="flex flex-col gap-2.5 p-2.5 z-[100] top-[100%] bg-black rounded-lg text-yellow-500 border-4 border-yellow-500"
       onClick={handlePropagation}
     >
-      <SketchPicker color={color} onChange={handleChange} />
-      <button onClick={handleConfirm}>Confirm</button>
+      <SketchPicker color={brushColor} onChange={handleChange} />
     </div>
   );
 };

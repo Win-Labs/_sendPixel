@@ -114,8 +114,7 @@ const Canvas = () => {
                   />
                   <Solidifier canvasId={canvasId as string} pixels={paintedPixels} />
                 </div>
-                <div className="flex flex-col gap-4">
-                  {" "}
+                <div className="flex flex-col gap-4 items-start">
                   <TargetImage nounImageId={fetchedCanvas.nounImageId} />
                   <ColorPicker brushColor={brushColor} handleBrushColor={handleBrushColor} />
                 </div>
