@@ -1,10 +1,6 @@
-import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import React from "react";
-import { useSendTransaction } from "wagmi";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { apiEndpoint } from "../config";
-import { ICanvas } from "../models";
-import Pixel from "../components/Pixel";
 
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../utils/api";
@@ -53,7 +49,8 @@ const Canvas = () => {
   };
 
   const handlePaintedPixels = (handler: (previousPixels: IPaintedPixel[]) => IPaintedPixel[]): void => {
-    setPaintedPixels(previousPixels => handler(previousPixels));
+    console.log("Painted pixels: ", paintedPixels);
+    setPaintedPixels(previousPixes => handler(previousPixes));
   };
 
   const { isPending: isPendingCanvas, data: fetchedCanvas } = useQuery({
@@ -66,7 +63,7 @@ const Canvas = () => {
   const [pixels, setPixels] = useState<IFetchedPixel[]>([]);
 
   useEffect(() => {
-    if (fetchedCanvas && fetchedCanvas.width > 0 && fetchedCanvas.height > 0) {
+    if (fetchedCanvas) {
       // Initialize grid with default values
       const grid = new Array(fetchedCanvas.width * fetchedCanvas.height).fill(null).map((_, index) => ({
         _id: index,

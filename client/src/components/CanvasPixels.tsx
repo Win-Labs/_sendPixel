@@ -1,3 +1,4 @@
+import { IFetchedPixel } from "../pages/Canvas";
 import Pixel from "./Pixel";
 
 const CanvasPixels = ({ pixels, brushColor, handlePaintedPixels, canvasProps }) => {
@@ -13,7 +14,7 @@ const CanvasPixels = ({ pixels, brushColor, handlePaintedPixels, canvasProps }) 
           } as React.CSSProperties
         }
       >
-        {pixels.map(pixel => (
+        {pixels.map((pixel: IFetchedPixel) => (
           <Pixel handlePaintedPixels={handlePaintedPixels} key={pixel._id} pixelData={pixel} brushColor={brushColor} />
         ))}
       </div>

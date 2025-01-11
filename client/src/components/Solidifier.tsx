@@ -10,7 +10,7 @@ interface ISolidifierProps {
 const Solidifier = ({ pixels, canvasId }: ISolidifierProps) => {
   const { data, sendTransaction, isPending } = useSendTransaction();
 
-  async function buildTransferAmount(x: number, y: number, r: number, g: number, b: number) {
+  function buildTransferAmount(x: number, y: number, r: number, g: number, b: number) {
     if (r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255) {
       throw new Error("RGB values must be between 0 and 255.");
     }
@@ -20,15 +20,15 @@ const Solidifier = ({ pixels, canvasId }: ISolidifierProps) => {
   }
 
   async function transact() {
-    const { x, y } = pixels[0];
-    const { r, g, b } = pixels[0].color;
     const to = canvasId as `0x${string}`;
 
-    const value = await buildTransferAmount(x, y, r, g, b);
-    sendTransaction({
-      to,
-      value,
-    });
+    const values = pixels.map(pixel =>
+      buildTransferAmount(pixel.x, pixel.y, pixel.color.r, pixel.color.g, pixel.color.b),
+    );
+
+    console.log(values);
+    const sendSransactionsResult = await Promise.all(values.map(value => sendTransaction({ to, value })));
+    console.log(sendSransactionsResult);
   }
 
   useEffect(() => {
