@@ -12,7 +12,7 @@ const CanvasCard = ({ name, width, height, creationTime, nounImageId, canvasId }
   };
 
   return (
-    <div className="border-4 rounded-md flex flex-col gap-3 border-yellow-400 p-4 shadow-md  shadow-orange-600">
+    <div className="border-4 rounded-md flex flex-col gap-3 border-yellow-400 p-4 shadow-md  shadow-orange-600 bg-black">
       <div>
         <img src={`https://noun.pics/${nounImageId}`} alt={name} />
       </div>

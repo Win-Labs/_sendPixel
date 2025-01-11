@@ -46,7 +46,7 @@ const Canvases = () => {
   });
 
   return (
-    <main>
+    <main className="flex flex-col h-full">
       <div className="flex w-full gap-8">{Tabs}</div>
       <div>
         {isLoading ? (
@@ -61,7 +61,7 @@ const Canvases = () => {
       </div>
 
       {address && (
-        <div className="flex w-full justify-center">
+        <div className="flex w-full justify-center mt-auto">
           <button
             className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color bg-yellow-400 px-6 py-2"
             onClick={toggleModal}

@@ -43,7 +43,7 @@ const Root = () => {
       <Outlet />
 
       <div className="w-full flex py-4 mt-auto">
-        <a className="text-white" href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer">
+        <a className="text-yellow-500" href="https://t.me/winlabs_az" target="_blank" rel="noopener noreferrer">
           Blog
         </a>
       </div>
