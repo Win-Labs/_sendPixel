@@ -19,7 +19,9 @@ const Modal = ({ toggle }) => {
 
   const { writeContract, isPending, data } = useWriteContract({
     mutation: {
-      onSuccess: () => {},
+      onSuccess: () => {
+        toggle();
+      },
     },
   });
 
@@ -41,7 +43,7 @@ const Modal = ({ toggle }) => {
       functionName: "deployCanvas",
       args: [name, Number(height), Number(width), 0, Number(duration)],
       abi: CANVAS_DEPLOYER_ABI,
-      address: CANVAS_DEPLOYERS[chainId],
+      address: CANVAS_DEPLOYERS[chainId] as `0x${string}`,
       account: address,
     });
   };
@@ -59,16 +61,16 @@ const Modal = ({ toggle }) => {
       onClick={toggle}
     >
       <div
-        className="w-full z-20 max-w-lg bg-white p-7 absolute rounded-lg"
+        className="w-full z-20 max-w-lg bg-black p-7 pt-10 absolute rounded-lg border-2 border-yellow-500 shadow-lg"
         onClick={e => {
           e.stopPropagation();
         }}
       >
-        <h2 className="mb-4 text-xl flex justify-center">Canvas Settings</h2>
+        <h2 className="mb-4 text-xl flex justify-center  text-yellow-500">Canvas Settings</h2>
         <div className="flex flex-col mb-3">
           <p>Name</p>
           <input
-            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
+            className="border-2 shadow-orange-400 rounded-md border-yellow-500 shadow-md color px-6 py-2 text-yellow-500 bg-black"
             placeholder="Enter name of the canvas"
             type="text"
             value={formState.name}
@@ -78,7 +80,7 @@ const Modal = ({ toggle }) => {
         <div className="flex flex-col mb-3">
           <p>Width</p>
           <input
-            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
+            className="border-2 shadow-orange-400 rounded-md border-yellow-500 shadow-md color px-6 py-2  text-yellow-500 bg-black"
             placeholder="Enter width of the canvas"
             type="text"
             value={formState.width}
@@ -88,7 +90,7 @@ const Modal = ({ toggle }) => {
         <div className="flex flex-col mb-8">
           <p>Height</p>
           <input
-            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
+            className="border-2 shadow-orange-400 rounded-md border-yellow-500 shadow-md color px-6 py-2  text-yellow-500 bg-black"
             placeholder="Enter height of the canvas"
             type="text"
             value={formState.height}
@@ -98,7 +100,7 @@ const Modal = ({ toggle }) => {
 
         <div className="flex justify-center">
           <button
-            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2"
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2 text-yellow-500"
             onClick={handleInitializeCanvas}
             type="button"
             disabled={isPending || !isFormValid}
