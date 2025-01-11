@@ -879,6 +879,10 @@ video {
   border-width: 5px;
 }
 
+.border-8 {
+  border-width: 8px;
+}
+
 .border-solid {
   border-style: solid;
 }

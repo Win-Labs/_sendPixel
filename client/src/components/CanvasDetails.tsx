@@ -10,7 +10,7 @@ interface ICanvasDetails {
 
 const CanvasDetails = (props: ICanvasDetails) => {
   return (
-    <div className="flex flex-col bg-black text-yellow-500 border-4 border-yellow-500 p-10 rounded-md">
+    <div className="flex flex-col bg-black text-yellow-500 border-4 border-yellow-500 p-10">
       <div className="flex justify-between gap-10">
         <span>NAME:</span>
         <span className="font-bold">{props.name}</span>

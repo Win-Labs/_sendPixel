@@ -37,7 +37,7 @@ const Solidifier = ({ pixels, canvasId }: ISolidifierProps) => {
 
   return (
     <button
-      className="py-1 px-10 text-yellow-500 bg-black flex justify-center items-center rounded-md h-1/2 uppercase border-yellow-500 border-4"
+      className="py-1 px-10 text-yellow-500 bg-black flex justify-center items-center h-1/2 uppercase border-yellow-500 border-4"
       onClick={transact}
     >
       {isPending && <Spinner />} Solidify Art
