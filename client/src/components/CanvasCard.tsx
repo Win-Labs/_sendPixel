@@ -1,171 +1,37 @@
-import { useNavigate } from "react-router-dom";
-import * as s from "./CanvasCardsStyles";
-import { useAccount, useWriteContract } from "wagmi";
-import { enqueueSnackbar } from "notistack";
-import { switchChain } from "@wagmi/core";
-import { config, canvasAbi } from "../config";
-import { useEffect, useState } from "react";
-import { add, differenceInSeconds } from "date-fns";
-import WorldIdButton from "./WorldIdButton";
-import worldIdIcon from "../assets/world-id-logo.svg";
+import { useNavigate } from "react-router";
+import useExpirationTimer from "../hooks/useExpirationTimer";
 
-const CanvasCard = ({
-  canvasId,
-  name,
-  owner,
-  width,
-  height,
-  worldIdVerified,
-  destination,
-  chainId: canvasChainId,
-  creationTime,
-  isFunded,
-  nounImageId,
-}) => {
+const CanvasCard = ({ name, width, height, creationTime, nounImageId, canvasId }) => {
+  const { isExpired, timeLeft } = useExpirationTimer(creationTime, 10); // 10 minutes expiration
+  const resolution = `${width}x${height}`;
+  const timeLeftString = `${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s`;
   const navigate = useNavigate();
-  const { address, chainId: accountChainId } = useAccount();
-  const {
-    data: claimTokenData,
-    isPending: isClaimTokenLoading,
-    writeContractAsync,
-  } = useWriteContract();
-
-  const [gradient, setGradient] = useState("");
-  const [isExpired, setIsExpired] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  const isOwner = address === owner;
-  const isBeneficiary = address === destination;
-  const isPlayable = !isExpired && !isFunded;
-
-  // Handle canvas initialization (Step 1)
-  const handleClaimTokens = () => {
-    if (accountChainId === canvasChainId) {
-      claim();
-    } else {
-      switchChain(config, { chainId: canvasChainId })
-        .then((data) => {
-          console.log("Switched chain: ", data);
-        })
-        .then(() => {
-          claim();
-        });
-    }
-  };
 
   const handleNavigate = () => {
     navigate(`/canvas/${canvasId}`);
   };
 
-  const claim = () => {
-    writeContractAsync({
-      abi: canvasAbi,
-      address: canvasId,
-      functionName: "transferFunds",
-      args: [],
-      account: address,
-    }).then(() => {
-      enqueueSnackbar("Tokens has been claimed", {
-        variant: "success",
-      });
-    });
-  };
-
-  useEffect(() => {
-    const expirationDate = add(new Date(creationTime * 1000), { hours: 6 });
-
-    const updateTimer = () => {
-      const secondsLeft = differenceInSeconds(expirationDate, new Date());
-      if (secondsLeft <= 0) {
-        setIsExpired(true);
-        setTimeLeft({ hours: 0, minutes: 0, seconds: 0 });
-      } else {
-        const hours = Math.floor(secondsLeft / 3600);
-        const minutes = Math.floor((secondsLeft % 3600) / 60);
-        const seconds = secondsLeft % 60;
-
-        setTimeLeft({ hours, minutes, seconds });
-      }
-    };
-
-    updateTimer();
-    const timerInterval = setInterval(updateTimer, 1000);
-
-    return () => clearInterval(timerInterval);
-  }, [creationTime]);
-
   return (
-    <s.Card>
+    <div className="border-4 rounded-md flex flex-col gap-3 border-yellow-400 p-4 shadow-md  shadow-orange-600 bg-black">
       <div>
-        <img src={`https://noun.pics/${nounImageId}`} />
+        <img src={`https://noun.pics/${nounImageId}`} alt={name} />
       </div>
-      <s.NameIdEditWrapper>
-        <s.NameIdWrapper>
-          <s.Name>{name}</s.Name>
-          <s.Id>{canvasId}</s.Id>
-        </s.NameIdWrapper>
-      </s.NameIdEditWrapper>
-      <s.PropWrapper>
-        <s.PropTitle>Deployer</s.PropTitle>
-        <s.Id>{owner}</s.Id>
-      </s.PropWrapper>
-      <s.PropWrapper>
-        <s.PropTitle>Resolution</s.PropTitle>
-        <s.PropValue>
-          {width}x{height}
-        </s.PropValue>
-      </s.PropWrapper>
-      <s.PropsWrapper>
-        {isExpired ? (
-          <s.PropWrapper>
-            <s.PropTitle>Expired</s.PropTitle>
-          </s.PropWrapper>
-        ) : (
-          <s.PropWrapper>
-            <s.PropTitle>Expires in:</s.PropTitle>
-            <s.PropValue>
-              {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s
-            </s.PropValue>
-          </s.PropWrapper>
-        )}
-      </s.PropsWrapper>
-      {worldIdVerified ? (
-        <span
-          className="badge rounded-pill bg-success"
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <img
-            src={worldIdIcon}
-            style={{ height: "15px", marginRight: "10px" }}
-          />
-          <span>World ID Verified</span>
-        </span>
-      ) : (
-        isOwner && <WorldIdButton canvasId={canvasId}></WorldIdButton>
-      )}
-      {isBeneficiary && (
+      <div className="flex flex-col items-center">
+        <span className="text-white text-xs">{name}</span>
+      </div>
+      <div className="flex flex-col items-center">
+        <span className="text-white text-xs">{resolution}</span>
+      </div>
+
+      <div className="flex w-full justify-center">
         <button
-          className="btn btn-warning"
-          onClick={handleClaimTokens}
-          disabled={!isExpired}
+          className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md bg-yellow-400 px-6 py-2 text-xs"
+          onClick={handleNavigate}
         >
-          Claim tokens
-        </button>
-      )}
-      {isPlayable && (
-        <button className="btn btn-warning" onClick={handleNavigate}>
           Enter
         </button>
-      )}
-    </s.Card>
+      </div>
+    </div>
   );
 };
 

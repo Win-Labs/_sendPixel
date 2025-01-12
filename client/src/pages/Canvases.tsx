@@ -1,100 +1,75 @@
-import { useState } from "react";
-import * as s from "./CanvasesStyles";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import Modal from "../components/Modal";
-import { supportedChains } from "../config";
-import { useOutletContext } from "react-router-dom";
-import CanvasCards from "../components/CanvasCards";
+import { apiEndpoint } from "../config";
+import { useQuery } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
+import CanvasCard from "../components/CanvasCard";
+import { ICanvas } from "../models";
 
-export enum FilterMode {
-  ALL = "ALL",
-  OWNED = "OWNED",
-  JOINED = "JOINED",
-  LISTED = "LISTED",
-  SOLD = "SOLD",
+import Loader from "../components/Loader";
+import { GET } from "../utils/api";
+
+export enum FilterTab {
+  ARENA = "ARENA",
+  MARKETPLACE = "MARKETPLACE",
 }
 
 const Canvases = () => {
-  const { address } = useOutletContext<{ address: string | undefined }>();
-  const [filterMode, setFilterMode] = useState(FilterMode.ALL);
-  const [selectedChainId, setSelectedChainId] = useState<number>(
-    supportedChains[0].id
-  );
+  const { address } = useAccount();
+  const [filterTab, setFilterTab] = useState(FilterTab.ARENA);
 
   const [showModal, setShowModal] = useState(false);
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+
+  const toggleModal = useCallback(() => {
+    setShowModal(prev => !prev);
+  }, []);
+
+  // Memoized tabs
+  const Tabs = useMemo(() => {
+    return Object.values(FilterTab).map(tab => (
+      <div
+        className={filterTab === tab ? `text-2xl text-yellow-400 cursor-pointer` : `text-2xl text-white cursor-pointer`}
+        key={tab}
+        onClick={() => setFilterTab(tab)}
+      >
+        {tab[0] + tab.slice(1).toLowerCase()}
+      </div>
+    ));
+  }, [filterTab]);
+
+  // Fetch data using react-query
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["canvases", filterTab, address],
+    queryFn: () => GET(`${apiEndpoint}/canvases`),
+    enabled: true,
+    refetchInterval: 1000,
+  });
 
   return (
-    <main className="page-container">
+    <main className="flex flex-col h-full">
+      <div className="flex w-full gap-8">{Tabs}</div>
       <div>
-        <div className="tabs-wrapper mb-3">
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.ALL)}
-            $active={filterMode === FilterMode.ALL}
-          >
-            All
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.OWNED)}
-            $active={filterMode === FilterMode.OWNED}
-          >
-            Owned
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.JOINED)}
-            $active={filterMode === FilterMode.JOINED}
-          >
-            Joined
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.LISTED)}
-            $active={filterMode === FilterMode.LISTED}
-          >
-            LISTED
-          </s.Tab>
-          <s.Tab
-            onClick={() => setFilterMode(FilterMode.SOLD)}
-            $active={filterMode === FilterMode.SOLD}
-          >
-            SOLD
-          </s.Tab>
-        </div>
-        <s.SubTabsWrapper>
-          {supportedChains.map((chain) => (
-            <s.SubTab
-              key={chain.id}
-              onClick={() => setSelectedChainId(chain.id)}
-              $active={selectedChainId === chain.id}
-            >
-              {chain.name}
-            </s.SubTab>
-          ))}
-        </s.SubTabsWrapper>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
-          <CanvasCards
-            filterMode={filterMode}
-            selectedChainId={selectedChainId}
-          />
-        </div>
-      </div>
-
-      <div
-        style={{ display: "flex", width: "100%", justifyContent: "center" }}
-        className="mt-4"
-      >
-        {address && (
-          <button className="btn btn-warning" onClick={toggleModal}>
-            Create New Canvas
-          </button>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <div className="flex w-full gap-3 pt-8 items-center mb-8">
+            {data.map((canvasData: ICanvas) => (
+              <CanvasCard key={`${canvasData.canvasId}-${canvasData.name}`} {...canvasData} />
+            ))}
+          </div>
         )}
       </div>
+
+      {address && (
+        <div className="flex w-full justify-center mt-auto">
+          <button
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color bg-yellow-400 px-6 py-2"
+            onClick={toggleModal}
+          >
+            Create New Canvas
+          </button>
+        </div>
+      )}
 
       {showModal && <Modal toggle={toggleModal} />}
     </main>

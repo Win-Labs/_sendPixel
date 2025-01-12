@@ -3,11 +3,7 @@ pragma solidity ^0.8.0;
 
 contract Canvas {
     // Event emitted when a pixel is registered (when Ether is received)
-    event PixelRegistered(
-        uint256 amount,
-        address sender,
-        address contractAddress
-    );
+    event PixelRegistered(uint256 amount, address sender, address contractAddress);
 
     // Event emitted when the canvas is locked after the duration
     event CanvasLocked(address contractAddress);
@@ -23,6 +19,20 @@ contract Canvas {
         creationTime = block.timestamp;
         isActive = true;
         walletAddress = _walletAddress;
+    }
+
+    function batchSend(uint256[] memory amounts) external payable {
+        uint256 totalAmount = 0;
+        for (uint256 i = 0; i < amounts.length; i++) {
+            totalAmount += amounts[i];
+        }
+
+        require(msg.value == totalAmount, "Incorrect total amount");
+
+        for (uint256 i = 0; i < amounts.length; i++) {
+            (bool success, ) = address(this).call{value: amounts[i]}("");
+            require(success, "Transfer failed");
+        }
     }
 
     // Function to accept Ether and emit the PixelRegistered event

@@ -1,268 +1,115 @@
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import { enqueueSnackbar } from "notistack";
-import { switchChain } from "@wagmi/core";
-import {
-  config,
-  supportedChains,
-  canvasDeployerAbi,
-  DEPLOYER_CONTRACT_ADDRESSES,
-} from "../config";
+import { useEffect } from "react";
+import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
+import { CANVAS_DEPLOYER_ABI } from "../constants/abis";
 import { useAccount, useWriteContract } from "wagmi";
-import {
-  notification,
-  usePushNotifications,
-} from "../utils/usePushNotifications";
-import { getGasPrice } from "@wagmi/core";
-import { formatEther } from "viem";
 
-const Overlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
-const ModalContainer = styled.div`
-  width: 100%;
-  z-index: 2;
-  max-width: 500px;
-  border-radius: 10px;
-  gap: 10px;
-  padding: 30px;
-  background-color: #fff;
-  position: absolute;
-`;
-
-const Title = styled.h2`
-  margin-bottom: 20px;
-`;
-
-const InputContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-`;
-
-export const SelectBox = styled.select`
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 10px;
-`;
-
-const Label = styled.p``;
-
-const SubmitBtnContainer = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 100%;
-`;
+import { useTransactionReceipt } from "wagmi";
+import { useFormState } from "../hooks/useFormState";
+import Loader from "./Loader";
 
 const Modal = ({ toggle }) => {
-  const { chainId: accountChainId, address } = useAccount();
+  const { chainId, address } = useAccount();
 
-  const { user, isSubscribed } = usePushNotifications();
-  const {
-    writeContractAsync,
-    data: hashInitializeCanvas,
-    isPending: initializeCanvasIsHashPending,
-  } = useWriteContract();
+  const { formState, handleChange } = useFormState({
+    name: "default",
+    height: "8",
+    width: "8",
+    duration: "600",
+  });
 
-  const [name, setName] = useState("");
-  const [height, setHeight] = useState("");
-  const [width, setWidth] = useState("");
+  const { writeContract, isPending, data } = useWriteContract({
+    mutation: {
+      onSuccess: () => {
+        toggle();
+      },
+    },
+  });
 
-  const [destinationAddress, setDestinationAddress] = useState<string>(
-    String(address)
-  );
-  const [gasPricesMap, setGasPricesMap] = useState<Map<number, string>>(
-    new Map()
-  );
+  const { data: transactionReceipt } = useTransactionReceipt({
+    hash: data,
+    query: {
+      enabled: !!data,
+    },
+  });
 
-  const isNetworkSupported = supportedChains.some(
-    (chain) => chain.id === accountChainId
-  );
-  const isFormValid =
-    name && height && width && isNetworkSupported && destinationAddress;
+  const isFormValid = formState.name && formState.height && formState.width;
 
   const handleInitializeCanvas = async () => {
-    const hash = await writeContractAsync({
+    if (!isFormValid || !chainId) return;
+
+    const { name, height, width, duration } = formState;
+
+    writeContract({
       functionName: "deployCanvas",
-      args: [name, Number("10"), Number("10"), 300, destinationAddress],
-      abi: canvasDeployerAbi,
-      address: DEPLOYER_CONTRACT_ADDRESSES[accountChainId as number],
+      args: [name, Number(height), Number(width), 0, Number(duration)],
+      abi: CANVAS_DEPLOYER_ABI,
+      address: CANVAS_DEPLOYERS[chainId] as `0x${string}`,
       account: address,
     });
-    toggle();
-
-    if (isSubscribed) {
-      notification(
-        user,
-        `Wallet ${user.account} created "${name}" (${width}x${height})`
-      );
-    }
-
-    const chain = supportedChains.find(
-      (chain) => chain.id === accountChainId!
-    )!;
-    const explorerUrl = chain?.blockExplorers?.custom.url;
-    const fullUrl = `${explorerUrl}tx/${hash}`;
-
-    enqueueSnackbar(
-      <>
-        Canvas has been created and will be displayed soon.&nbsp;
-        <a
-          href={fullUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: "inherit", textDecoration: "underline" }}
-        >
-          View on Blockscout
-        </a>
-      </>,
-      { variant: "success" }
-    );
-  };
-
-  const handleChainIdChange = (chainId: number) => {
-    switchChain(config, { chainId }).then((data) => {
-      console.log("Switched chain: ", data);
-    });
   };
 
   useEffect(() => {
-    console.log("hashInitializeCanvas", hashInitializeCanvas);
-  }, [hashInitializeCanvas]);
+    console.log(transactionReceipt);
+    console.log(isPending);
+  }, [transactionReceipt, isPending]);
 
-  useEffect(() => {
-    console.log("chain id", accountChainId);
-  }, [accountChainId]);
-
-  useEffect(() => {
-    //@ts-ignore
-    allChainsGasPrices().then((data) => setGasPricesMap(data));
-  }, []);
-
-  const allChainsGasPrices = async () => {
-    const gasPricesData = await Promise.all(
-      supportedChains.map((chain) =>
-        getGasPrice(config, { chainId: chain.id }).then((price) => ({
-          chainId: chain.id,
-          price,
-        }))
-      )
-    );
-    const gasPricesMap = new Map<number, string>();
-    gasPricesData.forEach((data) => {
-      gasPricesMap.set(data.chainId, formatEther(data.price));
-    });
-    return gasPricesMap;
-  };
-
-  return (
-    <Overlay onClick={toggle}>
-      <ModalContainer
-        onClick={(e) => {
+  return isPending || (data && !transactionReceipt) ? (
+    <Loader />
+  ) : (
+    <div
+      className="flex w-full h-full justify-center items-center fixed top-0 left-0 z-10 bg-black bg-opacity-50"
+      onClick={toggle}
+    >
+      <div
+        className="w-full z-20 max-w-lg bg-black p-7 pt-10 absolute rounded-lg border-2 border-yellow-500 shadow-lg"
+        onClick={e => {
           e.stopPropagation();
         }}
       >
-        <Title>Canvas Parameters</Title>
-        <InputContainer>
-          <Label>Canvas Name</Label>
-          <Input
+        <h2 className="mb-4 text-xl flex justify-center  text-yellow-500">Canvas Settings</h2>
+        <div className="flex flex-col mb-3">
+          <p>Name</p>
+          <input
+            className="border-2 shadow-orange-400 rounded-md border-yellow-500 shadow-md color px-6 py-2 text-yellow-500 bg-black"
             placeholder="Enter name of the canvas"
             type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
+            value={formState.name}
+            onChange={handleChange("name")}
           />
-        </InputContainer>
-        <InputContainer>
-          <Label>Width</Label>
-          <Input
+        </div>
+        <div className="flex flex-col mb-3">
+          <p>Width</p>
+          <input
+            className="border-2 shadow-orange-400 rounded-md border-yellow-500 shadow-md color px-6 py-2  text-yellow-500 bg-black"
             placeholder="Enter width of the canvas"
             type="text"
-            value={width}
-            onChange={(e) => setWidth(e.target.value)}
+            value={formState.width}
+            onChange={handleChange("width")}
           />
-        </InputContainer>
-        <InputContainer>
-          <Label>Height</Label>
-          <Input
+        </div>
+        <div className="flex flex-col mb-8">
+          <p>Height</p>
+          <input
+            className="border-2 shadow-orange-400 rounded-md border-yellow-500 shadow-md color px-6 py-2  text-yellow-500 bg-black"
             placeholder="Enter height of the canvas"
             type="text"
-            value={height}
-            onChange={(e) => setHeight(e.target.value)}
+            value={formState.height}
+            onChange={handleChange("height")}
           />
-        </InputContainer>
-        <InputContainer>
-          <Label>Beneficiary Wallet Address</Label>
-          <Input
-            type="text"
-            value={destinationAddress}
-            onChange={(e) => setDestinationAddress(e.target.value)}
-          />
-        </InputContainer>
-        <InputContainer>
-          <Label>Network</Label>
-          <SelectBox
-            onChange={(e) => handleChainIdChange(+e.target.value)}
-            value={isNetworkSupported ? accountChainId : ""}
-          >
-            <option value="" disabled>
-              Network with chain ID: {accountChainId} is not supported
-            </option>
-            {supportedChains.map((chain) => (
-              <option
-                key={chain.id}
-                value={chain.id}
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
-                <span>{chain.name}</span>{" "}
-                {gasPricesMap?.get(chain.id) && (
-                  <span style={{ float: "right" }}>
-                    (gas price: {gasPricesMap?.get(chain.id) || 0} ETH)
-                  </span>
-                )}
-              </option>
-            ))}
-          </SelectBox>
-        </InputContainer>
-        <SubmitBtnContainer>
+        </div>
+
+        <div className="flex justify-center">
           <button
+            className="border-2 shadow-orange-400 rounded-md border-yellow-400 shadow-md color px-6 py-2 text-yellow-500"
             onClick={handleInitializeCanvas}
-            className="btn btn-warning"
             type="button"
-            disabled={initializeCanvasIsHashPending || !isFormValid}
+            disabled={isPending || !isFormValid}
           >
-            {initializeCanvasIsHashPending ? (
-              <>
-                <span
-                  className="spinner-border spinner-border-sm"
-                  aria-hidden="true"
-                  style={{ marginRight: "10px" }}
-                ></span>
-                <span role="status">Loading...</span>
-              </>
-            ) : (
-              <>Create Canvas</>
-            )}
+            Confirm
           </button>
-        </SubmitBtnContainer>
-      </ModalContainer>
-    </Overlay>
+        </div>
+      </div>
+    </div>
   );
 };
 
