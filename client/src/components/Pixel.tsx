@@ -24,7 +24,7 @@ const Pixel = React.memo(({ pixelData, brushColor, handlePaintedPixels }: IPixel
           "--brush-color": `rgb(${brushColor.r}, ${brushColor.g}, ${brushColor.b})`,
         } as React.CSSProperties
       }
-      onClick={() => handleClick()}
+      onClick={handleClick}
     ></div>
   );
 });
