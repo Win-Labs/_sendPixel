@@ -1,4 +1,6 @@
-const CANVAS_ABI = [
+import { Abi } from "viem";
+
+const CANVAS_ABI: Abi = [
   {
     inputs: [
       {
@@ -111,7 +113,7 @@ const CANVAS_ABI = [
   },
 ];
 
-const CANVAS_DEPLOYER_ABI = [
+const CANVAS_DEPLOYER_ABI: Abi = [
   {
     inputs: [],
     stateMutability: "nonpayable",
