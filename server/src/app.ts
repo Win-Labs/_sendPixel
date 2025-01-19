@@ -8,12 +8,11 @@ import watcherService from "./services/watcherService.js";
 dotenv.config({ path: "./.env" });
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 app.use("/api/v1", routes);
 
-const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD);
+const DB = (process.env.DATABASE as string).replace("<PASSWORD>", process.env.DATABASE_PASSWORD as string);
 
 mongoose
   .connect(DB)
