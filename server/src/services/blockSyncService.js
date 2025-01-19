@@ -1,11 +1,6 @@
 import BlockSync from "../models/blockSyncModel.js";
 
-const updateLastProcessedEvent = async ({
-  contractAddress,
-  blockNumber,
-  transactionHash,
-  logIndex,
-}) => {
+const updateLastProcessedEvent = async ({ contractAddress, blockNumber, transactionHash, logIndex }) => {
   await BlockSync.findOneAndUpdate(
     { contractAddress },
     {
@@ -13,7 +8,7 @@ const updateLastProcessedEvent = async ({
       lastTransactionHash: transactionHash,
       lastLogIndex: logIndex,
     },
-    { upsert: true, new: true }
+    { upsert: true, new: true },
   );
 };
 

@@ -7,7 +7,7 @@ const ColorSchema = new Schema(
     g: { type: Number, required: true },
     b: { type: Number, required: true },
   },
-  { _id: false }
+  { _id: false },
 );
 
 const PixelSchema = new Schema({

@@ -5,14 +5,8 @@ import Canvas from "../models/canvasModel.js";
 const router = express.Router();
 
 router.get("/canvases", canvasController.getAllCanvases);
-router.get(
-  "/addresses/:walletAddress/canvases/generated",
-  canvasController.getGeneratedCanvases
-);
-router.get(
-  "/addresses/:walletAddress/canvases/joined",
-  canvasController.getJoinedCanvases
-);
+router.get("/addresses/:walletAddress/canvases/generated", canvasController.getGeneratedCanvases);
+router.get("/addresses/:walletAddress/canvases/joined", canvasController.getJoinedCanvases);
 router.get("/canvases/:canvasId", canvasController.getCanvas);
 router.get("/clear", canvasController.clear);
 

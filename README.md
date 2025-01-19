@@ -1,19 +1,18 @@
-# 🎉 _sendPixel
+# 🎉 \_sendPixel
 
-## 🎮 Demo: 
+## 🎮 Demo:
 
 https://send-pixel.vercel.app/
 
-
 ## 📝 Project Overview
 
-_sendPixel is a **unique blockchain-based game** that seamlessly blends **creativity, competition, and crowdfunding**. 🌟 The challenge of storing pixel data on-chain can be costly, but _sendPixel introduces an innovative approach to solve this. Instead of directly storing pixel data, each pixel's **RGB color values and its coordinates (x, y)** are encoded into the **amount of native ETH** sent to the contract. This design leverages the blockchain's most cost-efficient function: **transferring coins**. 🎨💡
+\_sendPixel is a **unique blockchain-based game** that seamlessly blends **creativity, competition, and crowdfunding**. 🌟 The challenge of storing pixel data on-chain can be costly, but \_sendPixel introduces an innovative approach to solve this. Instead of directly storing pixel data, each pixel's **RGB color values and its coordinates (x, y)** are encoded into the **amount of native ETH** sent to the contract. This design leverages the blockchain's most cost-efficient function: **transferring coins**. 🎨💡
 
 The structure is simple yet powerful — pixel data is represented in transactions as `0.0......0rgbxy`. A backend service then listens for on-chain events, decodes this data back into color and coordinates, and renders it on the frontend canvas. This transforms the experience into a **gamified canvas coloring game**, where participants can color pixels by sending ETH to a designated **Canvas contract address**.
 
 Each canvas holds the ETH contributed by players, and the creator of the canvas can set a custom recipient to claim the accumulated funds. This means the project not only fuels collaborative art but also serves as a **gamified form of crowdfunding**, with creators benefiting from user contributions.
 
-To maximize inclusivity and engagement, _sendPixel is deployed across multiple blockchain networks, allowing users to select their preferred chain. This deployment encourages **healthy competition** among various Layer 2 solutions, contributing to a dynamic and diverse ecosystem. 🌐🚀
+To maximize inclusivity and engagement, \_sendPixel is deployed across multiple blockchain networks, allowing users to select their preferred chain. This deployment encourages **healthy competition** among various Layer 2 solutions, contributing to a dynamic and diverse ecosystem. 🌐🚀
 
 ## 🛠️ Key Technologies
 
@@ -59,22 +58,26 @@ To maximize inclusivity and engagement, _sendPixel is deployed across multiple b
 To run the frontend (website):
 
 1. **Clone the repository**:
+
    ```bash
    git clone [https://github.com/your-repo/.git](https://github.com/mahammadZeynalov/_sendPixel.git)
    cd _sendPixel
    ```
 
 2. **Navigate to the client directory**:
+
    ```bash
    cd client
    ```
 
 3. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 4. **Start the development server**:
+
    ```bash
    npm run dev
    ```
@@ -88,19 +91,21 @@ To run the frontend (website):
 To run the backend (database):
 
 1. **Navigate to the server directory**:
+
    ```bash
    cd server
    ```
 
 2. **Install dependencies**:
+
    ```bash
    npm install
    ```
 
 3. **Start the backend server**:
+
    ```bash
    npm run dev
    ```
 
    The backend should now be running, and your database will be ready for use.
-

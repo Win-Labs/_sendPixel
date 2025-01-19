@@ -21,7 +21,7 @@ mongoose
     console.log("DB connection successful!");
     await watcherService.startWatchers();
   })
-  .catch(error => {
+  .catch((error) => {
     console.error("DB connection failed:", error.message);
     process.exit(1);
   });

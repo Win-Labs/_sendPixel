@@ -62,7 +62,7 @@ const Modal = ({ toggle }) => {
     >
       <div
         className="w-full z-20 max-w-lg bg-black p-7 pt-10 absolute rounded-lg border-2 border-yellow-500 shadow-lg"
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
         }}
       >
