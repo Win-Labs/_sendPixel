@@ -1,6 +1,6 @@
 import blockSyncService from "./blockSyncService.js";
 import eventService from "./eventService.js";
-import { Chain, createPublicClient, http, webSocket } from "viem";
+import { Abi, Address, Chain, createPublicClient, GetContractEventsReturnType, http, Log, webSocket } from "viem";
 import { CANVAS_DEPLOYER_ABI } from "../constants/abis.js";
 import chains from "../constants/chains.js";
 import { CANVAS_DEPLOYERS } from "../constants/contractAddresses.js";
@@ -42,7 +42,7 @@ const isNewLog = (log, lastProcessedEvent) => {
 };
 
 // Function to process logs
-const processLog = async (log, chain, address, events) => {
+const processLog = async (log, chain: Chain, address: Address, events) => {
   const event = events.find((e) => e.eventName === log.eventName);
 
   if (event && event.handleEvent) {
@@ -58,12 +58,12 @@ const processLog = async (log, chain, address, events) => {
 };
 
 // Function to fetch missed events for a specific contract on a specific chain
-const fetchMissedEvents = async (chain: Chain, address, abi, events, fromBlock, toBlock) => {
+const fetchMissedEvents = async (chain: Chain, address: Address, abi: Abi, events, fromBlock, toBlock) => {
   try {
     const clientHttp = createHttpClient(chain);
     const logs = await clientHttp.getContractEvents({
-      address: address,
-      abi: abi,
+      address,
+      abi,
       fromBlock,
       toBlock,
     });
@@ -86,7 +86,7 @@ const fetchMissedEvents = async (chain: Chain, address, abi, events, fromBlock, 
 };
 
 // Function to watch and sync events for a specific contract on a specific chain
-const checkPastThenWatch = async (chain: Chain, address, abi, events) => {
+const checkPastThenWatch = async (chain: Chain, address: Address, abi: Abi, events) => {
   console.log("checkPastThenWatch chain: ", chain.id);
 
   try {
@@ -105,10 +105,10 @@ const checkPastThenWatch = async (chain: Chain, address, abi, events) => {
     }
 
     clientWebSocket.watchContractEvent({
-      address: address,
+      address,
       abi: abi,
       fromBlock: lastProcessedEvent ? currentBlockNumber + 1n : currentBlockNumber,
-      onLogs: async (logs) => {
+      onLogs: async (logs: Log[]) => {
         console.log(`Received logs on ${chain.name}:`, logs);
         try {
           const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(address);
