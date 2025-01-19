@@ -6,14 +6,14 @@ dotenv.config({ path: "./.env" });
 const PORT = process.env.PORT || 3333;
 const NODE_ENV = process.env.NODE_ENV;
 
-console.log("hello world");
+console.log("Hello World");
 
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port: ${PORT}`);
   console.log(`Running in ${NODE_ENV} mode`);
 });
 
-process.on("unhandledRejection", (err) => {
+process.on("unhandledRejection", (err: Error) => {
   console.log("UNHANDLED REJECTION! 💥 Shutting down...");
   console.log(err.name, err.message);
   server.close(() => {

@@ -1,22 +1,27 @@
 import blockSyncService from "./blockSyncService.js";
 import eventService from "./eventService.js";
-import { createPublicClient, http, webSocket } from "viem";
+import { Chain, createPublicClient, http, webSocket } from "viem";
 import { CANVAS_DEPLOYER_ABI } from "../constants/abis.js";
 import chains from "../constants/chains.js";
 import { CANVAS_DEPLOYERS } from "../constants/contractAddresses.js";
 
 // Helper function to create an HTTP client for a given chain
-const createHttpClient = (chain) =>
+const createHttpClient = (chain: Chain) =>
   createPublicClient({
     chain,
     transport: http(chain.rpcUrls.custom?.http[0]),
   });
 
 // Helper function to create a WebSocket client for a given chain
-const createWebSocketClient = (chain) => {
+const createWebSocketClient = (chain: Chain) => {
+  const webSocketUrls = chain.rpcUrls.custom?.webSocket;
+
+  if (!webSocketUrls || webSocketUrls.length === 0) {
+    throw new Error("WebSocket URL is not available for the specified chain.");
+  }
   return createPublicClient({
     chain,
-    transport: webSocket(chain.rpcUrls.custom?.webSocket[0]),
+    transport: webSocket(webSocketUrls[0]),
   });
 };
 
@@ -53,7 +58,7 @@ const processLog = async (log, chain, address, events) => {
 };
 
 // Function to fetch missed events for a specific contract on a specific chain
-const fetchMissedEvents = async (chain, address, abi, events, fromBlock, toBlock) => {
+const fetchMissedEvents = async (chain: Chain, address, abi, events, fromBlock, toBlock) => {
   try {
     const clientHttp = createHttpClient(chain);
     const logs = await clientHttp.getContractEvents({
@@ -81,7 +86,7 @@ const fetchMissedEvents = async (chain, address, abi, events, fromBlock, toBlock
 };
 
 // Function to watch and sync events for a specific contract on a specific chain
-const checkPastThenWatch = async (chain, address, abi, events) => {
+const checkPastThenWatch = async (chain: Chain, address, abi, events) => {
   console.log("checkPastThenWatch chain: ", chain.id);
 
   try {

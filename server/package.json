@@ -5,7 +5,7 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "dev": "pnpm tsc && pnpm tsx ./src/server.ts",
+    "dev": "tsx watch ./src/server.ts --watch ./src --ignore node_modules,dist",
     "start": "NODE_ENV=production node ./dist/server.js"
   },
   "author": "gylman",
