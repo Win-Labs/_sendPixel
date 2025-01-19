@@ -28,9 +28,7 @@ const initializeCanvas = async (canvasData) => {
     });
 
     await newCanvas.save();
-    console.log(
-      `Canvas with ID ${canvasId} on chainId ${chainId} created by owner ${owner}.`
-    );
+    console.log(`Canvas with ID ${canvasId} on chainId ${chainId} created by owner ${owner}.`);
   } catch (error) {
     console.error("Error in initializeCanvas:", error.message);
   }
@@ -53,7 +51,7 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
     const maxPackedValue = (1n << 40n) - 1n; // Maximum value for 40 bits
     if (packedValue > maxPackedValue) {
       console.log(
-        "Invalid packed value: exceeds 40-bit limit. You are eligible for the reward, but your transfer will not be reflected on the canvas."
+        "Invalid packed value: exceeds 40-bit limit. You are eligible for the reward, but your transfer will not be reflected on the canvas.",
       );
       return;
     }
@@ -69,9 +67,7 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
 
     // Ensure x and y are within the canvas dimensions
     if (x >= width || y >= height) {
-      throw new Error(
-        `Coordinates out of bounds: x=${x}, y=${y}, width=${width}, height=${height}`
-      );
+      throw new Error(`Coordinates out of bounds: x=${x}, y=${y}, width=${width}, height=${height}`);
     }
 
     // Ensure RGB values are between 0-255
@@ -85,9 +81,7 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
     // Check if a pixel already exists at this position
     const existingPixel = canvas.pixels.find((pixel) => pixel._id === pixelId);
     if (existingPixel) {
-      console.log(
-        `Pixel at (${x}, ${y}) already exists on Canvas ${canvasId}.`
-      );
+      console.log(`Pixel at (${x}, ${y}) already exists on Canvas ${canvasId}.`);
     } else {
       // Create the new pixel
       const newPixel = {
@@ -102,9 +96,7 @@ const registerPixel = async ({ canvasId, amount, sender }) => {
       canvas.pixels.push(newPixel);
       await canvas.save();
 
-      console.log(
-        `Pixel added to Canvas ${canvasId} at (${x}, ${y}) with color rgb(${r}, ${g}, ${b}) by ${sender}`
-      );
+      console.log(`Pixel added to Canvas ${canvasId} at (${x}, ${y}) with color rgb(${r}, ${g}, ${b}) by ${sender}`);
     }
   } catch (error) {
     console.error("Error in registerPixel:", error.message);

@@ -29,16 +29,9 @@ const handleInitializeCanvas = async (log, _, chain) => {
     await canvasService.initializeCanvas(canvasData);
 
     // Start watching events from the newly deployed canvas contract
-    console.log(
-      `Starting listener for new Canvas contract: ${canvasData.canvasId} on chainId: ${canvasData.chainId}`
-    );
+    console.log(`Starting listener for new Canvas contract: ${canvasData.canvasId} on chainId: ${canvasData.chainId}`);
 
-    await watcherService.checkPastThenWatch(
-      chain,
-      canvasData.canvasId,
-      CANVAS_ABI,
-      events
-    );
+    await watcherService.checkPastThenWatch(chain, canvasData.canvasId, CANVAS_ABI, events);
   } catch (error) {
     console.error("Error in handleInitializeCanvas:", error.message);
   }

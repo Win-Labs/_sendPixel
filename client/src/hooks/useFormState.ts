@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const useFormState = initialState => {
+export const useFormState = (initialState) => {
   const [formState, setFormState] = useState(initialState);
 
   const handleChange = (field: string) => (e: any) => {

@@ -50,7 +50,7 @@ const Canvas = () => {
 
   const handlePaintedPixels = (handler: (previousPixels: IPaintedPixel[]) => IPaintedPixel[]): void => {
     console.log("Painted pixels: ", paintedPixels);
-    setPaintedPixels(previousPixes => handler(previousPixes));
+    setPaintedPixels((previousPixes) => handler(previousPixes));
   };
 
   const { isPending: isPendingCanvas, data: fetchedCanvas } = useQuery({
@@ -74,7 +74,7 @@ const Canvas = () => {
       }));
 
       // Overwrite grid pixels with fetchedCanvas pixels
-      fetchedCanvas.pixels.forEach(pixel => {
+      fetchedCanvas.pixels.forEach((pixel) => {
         grid[pixel.y * fetchedCanvas.width + pixel.x] = pixel;
       });
 

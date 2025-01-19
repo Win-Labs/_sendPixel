@@ -26,8 +26,7 @@ const isNewLog = (log, lastProcessedEvent) => {
     return true;
   }
 
-  const { lastBlockNumber, lastTransactionHash, lastLogIndex } =
-    lastProcessedEvent;
+  const { lastBlockNumber, lastTransactionHash, lastLogIndex } = lastProcessedEvent;
 
   return (
     BigInt(log.blockNumber) > BigInt(lastBlockNumber) ||
@@ -54,14 +53,7 @@ const processLog = async (log, chain, address, events) => {
 };
 
 // Function to fetch missed events for a specific contract on a specific chain
-const fetchMissedEvents = async (
-  chain,
-  address,
-  abi,
-  events,
-  fromBlock,
-  toBlock
-) => {
+const fetchMissedEvents = async (chain, address, abi, events, fromBlock, toBlock) => {
   try {
     const clientHttp = createHttpClient(chain);
     const logs = await clientHttp.getContractEvents({
@@ -73,9 +65,7 @@ const fetchMissedEvents = async (
 
     console.log(`Fetched missed events on ${chain.name}:`, logs);
 
-    const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(
-      address
-    );
+    const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(address);
 
     for (const log of logs) {
       if (isNewLog(log, lastProcessedEvent)) {
@@ -86,10 +76,7 @@ const fetchMissedEvents = async (
       }
     }
   } catch (error) {
-    console.error(
-      `Error fetching and processing missed events on ${chain.name}:`,
-      error
-    );
+    console.error(`Error fetching and processing missed events on ${chain.name}:`, error);
   }
 };
 
@@ -101,25 +88,13 @@ const checkPastThenWatch = async (chain, address, abi, events) => {
     const clientHttp = createHttpClient(chain);
     const clientWebSocket = createWebSocketClient(chain);
 
-    const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(
-      address
-    );
+    const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(address);
     let currentBlockNumber = await clientHttp.getBlockNumber();
 
     if (lastProcessedEvent) {
       const fromBlock = BigInt(lastProcessedEvent.lastBlockNumber);
-      await fetchMissedEvents(
-        chain,
-        address,
-        abi,
-        events,
-        fromBlock,
-        currentBlockNumber
-      ).catch((error) => {
-        console.error(
-          `Error fetching missed events for chain ${chain.name}:`,
-          error
-        );
+      await fetchMissedEvents(chain, address, abi, events, fromBlock, currentBlockNumber).catch((error) => {
+        console.error(`Error fetching missed events for chain ${chain.name}:`, error);
       });
       currentBlockNumber = BigInt(lastProcessedEvent.lastBlockNumber);
     }
@@ -127,14 +102,11 @@ const checkPastThenWatch = async (chain, address, abi, events) => {
     clientWebSocket.watchContractEvent({
       address: address,
       abi: abi,
-      fromBlock: lastProcessedEvent
-        ? currentBlockNumber + 1n
-        : currentBlockNumber,
+      fromBlock: lastProcessedEvent ? currentBlockNumber + 1n : currentBlockNumber,
       onLogs: async (logs) => {
         console.log(`Received logs on ${chain.name}:`, logs);
         try {
-          const lastProcessedEvent =
-            await blockSyncService.getLastProcessedEvent(address);
+          const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(address);
           for (const log of logs) {
             if (isNewLog(log, lastProcessedEvent)) {
               await processLog(log, chain, address, events);
@@ -146,10 +118,7 @@ const checkPastThenWatch = async (chain, address, abi, events) => {
       },
     });
   } catch (error) {
-    console.error(
-      `Error setting up watcher for events on ${chain.name}:`,
-      error
-    );
+    console.error(`Error setting up watcher for events on ${chain.name}:`, error);
   }
 };
 
@@ -165,17 +134,9 @@ const startWatchers = async () => {
   try {
     for (const chain of Object.values(chains)) {
       try {
-        await checkPastThenWatch(
-          chain,
-          CANVAS_DEPLOYERS[chain.id],
-          CANVAS_DEPLOYER_ABI,
-          events
-        );
+        await checkPastThenWatch(chain, CANVAS_DEPLOYERS[chain.id], CANVAS_DEPLOYER_ABI, events);
       } catch (error) {
-        console.error(
-          `Failed to start event watcher for chain ${chain.name}:`,
-          error
-        );
+        console.error(`Failed to start event watcher for chain ${chain.name}:`, error);
       }
     }
   } catch (error) {

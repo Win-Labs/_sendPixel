@@ -1,13 +1,11 @@
 {
-  "name": "_sendPixel",
+  "name": "_solPixel",
   "version": "1.0.0",
   "description": "",
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "tailwind": "pnpx tailwindcss -i ./src/index.css -o ./src/output.css --watch",
-    "test": "jest --detectOpenHandles",
-    "dev": "NODE_ENV=development nodemon",
+    "dev": "pnpm tsc && pnpm tsx ./src/server.ts",
     "start": "NODE_ENV=production node ./dist/server.js"
   },
   "author": "gylman",
@@ -16,12 +14,10 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@types/express": "^5.0.0",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.10.7",
     "babel-jest": "^29.7.0",
     "jest": "^29.7.0",
-    "nodemon": "^3.1.9",
     "supertest": "^7.0.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   },
   "dependencies": {
@@ -31,8 +27,8 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "mongoose": "^8.9.4",
-    "morgan": "^1.10.0",
     "pinata-web3": "^0.5.4",
+    "tsx": "^4.19.2",
     "uuid": "^11.0.5",
     "viem": "^2.22.7"
   },

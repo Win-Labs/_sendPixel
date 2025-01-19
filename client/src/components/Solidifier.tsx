@@ -22,7 +22,7 @@ const Solidifier = ({ pixels, canvasId }: ISolidifierProps) => {
   async function transact() {
     const to = canvasId as `0x${string}`;
 
-    const values = pixels.map(pixel =>
+    const values = pixels.map((pixel) =>
       buildTransferAmount(pixel.x, pixel.y, pixel.color.r, pixel.color.g, pixel.color.b),
     );
     console.log(`Native coin amounts to transfer: ${values}`);
