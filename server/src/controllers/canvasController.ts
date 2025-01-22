@@ -1,4 +1,4 @@
-import canvasService from "../services/canvasService.js";
+import canvasService from "../services/canvasService";
 
 const getAllCanvases = async (_, res) => {
   try {
@@ -46,7 +46,7 @@ const getCanvas = async (req, res) => {
 
 const clear = async (_, res) => {
   try {
-    await canvasService.clear({});
+    await canvasService.clear();
     res.status(200).json({ message: "All cleared" });
   } catch (error) {
     res.status(500).json({ error: error.message });

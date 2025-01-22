@@ -1,7 +1,7 @@
-import Canvas from "../models/canvasModel.js";
-import BlockSync from "../models/blockSyncModel.js";
-import ERC721Service from "./ERC721Service.js";
-import royaltyService from "./royaltyService.js";
+import Canvas from "../models/canvasModel";
+import BlockSync from "../models/blockSyncModel";
+// import ERC721Service from "./ERC721Service.js";
+// import royaltyService from "./royaltyService.ts/index.js";
 
 const getAllCanvases = async () => {
   return await Canvas.find();
@@ -28,7 +28,8 @@ const initializeCanvas = async (canvasData) => {
     });
 
     await newCanvas.save();
-    console.log(`Canvas with ID ${canvasId} on chainId ${chainId} created by owner ${owner}.`);
+    // variables are not defined below
+    // console.log(`Canvas with ID ${canvasId} on chainId ${chainId} created by owner ${owner}.`);
   } catch (error) {
     console.error("Error in initializeCanvas:", error.message);
   }

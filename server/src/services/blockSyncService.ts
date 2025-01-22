@@ -1,4 +1,4 @@
-import BlockSync from "../models/blockSyncModel.js";
+import BlockSync from "../models/blockSyncModel";
 
 const updateLastProcessedEvent = async ({ contractAddress, blockNumber, transactionHash, logIndex }) => {
   await BlockSync.findOneAndUpdate(

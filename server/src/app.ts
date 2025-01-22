@@ -1,9 +1,9 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import routes from "./routes/routes.js";
+import routes from "./routes/routes";
 import mongoose from "mongoose";
-import watcherService from "./services/watcherService.js";
+import watcherService from "./services/watcherService";
 
 dotenv.config({ path: "./.env" });
 

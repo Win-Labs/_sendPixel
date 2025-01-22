@@ -1,9 +1,9 @@
-import blockSyncService from "./blockSyncService.js";
-import eventService from "./eventService.js";
-import { Abi, Address, Chain, createPublicClient, GetContractEventsReturnType, http, Log, webSocket } from "viem";
-import { CANVAS_DEPLOYER_ABI } from "../constants/abis.js";
-import chains from "../constants/chains.js";
-import { CANVAS_DEPLOYERS } from "../constants/contractAddresses.js";
+import blockSyncService from "./blockSyncService";
+import eventService from "./eventService";
+import { Abi, Address, Chain, createPublicClient, http, Log, webSocket } from "viem";
+import { CANVAS_DEPLOYER_ABI } from "../constants/abis";
+import chains from "../constants/chains";
+import { CANVAS_DEPLOYERS } from "../constants/contractAddresses";
 
 // Helper function to create an HTTP client for a given chain
 const createHttpClient = (chain: Chain) =>
@@ -49,6 +49,7 @@ const processLog = async (log, chain: Chain, address: Address, events) => {
     await event.handleEvent(log, address, chain);
 
     await blockSyncService.updateLastProcessedEvent({
+      //@ts-ignore
       address,
       blockNumber: Number(log.blockNumber),
       transactionHash: log.transactionHash,
