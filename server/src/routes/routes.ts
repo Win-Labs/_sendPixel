@@ -1,6 +1,6 @@
 import express from "express";
-import canvasController from "../controllers/canvasController.js";
-import Canvas from "../models/canvasModel.js";
+import canvasController from "../controllers/canvasController";
+import Canvas from "../models/canvasModel";
 
 const router = express.Router();
 

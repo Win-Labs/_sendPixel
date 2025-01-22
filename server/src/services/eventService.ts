@@ -1,8 +1,7 @@
-import { webSocket } from "viem";
-import { CANVAS_ABI } from "../constants/abis.js";
-import canvasService from "../services/canvasService.js";
-import watcherService from "./watcherService.js";
-import royaltyService from "./royaltyService.js";
+import { CANVAS_ABI } from "../constants/abis";
+import canvasService from "./canvasService";
+import watcherService from "./watcherService";
+import royaltyService from "./royaltyService";
 
 const handleInitializeCanvas = async (log, _, chain) => {
   console.log("Handling InitializeCanvas event");

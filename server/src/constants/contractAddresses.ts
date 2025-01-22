@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import chains from "./chains.js";
+import chains from "./chains";
 
 const { localhost, holesky, sepolia, baseSepolia } = chains;
 

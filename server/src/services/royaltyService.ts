@@ -1,4 +1,4 @@
-import Royalty from "../models/royaltyModel.js";
+import Royalty from "../models/royaltyModel";
 
 const handleRoyalty = async ({ address, amount, canvasAddress }) => {
   try {

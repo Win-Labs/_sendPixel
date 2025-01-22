@@ -103,8 +103,8 @@ const manageERC721 = async ({ canvasId }) => {
     // Call all the functions in sequence
     await constructImage({ canvasId });
     const image = await publishToIPFS({ canvasId });
-    await mintERC721({ canvasId, image });
-    await listForSale({ canvasId });
+    // await mintERC721({ canvasId, image });
+    // await listForSale({ canvasId });
   } catch (error) {
     console.error("Error in manageERC721:", error.message);
     throw error;
