@@ -37,9 +37,7 @@ const constructImage = async (canvasData) => {
     // fs.writeFileSync(`./${canvasId}.png`, buffer);
     const imageBase64 = canvas.toDataURL("image/png");
     console.log("imageBase64: ", imageBase64);
-    console.log(
-      `Image for canvas ${canvasData.canvasId} constructed successfully`
-    );
+    console.log(`Image for canvas ${canvasData.canvasId} constructed successfully`);
 
     // Save the base64-encoded image to a file
     // const buffer = Buffer.from(base64Image, "base64");
@@ -59,9 +57,7 @@ const constructImage = async (canvasData) => {
 const publishToIPFS = async (data) => {
   console.log(`Publishing image to IPFS...`);
   try {
-    const uploadImageResponse = await pinataClient.upload.base64(
-      data.imageBase64.split(",")[1]
-    );
+    const uploadImageResponse = await pinataClient.upload.base64(data.imageBase64.split(",")[1]);
 
     const json = await pinataClient.upload.json({
       name: data.name,
@@ -107,8 +103,8 @@ const manageERC721 = async ({ canvasId }) => {
     // Call all the functions in sequence
     await constructImage({ canvasId });
     const image = await publishToIPFS({ canvasId });
-    await mintERC721({ canvasId, image });
-    await listForSale({ canvasId });
+    // await mintERC721({ canvasId, image });
+    // await listForSale({ canvasId });
   } catch (error) {
     console.error("Error in manageERC721:", error.message);
     throw error;

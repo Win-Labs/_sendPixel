@@ -12,7 +12,7 @@ const Pixel = React.memo(({ pixelData, brushColor, handlePaintedPixels }: IPixel
   const handleClick = () => {
     setColor(brushColor);
     console.log(`Painted pixel at x: ${pixelData.x}, y: ${pixelData.y} with color: ${JSON.stringify(brushColor)}`);
-    handlePaintedPixels(paintedPixels => [...paintedPixels, { x: pixelData.x, y: pixelData.y, color: brushColor }]);
+    handlePaintedPixels((paintedPixels) => [...paintedPixels, { x: pixelData.x, y: pixelData.y, color: brushColor }]);
   };
 
   return (

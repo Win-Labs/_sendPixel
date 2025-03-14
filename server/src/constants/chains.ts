@@ -7,15 +7,15 @@ import {
   scrollSepolia as scrollSepoliaDefault,
   morphHolesky as morphHoleskyDefault,
   localhost as localhostDefault,
+  Chain,
 } from "viem/chains";
 import dotenv from "dotenv";
-import { defineChain } from "viem";
 
 dotenv.config({ path: "./.env" });
 
-const alchemyApiKey = process.env.ALCHEMY_API_KEY;
+const alchemyApiKey = process.env.ALCHEMY_API_KEY as string;
 
-const localhost = {
+const localhost: Chain = {
   ...localhostDefault,
   rpcUrls: {
     ...localhostDefault.rpcUrls,
@@ -27,7 +27,7 @@ const localhost = {
   id: 31337,
 };
 
-const holesky = {
+const holesky: Chain = {
   ...holeskyDefault,
   rpcUrls: {
     ...holeskyDefault.rpcUrls,
@@ -38,7 +38,7 @@ const holesky = {
   },
 };
 
-const sepolia = {
+const sepolia: Chain = {
   ...sepoliaDefault,
   rpcUrls: {
     ...sepoliaDefault.rpcUrls,
@@ -49,7 +49,7 @@ const sepolia = {
   },
 };
 
-const baseSepolia = {
+const baseSepolia: Chain = {
   ...baseSepoliaDefault,
   rpcUrls: {
     ...baseSepoliaDefault.rpcUrls,

@@ -1,8 +1,7 @@
-import { webSocket } from "viem";
-import { CANVAS_ABI } from "../constants/abis.js";
-import canvasService from "../services/canvasService.js";
-import watcherService from "./watcherService.js";
-import royaltyService from "./royaltyService.js";
+import { CANVAS_ABI } from "../constants/abis";
+import canvasService from "./canvasService";
+import watcherService from "./watcherService";
+import royaltyService from "./royaltyService";
 
 const handleInitializeCanvas = async (log, _, chain) => {
   console.log("Handling InitializeCanvas event");
@@ -29,16 +28,9 @@ const handleInitializeCanvas = async (log, _, chain) => {
     await canvasService.initializeCanvas(canvasData);
 
     // Start watching events from the newly deployed canvas contract
-    console.log(
-      `Starting listener for new Canvas contract: ${canvasData.canvasId} on chainId: ${canvasData.chainId}`
-    );
+    console.log(`Starting listener for new Canvas contract: ${canvasData.canvasId} on chainId: ${canvasData.chainId}`);
 
-    await watcherService.checkPastThenWatch(
-      chain,
-      canvasData.canvasId,
-      CANVAS_ABI,
-      events
-    );
+    await watcherService.checkPastThenWatch(chain, canvasData.canvasId, CANVAS_ABI, events);
   } catch (error) {
     console.error("Error in handleInitializeCanvas:", error.message);
   }

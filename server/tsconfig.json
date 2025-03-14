@@ -3,7 +3,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext"],
-    "allowJs": false, // Disallow JavaScript files in TypeScript
+    "allowJs": true,
     "skipLibCheck": true, // Skip type checking for declaration files
     "esModuleInterop": true, // Allow compatibility with CommonJS modules
     "allowSyntheticDefaultImports": true, // Simplify imports
@@ -14,8 +14,12 @@
     "isolatedModules": true, // Isolated module support for transpilation
     "outDir": "./dist", // Specify the output directory for compiled files
     "rootDir": "./src", // Specify the root directory of input files
-    "noImplicitAny": false // Optionally loosen implicit `any` checks
+    "noImplicitAny": false, // Optionally loosen implicit `any` checks,
+    "useUnknownInCatchVariables": false
   },
-  "include": ["src"], // Include the source folder
-  "exclude": ["node_modules"] // Exclude the node_modules folder
+  "ts-node": {
+    "esm": true
+  },
+  "include": ["src/**/*"], // Include the source folder
+  "exclude": ["node_modules", "dist"] // Exclude the node_modules folder
 }

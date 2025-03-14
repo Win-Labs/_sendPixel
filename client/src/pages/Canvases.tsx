@@ -21,12 +21,12 @@ const Canvases = () => {
   const [showModal, setShowModal] = useState(false);
 
   const toggleModal = useCallback(() => {
-    setShowModal(prev => !prev);
+    setShowModal((prev) => !prev);
   }, []);
 
   // Memoized tabs
   const Tabs = useMemo(() => {
-    return Object.values(FilterTab).map(tab => (
+    return Object.values(FilterTab).map((tab) => (
       <div
         className={filterTab === tab ? `text-2xl text-yellow-400 cursor-pointer` : `text-2xl text-white cursor-pointer`}
         key={tab}

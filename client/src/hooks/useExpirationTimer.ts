@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { add, differenceInSeconds } from "date-fns";
 
-const useExpirationTimer = (
-  creationTime: number,
-  expirationMinutes: number
-) => {
+const useExpirationTimer = (creationTime: number, expirationMinutes: number) => {
   const [isExpired, setIsExpired] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     hours: 0,

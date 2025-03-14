@@ -6,7 +6,7 @@ export const useSignEachSend = () => {
   const signEachSend = async (to: `0x${string}`, values: bigint[]) => {
     try {
       const sendTransactionsResult = await Promise.all(
-        values.map(async value => {
+        values.map(async (value) => {
           try {
             const tx = sendTransaction({ to, value });
             return tx;
