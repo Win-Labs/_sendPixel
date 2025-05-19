@@ -12,7 +12,10 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/v1", routes);
 
-const DB = (process.env.DATABASE as string).replace("<PASSWORD>", process.env.DATABASE_PASSWORD as string);
+const DB = (process.env.VITE_DATABASE_LOCAL as string).replace(
+  "<PASSWORD>",
+  process.env.VITE_DATABASE_PASSWORD_LOCAL as string,
+);
 
 mongoose
   .connect(DB)

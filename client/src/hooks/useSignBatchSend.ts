@@ -1,5 +1,5 @@
 import { useAccount, useWriteContract } from "wagmi";
-import { CANVAS_ABI } from "../constants/abis";
+import { config } from "../config";
 
 export const useSignBatchSend = () => {
   const { address } = useAccount();
@@ -9,7 +9,7 @@ export const useSignBatchSend = () => {
     writeContract({
       functionName: "batchSend",
       args: [values],
-      abi: CANVAS_ABI,
+      abi: config.contractAbi,
       address: to,
       account: address,
       value: values.reduce((acc, val) => acc + val, 0n),
