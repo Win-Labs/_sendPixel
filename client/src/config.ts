@@ -1,11 +1,7 @@
-import { http, injected } from "@wagmi/core";
-import { createConfig } from "@wagmi/core";
-import { localhost } from "./constants/chains";
+import { officeL1Config } from "./constants/configs";
 
-export const apiEndpoint = `http://localhost:3333/api/v1`;
+export const config = officeL1Config;
 
-export const config = createConfig({
-  chains: [localhost],
-  connectors: [injected()],
-  transports: { [localhost.id]: http() },
-});
+const apiEndpointLocal = `http://127.0.0.1:3333/api/v1`;
+
+export const apiEndpoint = apiEndpointLocal;

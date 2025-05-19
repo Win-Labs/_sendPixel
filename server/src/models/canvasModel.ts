@@ -19,19 +19,9 @@ const PixelSchema = new Schema({
 });
 
 const CanvasSchema = new Schema({
-  canvasId: { type: String, required: true },
-  owner: { type: String, required: true },
   name: { type: String, required: true },
   width: { type: Number, required: true },
   height: { type: Number, required: true },
-  mode: { type: Number, required: true },
-  chainId: { type: Number, required: true },
-  worldIdVerified: { type: Boolean, default: false },
-  destination: { type: String, required: false },
-  creationTime: { type: Number, required: true },
-  totalAmount: { type: String, required: false },
-  isFunded: { type: Boolean, default: false },
-  nounImageId: { type: Number, required: true },
   pixels: [PixelSchema],
 });
 
