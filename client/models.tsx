@@ -14,19 +14,9 @@ interface Pixel {
 
 export interface ICanvas {
   _id: string;
-  canvasId: string;
   owner: string;
-  name: string;
   width: number;
   height: number;
-  mode: number;
-  worldIdVerified: boolean;
   pixels: Pixel[];
-  __v: number;
-  chainId: number;
-  destination: string;
-  creationTime: number;
   totalAmount: string;
-  isFunded: boolean;
-  nounImageId: number;
 }

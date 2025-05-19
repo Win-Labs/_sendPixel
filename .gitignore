@@ -1,3 +1,6 @@
 node_modules
 chain/out
 server/dist
+chain/lib
+chain/cache
+/chain/lib/forge-std

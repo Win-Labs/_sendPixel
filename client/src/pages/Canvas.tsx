@@ -5,8 +5,6 @@ import { apiEndpoint } from "../config";
 import { useQuery } from "@tanstack/react-query";
 import { GET } from "../utils/api";
 import Loader from "../components/Loader";
-import TargetImage from "../components/TargetImage";
-import CanvasDetails from "../components/CanvasDetails";
 import CanvasPixels from "../components/CanvasPixels";
 import ColorPicker from "../components/ColorPicker";
 import Solidifier from "../components/Solidifier";

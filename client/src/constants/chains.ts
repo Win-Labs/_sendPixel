@@ -1,48 +1,23 @@
-import {
-  holesky as holeskyDefault,
-  sepolia as sepoliaDefault,
-  baseSepolia as baseSepoliaDefault,
-  localhost as localhostDefault,
-} from "viem/chains";
+import { defineChain } from "viem";
 
-const alchemyApiKey: string = import.meta.env.VITE_PUBLIC_ALCHEMY_API_KEY;
-
-const localhost = {
-  ...localhostDefault,
-  id: 31337,
-};
-
-const holesky = {
-  ...holeskyDefault,
-  rpcUrls: {
-    ...holeskyDefault.rpcUrls,
-    custom: {
-      http: [`https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`],
+function buildChainFromEnv(prefix: string) {
+  return defineChain({
+    id: Number(import.meta.env[`VITE_${prefix}_CHAIN_ID`]),
+    name: import.meta.env[`VITE_${prefix}_CHAIN_NAME`],
+    nativeCurrency: {
+      name: import.meta.env[`VITE_${prefix}_NATIVE_CURRENCY_NAME`],
+      symbol: import.meta.env[`VITE_${prefix}_NATIVE_CURRENCY_SYMBOL`],
+      decimals: Number(import.meta.env[`VITE_${prefix}_NATIVE_CURRENCY_DECIMALS`]),
     },
-  },
-};
-
-const sepolia = {
-  ...sepoliaDefault,
-  rpcUrls: {
-    ...sepoliaDefault.rpcUrls,
-    custom: {
-      http: [`https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
+    rpcUrls: {
+      default: {
+        http: [import.meta.env[`VITE_${prefix}_ROLLUP_RPC_URL`]],
+        webSocket: [import.meta.env[`VITE_${prefix}_ROLLUP_WS_URL`]],
+      },
     },
-  },
-};
+  });
+}
 
-const baseSepolia = {
-  ...baseSepoliaDefault,
-  rpcUrls: {
-    ...baseSepoliaDefault.rpcUrls,
-    custom: {
-      http: [`https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-};
+const officeL1 = buildChainFromEnv("OFFICE_L1");
 
-export { holesky, sepolia, baseSepolia, localhost };
+export { officeL1 };
