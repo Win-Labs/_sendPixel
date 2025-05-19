@@ -1,68 +1,25 @@
-import {
-  holesky as holeskyDefault,
-  sepolia as sepoliaDefault,
-  celoAlfajores as celoAlfajoresDefault,
-  baseSepolia as baseSepoliaDefault,
-  lineaSepolia as lineaSepoliaDefault,
-  scrollSepolia as scrollSepoliaDefault,
-  morphHolesky as morphHoleskyDefault,
-  localhost as localhostDefault,
-  Chain,
-} from "viem/chains";
+import { defineChain } from "viem";
 import dotenv from "dotenv";
-
 dotenv.config({ path: "./.env" });
 
-const alchemyApiKey = process.env.ALCHEMY_API_KEY as string;
-
-const localhost: Chain = {
-  ...localhostDefault,
-  rpcUrls: {
-    ...localhostDefault.rpcUrls,
-    custom: {
-      http: ["http://localhost:8545"],
-      webSocket: ["http://localhost:8545"],
+function buildChainFromEnv(prefix: string) {
+  return defineChain({
+    id: Number(process.env[`VITE_${prefix}_CHAIN_ID`]),
+    name: process.env[`VITE_${prefix}_CHAIN_NAME`] as string,
+    nativeCurrency: {
+      name: process.env[`VITE_${prefix}_NATIVE_CURRENCY_NAME`] as string,
+      symbol: process.env[`VITE_${prefix}_NATIVE_CURRENCY_SYMBOL`] as string,
+      decimals: Number(process.env[`VITE_${prefix}_NATIVE_CURRENCY_DECIMALS`]),
     },
-  },
-  id: 31337,
-};
-
-const holesky: Chain = {
-  ...holeskyDefault,
-  rpcUrls: {
-    ...holeskyDefault.rpcUrls,
-    custom: {
-      http: [`https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://eth-holesky.g.alchemy.com/v2/${alchemyApiKey}`],
+    rpcUrls: {
+      default: {
+        http: [process.env[`VITE_${prefix}_ROLLUP_RPC_URL`] as string],
+        webSocket: [process.env[`VITE_${prefix}_ROLLUP_WS_URL`] as string],
+      },
     },
-  },
-};
+  });
+}
 
-const sepolia: Chain = {
-  ...sepoliaDefault,
-  rpcUrls: {
-    ...sepoliaDefault.rpcUrls,
-    custom: {
-      http: [`https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://eth-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-};
+const officeL1 = buildChainFromEnv("OFFICE_L1");
 
-const baseSepolia: Chain = {
-  ...baseSepoliaDefault,
-  rpcUrls: {
-    ...baseSepoliaDefault.rpcUrls,
-    custom: {
-      http: [`https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-      webSocket: [`https://base-sepolia.g.alchemy.com/v2/${alchemyApiKey}`],
-    },
-  },
-};
-
-export default {
-  localhost,
-  holesky,
-  sepolia,
-  baseSepolia,
-};
+export { officeL1 };

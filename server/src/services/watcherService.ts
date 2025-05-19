@@ -1,160 +1,131 @@
-import blockSyncService from "./blockSyncService.js";
+import { decodeEventLog, Address } from "viem";
 import eventService from "./eventService.js";
-import { Abi, Address, Chain, createPublicClient, GetContractEventsReturnType, http, Log, webSocket } from "viem";
-import { CANVAS_DEPLOYER_ABI } from "../constants/abis.js";
-import chains from "../constants/chains.js";
-import { CANVAS_DEPLOYERS } from "../constants/contractAddresses.js";
+import { updateLastProcessedBlock, getLastProcessedBlock } from "./blockSyncService.js";
+import { config } from "../config.js";
+import { createHttpClient } from "../utils/clients.js";
 
-// Helper function to create an HTTP client for a given chain
-const createHttpClient = (chain: Chain) =>
-  createPublicClient({
-    chain,
-    transport: http(chain.rpcUrls.custom?.http[0]),
-  });
+const client = createHttpClient();
 
-// Helper function to create a WebSocket client for a given chain
-const createWebSocketClient = (chain: Chain) => {
-  const webSocketUrls = chain.rpcUrls.custom?.webSocket;
-
-  if (!webSocketUrls || webSocketUrls.length === 0) {
-    throw new Error("WebSocket URL is not available for the specified chain.");
-  }
-  return createPublicClient({
-    chain,
-    transport: webSocket(webSocketUrls[0]),
-  });
+const processLog = async (log: any, events: any[]) => {
+  const event = events.find((e) => e.name === log.eventName);
+  console.log(`Processing ${log.name} event...`);
+  await event.handler(log);
 };
 
-// Helper function to check if the log is new
-const isNewLog = (log, lastProcessedEvent) => {
-  if (!lastProcessedEvent) {
-    return true;
+const checkPastThenWatch = async (blockNumber: bigint, contractAddress: Address, contractAbi: Abi, events) => {
+  let isProcessing = false;
+  let lastProcessedBlock = await getLastProcessedBlock();
+
+  if (!lastProcessedBlock) {
+    lastProcessedBlock = blockNumber;
+    await updateLastProcessedBlock(lastProcessedBlock);
   }
 
-  const { lastBlockNumber, lastTransactionHash, lastLogIndex } = lastProcessedEvent;
+  const poll = async () => {
+    if (isProcessing) return;
+    isProcessing = true;
+    const blockStep = 1000n;
 
-  return (
-    BigInt(log.blockNumber) > BigInt(lastBlockNumber) ||
-    (BigInt(log.blockNumber) === BigInt(lastBlockNumber) &&
-      log.transactionHash === lastTransactionHash &&
-      log.logIndex > lastLogIndex)
-  );
-};
+    try {
+      const currentBlock = await client.getBlockNumber();
+      if (lastProcessedBlock !== null && lastProcessedBlock < currentBlock) {
+        const fromBlock = lastProcessedBlock + 1n;
 
-// Function to process logs
-const processLog = async (log, chain: Chain, address: Address, events) => {
-  const event = events.find((e) => e.eventName === log.eventName);
+        const toBlock = currentBlock - fromBlock > blockStep ? fromBlock + blockStep : currentBlock;
 
-  if (event && event.handleEvent) {
-    await event.handleEvent(log, address, chain);
+        console.log(`Fetching logs from block ${fromBlock} to ${toBlock}`);
 
-    await blockSyncService.updateLastProcessedEvent({
-      address,
-      blockNumber: Number(log.blockNumber),
-      transactionHash: log.transactionHash,
-      logIndex: log.logIndex,
-    });
-  }
-};
+        const logs = await client.getLogs({
+          address: contractAddress,
+          event: {
+            type: "event",
+            name: "PixelRegistered",
+            inputs: [
+              { name: "amount", type: "uint256", indexed: false, internalType: "uint256" },
+              { name: "sender", type: "address", indexed: false, internalType: "address" },
+            ],
+          },
+          fromBlock,
+          toBlock,
+        });
 
-// Function to fetch missed events for a specific contract on a specific chain
-const fetchMissedEvents = async (chain: Chain, address: Address, abi: Abi, events, fromBlock, toBlock) => {
-  try {
-    const clientHttp = createHttpClient(chain);
-    const logs = await clientHttp.getContractEvents({
-      address,
-      abi,
-      fromBlock,
-      toBlock,
-    });
-
-    console.log(`Fetched missed events on ${chain.name}:`, logs);
-
-    const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(address);
-
-    for (const log of logs) {
-      if (isNewLog(log, lastProcessedEvent)) {
-        console.log(`Processing missed event log on ${chain.name}:`, log);
-        await processLog(log, chain, address, events);
-      } else {
-        console.log(`Skipping already processed log on ${chain.name}:`, log);
-      }
-    }
-  } catch (error) {
-    console.error(`Error fetching and processing missed events on ${chain.name}:`, error);
-  }
-};
-
-// Function to watch and sync events for a specific contract on a specific chain
-const checkPastThenWatch = async (chain: Chain, address: Address, abi: Abi, events) => {
-  console.log("checkPastThenWatch chain: ", chain.id);
-
-  try {
-    const clientHttp = createHttpClient(chain);
-    const clientWebSocket = createWebSocketClient(chain);
-
-    const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(address);
-    let currentBlockNumber = await clientHttp.getBlockNumber();
-
-    if (lastProcessedEvent) {
-      const fromBlock = BigInt(lastProcessedEvent.lastBlockNumber);
-      await fetchMissedEvents(chain, address, abi, events, fromBlock, currentBlockNumber).catch((error) => {
-        console.error(`Error fetching missed events for chain ${chain.name}:`, error);
-      });
-      currentBlockNumber = BigInt(lastProcessedEvent.lastBlockNumber);
-    }
-
-    clientWebSocket.watchContractEvent({
-      address,
-      abi: abi,
-      fromBlock: lastProcessedEvent ? currentBlockNumber + 1n : currentBlockNumber,
-      onLogs: async (logs: Log[]) => {
-        console.log(`Received logs on ${chain.name}:`, logs);
-        try {
-          const lastProcessedEvent = await blockSyncService.getLastProcessedEvent(address);
-          for (const log of logs) {
-            if (isNewLog(log, lastProcessedEvent)) {
-              await processLog(log, chain, address, events);
-            }
+        for (const log of logs) {
+          try {
+            console.log("Log:", log);
+            await processLog(log, events);
+          } catch (decodeErr) {
+            console.warn("Failed to decode log:", decodeErr);
           }
-        } catch (error) {
-          console.error(`Error handling event logs on ${chain.name}:`, error);
         }
-      },
-    });
-  } catch (error) {
-    console.error(`Error setting up watcher for events on ${chain.name}:`, error);
-  }
+
+        lastProcessedBlock = toBlock;
+        await updateLastProcessedBlock(lastProcessedBlock);
+      }
+    } catch (err) {
+      console.error(`Polling error:`, err);
+    }
+    isProcessing = false;
+    setTimeout(poll, 3000);
+  };
+
+  poll();
 };
 
-// Start watchers for all configured chains
 const startWatchers = async () => {
   const events = [
     {
-      eventName: "CanvasDeployed",
-      handleEvent: eventService.handleInitializeCanvas,
+      name: "PixelRegistered",
+      handler: eventService.handleRegisterPixel,
     },
   ];
 
-  try {
-    for (const chain of Object.values(chains)) {
-      try {
-        await checkPastThenWatch(chain, CANVAS_DEPLOYERS[chain.id], CANVAS_DEPLOYER_ABI, events);
-      } catch (error) {
-        console.error(`Failed to start event watcher for chain ${chain.name}:`, error);
-      }
-    }
-  } catch (error) {
-    console.error("Critical failure in startWatchers:", error);
+  const { canvasDeployerAddress, canvasDeployerAbi, canvasOut } = config;
+
+  // Simulate the contract call
+  const { request } = await client.simulateContract({
+    abi: canvasDeployerAbi,
+    address: canvasDeployerAddress,
+    functionName: "deployCanvas",
+    args: [1000, 1000], // Still needed for event metadata
+  });
+
+  // Write the transaction
+  const txHash = await client.writeContract(request);
+
+  // Wait for confirmation
+  const receipt = await client.waitForTransactionReceipt({ hash: txHash });
+  const blockNumber = receipt.blockNumber;
+  console.log(`Confirmed in block: ${receipt.blockNumber}`);
+
+  // Extract deployed address from event
+  const log = receipt.logs.find((log) => log.address.toLowerCase() === canvasDeployerAddress.toLowerCase());
+
+  if (!log) {
+    console.error("No logs found for the deployed canvas");
+    return;
   }
+
+  const decoded = decodeEventLog({
+    abi: canvasDeployerAbi,
+    eventName: "CanvasDeployed",
+    data: log.data,
+    topics: log.topics,
+  });
+
+  const { deployedCanvasContract, height, width } = decoded.args as unknown as {
+    deployedCanvasContract: Address;
+    height: bigint;
+    width: bigint;
+  };
+
+  console.log(`✅ Canvas deployed at: ${deployedCanvasContract} with dimensions ${width}x${height}`);
+
+  console.log(`Starting polling since block ${blockNumber} at canvas ${deployedCanvasContract}`);
+  await checkPastThenWatch(blockNumber, deployedCanvasContract, canvasOut.abi, events);
 };
 
-const watcherService = {
-  isNewLog,
+export default {
   processLog,
-  fetchMissedEvents,
   checkPastThenWatch,
   startWatchers,
 };
-
-export default watcherService;

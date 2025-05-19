@@ -5,7 +5,8 @@
   "main": "server.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch ./src/server.ts --watch ./src --ignore node_modules,dist",
+    "dev": "tsx watch ./src/server.ts",
+    "build": "npx tsc",
     "start": "NODE_ENV=production node ./dist/server.js"
   },
   "author": "gylman",
